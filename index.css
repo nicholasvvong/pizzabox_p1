@@ -1,0 +1,72 @@
+body {
+    background-color: slategrey;
+}
+
+#loginBox {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-top: 5%;
+    max-width: 20%;
+    height: 75%;
+    /* border: 3px solid black;  */
+}
+
+#loginBox .title {
+    color:navy;
+    font-family: Arial;
+    font-size: 250%;
+    text-align: center;
+    text-transform: capitalize;
+    position: relative;
+    top:-8%;
+    margin-bottom: 0;
+    /* border: 1px solid black; */
+}
+
+#loginBox .undertitle {
+    color:navy;
+    font-family: Arial;
+    font-size: 175%;
+    text-align: center;
+    text-transform: capitalize;
+    position: relative;
+    top:-10%;
+    margin-bottom: 0;
+    /* border: 1px solid black;  */
+}
+
+#loginbox img {
+    margin:auto;
+    height: 50%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    /* border: 1px solid black;  */
+}
+
+#loginBox form {
+    margin: 1rem;
+    display:block;
+    /* border: 1px solid black; */
+    position:relative;
+    top:-10%;
+}
+#loginBox form button{
+    margin-top:1rem;
+    margin-right:1rem;
+    display:block;
+    /* border: 1px solid black; */
+    display:inline-block;
+    font-size: 120%;
+}
+
+#loginBox form label {
+    font-family: 'Times New Roman';
+    font-size:150%;
+    /* border: 1px solid black;  */
+    display:inline-block;
+    width: 45%;
+}

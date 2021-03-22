@@ -1,0 +1,314 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap');
+
+
+body {
+    background-color:cyan;
+    margin:0;
+}
+
+.topbar {
+    display: flex;
+    margin:0;
+    padding:0;
+    max-width: 100%;
+    height: 10%;
+    /* border: 3px solid black; */
+    justify-content: space-between;
+    background-color:lime;
+}
+
+.topbar-item {
+    color:darkred;
+    display: block;
+    height:100%;
+    width:25%;
+    border: 1px solid black;
+}
+
+.topbar-item span {
+    margin:0;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    width:100%;
+    height:100%;
+    font-size: 2vw;
+    text-align: center;
+    /* border: 1px solid red; */
+    flex-grow: 1;
+}
+
+.topbar-item:hover {
+    background-color:darkblue;
+}
+
+.maincontent .orderhistory {
+    background-color: white;
+    margin-top: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 95%;
+    /* border: 1px solid red; */
+}
+
+.maincontent h1 {
+    text-align: center;
+    font-size: 3vw;
+}
+
+.maincontent .allorders {
+    list-style-type:none;
+    color:red;
+    padding:0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* border: 1px solid black; */
+}
+
+.maincontent .order {
+    padding: 0;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    margin: 0;
+    height: 10%;
+    width: 100%;
+    
+    /* border: 1px solid blue; */
+}
+
+.maincontent .moreinfo {
+    color:navy;
+}
+
+.maincontent .information {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    font-size:2vw;
+    padding-bottom: 0.5rem;
+    /* border: 1px solid blue; */
+}
+
+.maincontent .orderagain {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    width:15%;
+    position: relative;
+    left:43%;
+    /* border: 1px solid black; */
+}
+
+.maincontent .ordering h1 {
+    margin-bottom: 0;
+}
+
+.maincontent .ordering h2 {
+    text-align: center;
+    font-size: 1.75vw;
+    margin: auto;
+    width:50%;
+    /* border: 1px solid red; */
+}
+
+.maincontent .order:nth-child(odd) {
+    background-color: dimgrey;
+}
+
+.maincontent .order:nth-child(even) {
+    background-color:slategrey;
+}
+
+.maincontent .ordering .orderNow {
+    list-style-type:none;
+    color:red;
+    padding:0;
+    padding-bottom:1rem;
+    margin-left:auto;
+    margin-right:auto;
+    margin-bottom:1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    /* border: 1px solid red; */
+}
+
+.maincontent .ordering {
+    background-color: cyan;
+    margin-top: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding:0;
+    width: 90%;
+    border: 3px solid black;
+    display:flex;
+    justify-content: center;
+}
+ 
+.maincontent .ordering .orderselect {
+    background-color: white;
+    margin:0;
+    width: 50%;
+    /* border: 1px solid red; */
+    display:inline-block;
+}
+
+#storeselected {
+    flex:1;
+}
+
+.maincontent .ordering .currentorder {
+    background-color:burlywood;
+    margin:0;
+    width: 33%;
+    /* border: 1px solid black; */
+    display:inline-block;
+    
+}
+
+.maincontent .ordering .storeOption {
+    margin: auto;
+    width: 50%;
+    /* border: 1px solid black; */
+}
+
+.maincontent .ordering .currentList {
+    list-style-type:none;
+    color:red;
+    padding:0;
+    padding-bottom:1rem;
+    margin-left:auto;
+    margin-right:auto;
+    margin-bottom:1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+}
+
+.maincontent .ordering .storebtn {
+    width:100%;
+    padding-top: 0.50rem;
+    padding-bottom: 0.50rem;
+    font-size: 1.25vw;
+    margin-top:0.5rem;
+    margin-bottom:0.5rem;
+}
+
+.maincontent .ordering .pizzaOptions {
+    list-style-type:none;
+    color:black;
+    padding:0;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* border: 2px solid black; */
+}
+
+.maincontent .ordering .pizza {
+    background-color:rgb(187, 186, 186);
+    margin-left: auto;
+    margin-right: auto;
+    padding:1rem;
+    width: 90%;
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    display:flex;
+    justify-content: center;
+}
+
+.maincontent .pizzaName {
+    margin: 0;
+    padding:1rem;
+    width: 80%;
+    border-right: 1px solid black;
+    font-weight: bolder;
+    font-size: 1.25vw;
+    display:flex;
+    flex: 1;
+    text-align: left;
+    text-indent: 1.0rem;
+}
+
+.maincontent .pizzaName:last-child {
+    border-right:none;
+    border-bottom: 1px solid black;
+}
+
+.maincontent .placeorder {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.0vw;
+    padding-left:0.5rem;
+    padding-right:0.5rem;
+    border-left: 1px solid black;
+    text-align: center;
+}
+
+.maincontent .sizeselect {
+    margin:0.5rem;
+    padding:0.25rem;
+    text-align: center;
+}
+
+.maincontent .pizza.preset, .maincontent .pizza.custom {
+    padding:0;
+}
+
+.maincontent .orderselect .customOptions {
+    display:inline-block;
+    border: 1px solid black;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: center;
+}
+
+.maincontent .comp {
+    display:inline-block;
+    margin:0;
+    border-right: 1px solid black;
+    width: 30%;
+    flex:1;
+    padding-top: 0;
+}
+
+.maincontent .comp:last-child {
+    border:none
+}
+
+.maincontent .comp h3 {
+    margin-top: 0;
+    text-align: center;
+}
+
+.maincontent .comp .compOptions {
+    border: 1px solid black;
+    width:90%;
+    margin-left:auto;
+    margin-right:auto;
+    margin-bottom:1rem;
+}
+
+
+#name {
+    font-family: 'Dancing Script', cursive;
+    background-color:cyan;
+    color:darkred;
+    border:none;
+}
+
+#selected {
+    color:white;
+    background-color:green;
+}
