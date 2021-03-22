@@ -22,13 +22,18 @@ form.addEventListener("click", (event) => {
 
 function accountLogInForm() {
     const changeHTML = `
-    <label for="email">Email: </label>
-    <input type="text" class="textinput" name="email">
-    <br>
-    <label for="password">Password: </label>
-    <input type="text" class="textinput" name="username">
-    <button type="submit" class="create">Create New Account</button>
-    <button type="submit" class="login">Login</button>
+    <span class="formItem">
+        <label for="email">Email: </label>
+        <input type="text" class="textinput" name="email">
+    </span>
+    <span class="formItem">
+        <label for="password">Password: </label>
+        <input type="text" class="textinput" name="username">
+    </span>
+    <span class="formitem">
+        <span><button type="submit" class="create">Create New Account</button></span>
+        <span><button type="submit" class="login">Login</button></span>
+    </span>
     `
 
     form.innerHTML = changeHTML;
@@ -36,16 +41,22 @@ function accountLogInForm() {
 
 function accountCreateForm() {
     const changeHTML = `
-    <label for="email">Email: </label>
-    <input type="text" class="textinput" name="email">
-    <br>
-    <label for="password">Password: </label>
-    <input type="text" class="textinput" name="username">
-    <label for="fname">First Name: </label>
-    <input type="text" class="textinput" name="fname">
-    <br>
-    <label for="lname">Last Name: </label>
-    <input type="text" class="textinput" name="lname">
+    <span class="formItem">
+        <label for="email">Email: </label>
+        <input type="text" class="textinput" name="email">
+    </span>
+    <span class="formItem">
+        <label for="password">Password: </label>
+        <input type="text" class="textinput" name="username">
+    </span>
+    <span class="formItem">
+        <label for="fname">First Name: </label>
+        <input type="text" class="textinput" name="fname">
+    </span>
+    <span class="formItem">
+        <label for="lname">Last Name: </label>
+        <input type="text" class="textinput" name="lname">
+    </span>
     <button type="submit" class="creating">Create</button>
     `
     form.innerHTML = changeHTML;
