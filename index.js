@@ -5,16 +5,18 @@ accountLogInForm();
 
 form.addEventListener("click", (event) => {
     event.preventDefault();
-    if(event.target.classList.contains('create')) {
-        console.log("create");
-        accountCreateForm();
-    }
-    if(event.target.classList.contains('login')) {
-        console.log("login");
-        logIn();
-    }
-    if(event.target.classList.contains('creating')) {
-        createAccount();
+    if(event.target.tagName.toLowerCase() === 'button') {
+        if(event.target.classList.contains('create')) {
+            console.log("create");
+            accountCreateForm();
+        }
+        if(event.target.classList.contains('login')) {
+            console.log("login");
+            logIn();
+        }
+        if(event.target.classList.contains('creating')) {
+            createAccount();
+        }
     }
 })
 

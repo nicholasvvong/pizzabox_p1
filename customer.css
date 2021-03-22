@@ -170,6 +170,33 @@ body {
     
 }
 
+.maincontent .ordering .currentorder .priceOrder {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1rem;
+    display:flex;
+    width:90%;
+    /* border: 1px solid black; */
+    align-content: center;
+    height:10%;
+}
+
+.maincontent .priceOrder .totalprice {
+    font-size:2.0vw;
+    width:75%;
+    padding:0.25rem;
+    flex:1;
+    margin:0;
+    /* border: 1px solid black; */
+}
+
+.maincontent .priceOrder .orderButton button{
+    /* border: 1px solid black; */
+    font-size:1.0vw;
+    height:100%;
+    width:100%;
+}
+
 .maincontent .ordering .storeOption {
     margin: auto;
     width: 50%;
@@ -187,8 +214,15 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
-    width: 50%;
+    width: 90%;
+
+    border-bottom: 1px solid black;
+}
+
+.maincontent .currentList .currentItem{
+    /* border: 1px solid black; */
+    font-size:1.0vw;
+    margin:0.25rem;
 }
 
 .maincontent .ordering .storebtn {
@@ -274,17 +308,15 @@ body {
     justify-content: center;
 }
 
-.maincontent .comp {
-    display:inline-block;
+.maincontent .customOptions .comp {
     margin:0;
     border-right: 1px solid black;
-    width: 30%;
     flex:1;
     padding-top: 0;
 }
 
-.maincontent .comp:last-child {
-    border:none
+.maincontent .customOptions .comp:last-child {
+    border:none;
 }
 
 .maincontent .comp h3 {
@@ -293,11 +325,53 @@ body {
 }
 
 .maincontent .comp .compOptions {
-    border: 1px solid black;
+    /* border: 1px solid black; */
+    display:flex;
     width:90%;
     margin-left:auto;
     margin-right:auto;
-    margin-bottom:1rem;
+    margin-bottom:0;
+    border-bottom: 1px solid black;
+}
+
+.maincontent .comp .compOptions:last-child {
+    /* border: 1px solid black; */
+    border-bottom: none;
+}
+
+.maincontent .comp .compOptions input{
+    margin:1rem;
+    align-self:flex-end;
+}
+
+.maincontent .comp .compOptions label{
+    /* border: 1px solid red; */
+    margin:0;
+    padding-left: 1rem;
+    padding-top:1rem;
+    padding-bottom:1rem;
+    width:80%;
+}
+
+.maincontent .addpizza{
+    /* border: 1px solid red; */
+    /* border: 1px solid black; */
+    display:flex;
+    margin-left:auto;
+    margin-right: auto;
+    margin-bottom: 1rem;
+    justify-content: flex-end;
+    width: 90%
+}
+
+.maincontent .addpizza .addbtn{
+    /* border: 1px solid red; */
+    /* border: 1px solid black; */
+    padding: 1rem;
+    margin-right: auto;
+    margin-left: auto;
+    font-size: 2vw;
+    width:90%;
 }
 
 
