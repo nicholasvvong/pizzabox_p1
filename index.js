@@ -3,6 +3,11 @@
 const form = document.querySelector(".login")
 accountLogInForm();
 
+let correctLogin = {
+    email: "Nick",
+    password: "Nick"
+}
+
 form.addEventListener("click", (event) => {
     event.preventDefault();
     if(event.target.tagName.toLowerCase() === 'button') {
@@ -28,7 +33,7 @@ function accountLogInForm() {
     </span>
     <span class="formItem">
         <label for="password">Password: </label>
-        <input type="text" class="textinput" name="username">
+        <input type="text" class="textinput" name="password">
     </span>
     <span class="formitem">
         <span><button type="submit" class="create">Create New Account</button></span>
@@ -47,7 +52,7 @@ function accountCreateForm() {
     </span>
     <span class="formItem">
         <label for="password">Password: </label>
-        <input type="text" class="textinput" name="username">
+        <input type="text" class="textinput" name="password">
     </span>
     <span class="formItem">
         <label for="fname">First Name: </label>
@@ -63,10 +68,55 @@ function accountCreateForm() {
 }
 
 function createAccount() {
-    console.log("creating account");
-    accountLogInForm();
+    
+    if(checkAlreadyAccount()) {
+        console.log("creating account");
+        accountLogInForm();
+    }
+    else {
+        let incorrectText = document.createElement("span");
+        incorrectText.classList.add("formItem");
+        incorrectText.classList.add("incorrect");
+        incorrectText.innerText = "Email already exists";
+
+        form.insertBefore(incorrectText, form.lastElementChild);
+    }
 }
 
 function logIn() {
-    window.location.replace("customer.html");
+    if(checkValidLogin()) {
+        window.location.replace("customer.html");
+    } 
+    else {
+        let incorrectText = document.createElement("span");
+        incorrectText.classList.add("formItem");
+        incorrectText.classList.add("incorrect");
+        incorrectText.innerText = "Incorrect email and/or password";
+
+        form.insertBefore(incorrectText, form.lastElementChild);
+    }
+}
+
+function checkValidLogin() {
+    let emailInput = form.email.value;
+    let pwInput = form.password.value;
+
+    if(emailInput == correctLogin.email && pwInput === correctLogin.password) {
+        return true;
+    }
+    
+    else {
+        return false;
+    }
+}
+
+function checkAlreadyAccount() {
+    let emailInput = form.email.value;
+
+    if(correctLogin.email == emailInput) {
+        return false;
+    }
+    else {
+        return true;
+    }
 }

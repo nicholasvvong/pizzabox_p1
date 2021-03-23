@@ -138,23 +138,28 @@ body {
 }
 
 .maincontent .ordering {
-    background-color: cyan;
     margin-top: 1rem;
     margin-left: auto;
     margin-right: auto;
     padding:0;
     width: 90%;
-    border: 3px solid black;
     display:flex;
     justify-content: center;
 }
- 
+
+.maincontent .ordering:not(#storeselected){
+    border:none;
+}
+
 .maincontent .ordering .orderselect {
     background-color: white;
     margin:0;
     width: 50%;
-    /* border: 1px solid red; */
     display:inline-block;
+}
+
+.maincontent .ordering .orderselect:not(#storeselected) {
+    border: 2px solid black;
 }
 
 #storeselected {
@@ -167,7 +172,6 @@ body {
     width: 33%;
     /* border: 1px solid black; */
     display:inline-block;
-    
 }
 
 .maincontent .ordering .currentorder .priceOrder {
@@ -181,31 +185,50 @@ body {
     height:10%;
 }
 
-.maincontent .priceOrder .totalprice {
-    font-size:2.0vw;
-    width:75%;
-    padding:0.25rem;
-    flex:1;
-    margin:0;
+.maincontent .priceOrder {
+    margin-top: 2.25em;
+    display:flex;
+    flex-direction: column;
+    justify-content: flex-end;
     /* border: 1px solid black; */
 }
 
-.maincontent .priceOrder .orderButton button{
+.maincontent .priceOrder .totalprice {
+    font-size:2.0vw;
+    width:100%;
+    margin-bottom: 1rem;
+    text-align: right;
+    /* border: 1px solid black; */
+}
+
+.maincontent .priceOrder .orderbutton{
     /* border: 1px solid black; */
     font-size:1.0vw;
     height:100%;
+    width:80%;
+    margin-left: auto;
+    margin-right:0;
+    padding:0;
+}
+.maincontent .priceOrder .orderbutton button{
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    font-size: 1.25vw;
     width:100%;
+    margin-left: auto;
+    margin-right:0;
+    padding:0;
 }
 
 .maincontent .ordering .storeOption {
     margin: auto;
-    width: 50%;
+    width: 70%;
     /* border: 1px solid black; */
 }
 
 .maincontent .ordering .currentList {
     list-style-type:none;
-    color:red;
+    color:black;
     padding:0;
     padding-bottom:1rem;
     margin-left:auto;
@@ -220,9 +243,20 @@ body {
 }
 
 .maincontent .currentList .currentItem{
-    /* border: 1px solid black; */
+    /* border: 1px solid red; */
     font-size:1.0vw;
     margin:0.25rem;
+    display:flex;
+    /* border-bottom: 1px solid black; */
+}
+
+.maincontent .currentList .currentItem .currentItemText{
+    /* border: 1px solid black; */
+    font-size:1.0vw;
+    padding:0.25rem;
+    height:100%;
+    width: 80%;
+    flex:1;
 }
 
 .maincontent .ordering .storebtn {
@@ -258,16 +292,25 @@ body {
     justify-content: center;
 }
 
-.maincontent .pizzaName {
+.maincontent .pizzaName:not(.price) {
     margin: 0;
     padding:1rem;
     width: 80%;
-    border-right: 1px solid black;
+    /* border-right: 1px solid black; */
     font-weight: bolder;
     font-size: 1.25vw;
     display:flex;
     flex: 1;
     text-align: left;
+    text-indent: 1.0rem;
+}
+
+.maincontent .pizzaName.price {
+    margin: 0;
+    padding:1rem;
+    border-right: 1px solid black;
+    font-weight: bolder;
+    font-size: 1.25vw;
     text-indent: 1.0rem;
 }
 
@@ -370,8 +413,16 @@ body {
     padding: 1rem;
     margin-right: auto;
     margin-left: auto;
-    font-size: 2vw;
-    width:90%;
+    font-size: 1.5vw;
+    width:80%;
+}
+
+.price {
+    text-align: right;
+    /* border: 1px solid black; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 

@@ -1,5 +1,12 @@
 "use strict"
 
+let storeList = ["California Store", "Chicago Store", "Freddy's Store", "New York Store", "Some Other Store", "Another One", "Just to see how long"];
+let pizzaList = ["Meat Pizza", "Hawaiin Pizza", "Deluxe Pizza", "Some Other Pizza"];
+let possibleSizes = ["Small", "Medium", "Large"];
+let possibleCrust = ["Crust1", "Crust2", "Crust3", "Crust4"];
+let possibleToppings = ["Topping1", "Topping2", "Topping3", "Topping4", "Topping5", "Topping6"];
+let toppingLimit = 5;
+
 const topbar = document.querySelector('.topbar');
 const main = document.querySelector('.maincontent');
 var storeID = "";
@@ -101,7 +108,7 @@ function initPizzaButtons() {
 
 function initAddPizza() {
     const addPizza = document.querySelector('.addbtn');
-    
+ 
     addPizza.addEventListener("click", (event) => {
 
         let customPizza = {
@@ -121,6 +128,41 @@ function initAddPizza() {
 
         //showPizzaOptions();
     })
+}
+
+function initToppingLimit() {
+    let clickOptions = document.querySelectorAll(".toppings");
+    
+    clickOptions.forEach(value => value.addEventListener("click", (event) => {
+        
+        if(enoughToppings())
+        {
+            console.log("click");
+        }
+        
+    }))
+}
+
+function enoughToppings() {
+    let totalSelectedTopping = document.querySelectorAll('input[name="topping"]:checked');
+
+    if(totalSelectedTopping.length >= 5) {
+        let unCheckedTopping = document.querySelectorAll('input[name="topping"]');
+        unCheckedTopping.forEach(value => {
+            if(!value.checked) {
+                value.disabled=true;
+            }
+        })
+    }
+    else {
+        let allTopping = document.querySelectorAll('input[name="topping"]');
+        allTopping.forEach(value => {
+            if((!value.checked) && value.disabled) {
+                value.disabled = false;
+            }
+        })
+    }
+
 }
 
 function switchSelected(target) {
@@ -145,13 +187,19 @@ function addToOrder(target) {
     }
     else {
         
-        const pizzaType = target.previousElementSibling.previousElementSibling.innerText
+        const pizzaType = target.parentNode.firstElementChild.innerHTML;
+        const pizzaValue = target.parentNode.firstElementChild.nextSibling.innerHTML;
 
         const curOrder = document.querySelector(".currentList");
         const newString = pizzaType + " - " + sizevalue;
         const listItem = document.createElement("li");
         listItem.classList.add("currentItem");
-        listItem.innerText = newString;
+        
+        const insideHtml = `
+            <span class="currentitemtext">${sizevalue.charAt(0).toUpperCase() + sizevalue.slice(1)} ${pizzaType}</span><spa class="price">${pizzaValue}</span>
+        `
+
+        listItem.innerHTML = insideHtml;
 
         curOrder.appendChild(listItem);
 
@@ -200,7 +248,7 @@ function checkSize(customPizza) {
 function checkTopping(customPizza) {
     const toppingRadio = document.querySelectorAll('input[name="topping"]:checked');
 
-    if(toppingRadio == null) {
+    if(toppingRadio == null || toppingRadio.length == 0) {
         console.log('nothing selected')
         return false;
     }
@@ -220,69 +268,24 @@ function startCustomPizza() {
     const customHTML = `
         <h1>Order Pizza</h1>
         <div class="customOptions">
-            <span class="comp"><h3>Crust</h3>
-                <div class="compOptions">
-                    <label for="crust1">Crust1</label>
-                    <input type="radio" id="Crust1" name="crust" value="crust1">
-                </div>
-                <div class="compOptions">
-                    <label for="crust2">Crust2</label>
-                    <input type="radio" id="Crust2" name="crust" value="crust2">
-                </div>
-                <div class="compOptions">
-                    <label for="crust3">Crust3</label>
-                    <input type="radio" id="Crust3" name="crust" value="crust3">
-                </div>
-            </span>
-            <span class="comp"><h3>Size</h3>
-                <div class="compOptions">
-                    <label for="Size1">Size1</label>
-                    <input type="radio" id="Size1" name="size" value="Size1">
-                </div>
-                <div class="compOptions">
-                    <label for="Size2">Size2</label>
-                    <input type="radio" id="Size1" name="size" value="Size2">
-                </div>
-                <div class="compOptions">
-                    <label for="Size3">Size3</label>
-                    <input type="radio" id="Size1" name="size" value="Size3">
-                </div>
-                <div class="compOptions">    
-                    <label for="Size4">Size4</label>
-                    <input type="radio" id="Size1" name="size" value="Size4">
-                </div>   
-            </span>
-            <span class="comp"><h3>Toppings</h3>
-                <div class="compOptions">
-                    <label for="Topping1">Topping1</label>
-                    <input type="checkbox" id="Topping1" name="topping" value="Topping1">
-                </div>
-                <div class="compOptions">
-                    <label for="Topping2">Topping2</label>
-                    <input type="checkbox" id="Topping2" name="topping" value="Topping2">
-                </div>
-                <div class="compOptions">
-                    <label for="Topping3">Topping3</label>
-                    <input type="checkbox" id="Topping3" name="topping" value="Topping3">
-                </div>
-                <div class="compOptions">
-                    <label for="Topping4">Topping4</label>
-                    <input type="checkbox" id="Topping4" name="topping" value="Topping4">
-                </div>
-                <div class="compOptions">
-                    <label for="Topping5">Topping5</label>
-                    <input type="checkbox" id="Topping5" name="topping" value="Topping5">
-                </div>
-            </span>
+            
         </div>
         <div class="addpizza">
-            <button type="submit" class="addbtn">Add Pizza</button>
+            <button type="submit" class="addbtn">Add Custom Pizza</button>
         </div>
     </div>
     `
-
     main.firstElementChild.lastElementChild.innerHTML = customHTML;
-    initAddPizza();``
+
+    let crustCompHtml = getCrustHtml();
+    let sizeCompHtml = getSizeCustHtml();
+    let toppingHtml = getToppingsHtml();
+
+    let options = document.querySelector(".customOptions");
+    options.innerHTML = crustCompHtml + sizeCompHtml + toppingHtml;
+
+    initToppingLimit();
+    initAddPizza();
 }
 
 function startOrder() {
@@ -291,20 +294,20 @@ function startOrder() {
             <h1>Current Order</h1>
             <h2>${storeID}</h2>
             <ul class="currentList">
-                <li class="currentitem">Toppings</li>
-                <li class="currentitem">Toppings1</li>
-                <li class="currentitem">Toppings2</li>
-                <li class="currentitem">Toppings3</li>
-                <li class="currentitem">Toppings4</li>
-                <li class="currentitem">Toppings5</li>
+                <li class="currentitem"><span class="currentitemtext">Toppings</span><spa class="price">$10</span></li>
+                <li class="currentitem"><span class="currentitemtext">Toppings</span><span class="price">$10</span></li>
+                <li class="currentitem"><span class="currentitemtext">Toppings</span><span class="price">$10</span></li>
+                <li class="currentitem"><span class="currentitemtext">Toppings</span><span class="price">$10</span></li>
+                <li class="currentitem"><span class="currentitemtext">Toppings</span><span class="price">$10</span></li>
+                <li class="currentitem"><span class="currentitemtext">Toppings</span><span class="price">$10</span></li>
             </ul>
             <div class="priceOrder">
-                <span class="totalprice">Total: $190.39</span>
-                <span class="orderbutton"><button type="submit">Place Order</button></span>
+                <div class="totalprice">Total: $190.39</div>
+                <div class="orderbutton"><button type="submit" name="submitbtn">Place Order</button></div>
             </div>
         </div>
     `
-    const insideOrder = main.firstElementChild;  
+    const insideOrder = main.firstElementChild;
     insideOrder.lastElementChild.setAttribute("id", "storeselected");
     insideOrder.innerHTML = currentOrderHTML + insideOrder.innerHTML;
     showPizzaOptions();
@@ -314,49 +317,39 @@ function showPizzaOptions() {
     const orderNowHTML = `
         <h1>Order Pizza</h1>
         <ul class="pizzaOptions">
-            <li class="pizza preset"><span class="pizzaName">Meat Store</span>
-                <select name=size class="sizeselect">
-                    <option value="none" selected disabled> Select Size</option>
-                    <option value="small">Small</option>
-                    <option value="medium">Medium</option>
-                    <option value="large">Large</option>
-                </select>
-                <span class="placeorder">Add Pizza</span>
-            </li>
-            <li class="pizza preset"><span class="pizzaName">Meat1 Store</span>
-                <select name=size class="sizeselect">
-                    <option value="none" selected disabled> Select Size</option>
-                    <option value="small">Small</option>
-                    <option value="medium">Medium</option>
-                    <option value="large">Large</option>
-                </select>
-                <span class="placeorder">Add Pizza</span>
-            </li>
-            <li class="pizza preset"><span class="pizzaName">Meat2's Store</span>
-                <select name=size class="sizeselect">
-                    <option value="none" selected disabled> Select Size</option>
-                    <option value="small">Small</option>
-                    <option value="medium">Medium</option>
-                    <option value="large">Large</option>
-                </select>
-                <span class="placeorder">Add Pizza</span>
-            </li>
-            <li class="pizza preset"><span class="pizzaName">Meat3 Store</span>
-                <select name=size class="sizeselect">
-                    <option value="none" selected disabled> Select Size</option>
-                    <option value="small">Small</option>
-                    <option value="medium">Medium</option>
-                    <option value="large">Large</option>
-                </select>
-                <span class="placeorder">Add Pizza</span>
-            </li>
-            <li class="pizza custom"><span class="pizzaName customPizza">Some Other Store</span>
+            
 
-            </li>
         </ul>
     `
     const rightMenu = main.firstElementChild.lastElementChild;
     rightMenu.innerHTML = orderNowHTML;
+
+    let menuList = document.querySelector(".pizzaOptions");
+    let sizeSelectHtml = getSizeHTML();
+
+    sizeSelectHtml += `<span class="placeorder">Add Pizza</span>`;
+
+    pizzaList.forEach(value => {
+        let listItem = document.createElement("li");
+        listItem.classList.add("pizza");
+        listItem.classList.add("preset");
+
+        let pizzaName = document.createElement("span");
+        pizzaName.classList.add("pizzaName");
+        pizzaName.innerText = value;
+
+        let pizzaPrice = document.createElement("span");
+        pizzaPrice.classList.add("pizzaName");
+        pizzaPrice.classList.add("price");
+        pizzaPrice.innerText = "$10";
+
+        listItem.appendChild(pizzaName);
+        listItem.appendChild(pizzaPrice);
+        listItem.innerHTML += sizeSelectHtml;
+        menuList.appendChild(listItem);
+    })
+
+    menuList.innerHTML += `<li class="pizza custom"><span class="pizzaName customPizza">Custom Pizza</span></li>`;
     initPizzaButtons();
 }
 
@@ -388,15 +381,98 @@ function orderNowSwitch() {
             <div class="orderselect">
                 <h1>Order Pizza</h1>
                 <ul class="orderNow">
-                    <li class="storeOption"><button class="storebtn" id="cpk">California Store</button></li>
-                    <li class="storeOption"><button class="storebtn" id="chicago">Chicago Store</button></li>
-                    <li class="storeOption"><button class="storebtn" id="freddy">Freddy's Store</button></li>
-                    <li class="storeOption"><button class="storebtn" id="ny">NewYork Store</button></li>
-                    <li class="storeOption"><button class="storebtn" id="other">Some Other Store</button></li>
+                    
                 </ul>
             </div>
         </div>
     `
     main.innerHTML = orderNowHTML;
+    let insideList = document.querySelector(".orderNow");
+    storeList.forEach(value => {
+        let listItem = document.createElement("li");
+        listItem.classList.add("storeOption");
+
+        let storeButton = document.createElement("button");
+        storeButton.classList.add("storebtn");
+        storeButton.setAttribute("id", value);
+        storeButton.textContent = value;
+
+        listItem.appendChild(storeButton);
+        insideList.appendChild(listItem);
+    })
+
     initStoreButtons();
+}
+
+
+function getSizeHTML() {
+    let sizeHtml = `
+        <select name=size class="sizeselect">
+        <option value="none" selected disabled> Select Size</option>
+    `
+    
+    possibleSizes.forEach(value => {
+        sizeHtml += `<option value="${value.toLowerCase()}">${value}</option>`
+    })
+
+    sizeHtml += `</select>`;
+
+    return sizeHtml;
+}
+
+function getCrustHtml() {
+    let crustHtml = `
+    <span class="comp"><h3>Crust</h3>
+    `
+
+    possibleCrust.forEach(value => {
+        crustHtml += `
+        <div class="compOptions">
+            <input type="radio" id="${value.toLowerCase()}" name="crust" value="${value.toLowerCase()}">
+            <label for="${value.toLowerCase()}">${value}</label><span class="price">$1</span>
+        </div>
+        `
+    })
+
+    crustHtml += `</span>`;
+
+    return crustHtml;
+}
+
+function getSizeCustHtml() {
+    let sizeHtml = `
+    <span class="comp"><h3>Size</h3>
+    `
+
+    possibleSizes.forEach(value => {
+        sizeHtml += `
+        <div class="compOptions">
+            <input type="radio" id="${value.toLowerCase()}" name="size" value="${value.toLowerCase()}">
+            <label for="${value.toLowerCase()}" name="lsize">${value}</label><span class="price">$1</span>
+        </div>
+        `
+    })
+
+    sizeHtml += `</span>`;
+
+    return sizeHtml;
+}
+
+function getToppingsHtml() {
+    let toppingsHtml = `
+    <span class="comp"><h3>Toppings(Max ${toppingLimit})</h3>
+    `
+
+    possibleToppings.forEach((value, index) => {
+        toppingsHtml += `
+        <div class="compOptions toppings">
+            <input type="checkbox" id="${value.toLowerCase()}" name="topping" value="${value.toLowerCase()}">
+            <label for="${value.toLowerCase()}">${value}</label><span class="price">$1</span>
+        </div>
+        `
+    })
+
+    toppingsHtml += `</span>`;
+
+    return toppingsHtml;
 }
