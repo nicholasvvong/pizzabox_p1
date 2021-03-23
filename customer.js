@@ -1,15 +1,40 @@
 "use strict"
 
 let storeList = ["California Store", "Chicago Store", "Freddy's Store", "New York Store", "Some Other Store", "Another One", "Just to see how long"];
-let pizzaList = ["Meat Pizza", "Hawaiin Pizza", "Deluxe Pizza", "Some Other Pizza"];
+let pizzaList = [];
 let possibleSizes = ["Small", "Medium", "Large"];
 let possibleCrust = ["Crust1", "Crust2", "Crust3", "Crust4"];
 let possibleToppings = ["Topping1", "Topping2", "Topping3", "Topping4", "Topping5", "Topping6"];
+
+let currentOrder = [createCustomPizza("custom","small", "crust1", ["topping1, topping2"])];
+
 let toppingLimit = 5;
 
 const topbar = document.querySelector('.topbar');
 const main = document.querySelector('.maincontent');
 var storeID = "";
+
+function createCustomPizza(cName, cSize, cCrust, cToppings)  {
+    return {
+        name: cName,
+        size: cSize,
+        crust: cCrust,
+        toppings: cToppings
+    }
+}
+
+(function initPresetPizza() {
+    let newCustom = createCustomPizza("Meat Pizza","", "Crust", ["Meat1, Meat2, Meat3, Meat4"]);
+    pizzaList.push(newCustom);
+    newCustom = createCustomPizza("Hawaiin Pizza","", "Crust", ["Meat1, Meat2, Meat3, Meat4"]);
+    pizzaList.push(newCustom);
+    newCustom = createCustomPizza("Deluxe Pizza","", "Crust", ["Meat1, Meat2, Meat3, Meat4"]);
+    pizzaList.push(newCustom);
+    newCustom = createCustomPizza("Other Pizza","", "Crust", ["Meat1, Meat2, Meat3, Meat4"]);
+    pizzaList.push(newCustom);
+    newCustom = createCustomPizza("AnoooOther Pizza","", "Crust", ["Meat1, Meat2, Meat3, Meat4"]);
+    pizzaList.push(newCustom);
+})();
 
 
 (function storeManager() {
@@ -33,14 +58,14 @@ var storeID = "";
 
 topbar.addEventListener("click", (event) => {
     if(event.target.parentNode.id == "name") {
-        console.log("name");
+        // console.log("name");
         return;
     }
     if(event.target.id == "logout") {
         logOut();
     }
     if(event.target.id == 'selected') {
-        console.log("selected1");
+        // console.log("selected1");
     }
     else {
         switchSelected(event.target);
@@ -53,7 +78,7 @@ function initOrderButtons() {
     orderhistory.addEventListener("click", (event) => {
         if(event.target.classList.contains("information")) {
             if(!event.target.classList.contains("expanded")) {
-                console.log(event.target.innerText);
+                // console.log(event.target.innerText);
                 
                 event.target.classList.add("expanded");
                 const additionalInformation = document.createElement("ol");
@@ -81,7 +106,7 @@ function initStoreButtons() {
 
         if(event.target.classList.contains("storebtn"))
         {
-            console.log(event.target.id);
+            // console.log(event.target.id);
             storeID = event.target.id;
             startOrder();
         }
@@ -111,11 +136,7 @@ function initAddPizza() {
  
     addPizza.addEventListener("click", (event) => {
 
-        let customPizza = {
-            crust: "",
-            size: "",
-            toppings: new Array()
-        }
+        let customPizza = createCustomPizza("Custom Pizza", "","",new Array())
 
         if(checkCrust(customPizza)) {
             if(checkSize(customPizza)) {
@@ -137,9 +158,20 @@ function initToppingLimit() {
         
         if(enoughToppings())
         {
-            console.log("click");
+            // console.log("click");
         }
         
+    }))
+}
+
+function initDeleteButton() {
+    let delcurrentBtn = document.querySelectorAll(".delbtn");
+
+    delcurrentBtn.forEach(value => value.addEventListener("click", (event) => {
+        
+        // console.log(event.target.parentNode);
+
+        event.target.parentNode.remove();
     }))
 }
 
@@ -169,11 +201,11 @@ function switchSelected(target) {
     document.getElementById('selected').removeAttribute('id');
     target.id = "selected";
     if(target.innerText == "Order History"){
-        console.log("order history");
+        // console.log("order history");
         showOrderHistory();
     }
     if(target.innerText == "Order Now"){
-        console.log("order now");
+        // console.log("order now");
         orderNowSwitch();
     }
 }
@@ -187,34 +219,79 @@ function addToOrder(target) {
     }
     else {
         
+        const parentList = target.parentNode;
         const pizzaType = target.parentNode.firstElementChild.innerHTML;
         const pizzaValue = target.parentNode.firstElementChild.nextSibling.innerHTML;
 
         const curOrder = document.querySelector(".currentList");
-        const newString = pizzaType + " - " + sizevalue;
+        
         const listItem = document.createElement("li");
         listItem.classList.add("currentItem");
+
+        let pizzaName = parentList.querySelector(".presetName");
+        let pizzaCrust = parentList.querySelector(".crustInfo").innerText;
+        let pizzaToppings = parentList.querySelector(".toppingInfo").innerText;
+
+        let newPresetPizza = createCustomPizza(pizzaName, sizevalue, pizzaCrust, pizzaToppings);
         
         const insideHtml = `
-            <span class="currentitemtext">${sizevalue.charAt(0).toUpperCase() + sizevalue.slice(1)} ${pizzaType}</span><spa class="price">${pizzaValue}</span>
+        <span class="pizzaInfoList">
+            <div class="currentitemtext">${sizevalue.charAt(0).toUpperCase() + sizevalue.slice(1)} ${target.parentNode.querySelector(".presetName").innerText}</div>
+            <div class="currentitemtext">${pizzaCrust} - ${pizzaToppings}</div>
+        </span>
+        <span class="price">${pizzaValue}</span>
         `
 
-        listItem.innerHTML = insideHtml;
+        let deleteButton = document.createElement("span");
+        deleteButton.classList.add("delbtn");
+        deleteButton.innerText = "(R)";
+
+
+        listItem.appendChild(deleteButton);
+
+        listItem.innerHTML += insideHtml;
 
         curOrder.appendChild(listItem);
 
         target.previousElementSibling.selectedIndex = 0;
+
+        initDeleteButton();
     }
 }
 
 function addCustomPizza(customPizza) {
+    
+    // let newCustomPizza = createCustomPizza(customPizza.size, customPizza.crust, customPizza.topping);
+    // currentOrder.add(newCustomPizza);
+    updateCurrentOrderList(customPizza);
+}
+
+function updateCurrentOrderList(newPizza) {
+
     const curOrder = document.querySelector(".currentList");
-    let newString = "Custom Pizza - " + customPizza.crust + " - " + customPizza.size + " - " + customPizza.toppings;
+
+    let deleteButton = document.createElement("span");
+    deleteButton.classList.add("delbtn");
+    deleteButton.innerText = "(R)";
+
+    // console.log(newPizza);
+
+    let custompizza = `
+        <span class="pizzaInfoList">
+            <div class="currentitemtext">${newPizza.size.charAt(0).toUpperCase() + newPizza.size.slice(1)} ${newPizza.name.charAt(0).toUpperCase() + newPizza.name.slice(1)}</div>
+            <div class="currentitemtext">${newPizza.crust} - ${newPizza.toppings}</div>
+        </span>
+        <span class="price">$10</span>
+    `
+
     const listItem = document.createElement("li");
     listItem.classList.add("currentItem");
-    listItem.innerText = newString;
+    listItem.appendChild(deleteButton);
+    listItem.innerHTML += custompizza;
 
     curOrder.appendChild(listItem);
+
+    initDeleteButton();
 }
 
 function checkCrust(customPizza) {
@@ -225,7 +302,7 @@ function checkCrust(customPizza) {
         return false;
     }
     else {
-        console.log(crustRadio.value);
+        // console.log(crustRadio.value);
         customPizza.crust = crustRadio.value;
         return true;
     }
@@ -239,7 +316,7 @@ function checkSize(customPizza) {
         return false;
     }
     else {
-        console.log(sizeRadio.value);
+        // console.log(sizeRadio.value);
         customPizza.size = sizeRadio.value;
         return true;
     }
@@ -253,9 +330,9 @@ function checkTopping(customPizza) {
         return false;
     }
     else {
-        console.log(toppingRadio);
+        // console.log(toppingRadio);
         toppingRadio.forEach(element => customPizza.toppings.push(element.value));
-        console.log(customPizza.toppings.length)
+        // console.log(customPizza.toppings.length)
         return true;
     }
 }
@@ -288,18 +365,19 @@ function startCustomPizza() {
     initAddPizza();
 }
 
+{/* <li class="currentitem"><span class="delbtn">(R)</span><span class="currentitemtext">Toppings</span><span class="price">$10</span></li>
+<li class="currentitem"><span class="delbtn">(R)</span><span class="currentitemtext">Toppings</span><span class="price">$10</span></li>
+<li class="currentitem"><span class="delbtn">(R)</span><span class="currentitemtext">Toppings</span><span class="price">$10</span></li>
+<li class="currentitem"><span class="delbtn">(R)</span><span class="currentitemtext">Toppings</span><span class="price">$10</span></li>
+<li class="currentitem"><span class="delbtn">(R)</span><span class="currentitemtext">Toppings</span><span class="price">$10</span></li>
+<li class="currentitem"><span class="delbtn">(R)</span><span class="currentitemtext">Toppings</span><span class="price">$10</span></li> */}
 function startOrder() {
     const currentOrderHTML = `
         <div class="currentorder">
             <h1>Current Order</h1>
             <h2>${storeID}</h2>
             <ul class="currentList">
-                <li class="currentitem"><span class="currentitemtext">Toppings</span><spa class="price">$10</span></li>
-                <li class="currentitem"><span class="currentitemtext">Toppings</span><span class="price">$10</span></li>
-                <li class="currentitem"><span class="currentitemtext">Toppings</span><span class="price">$10</span></li>
-                <li class="currentitem"><span class="currentitemtext">Toppings</span><span class="price">$10</span></li>
-                <li class="currentitem"><span class="currentitemtext">Toppings</span><span class="price">$10</span></li>
-                <li class="currentitem"><span class="currentitemtext">Toppings</span><span class="price">$10</span></li>
+                
             </ul>
             <div class="priceOrder">
                 <div class="totalprice">Total: $190.39</div>
@@ -310,6 +388,8 @@ function startOrder() {
     const insideOrder = main.firstElementChild;
     insideOrder.lastElementChild.setAttribute("id", "storeselected");
     insideOrder.innerHTML = currentOrderHTML + insideOrder.innerHTML;
+
+    initDeleteButton();
     showPizzaOptions();
 }
 
@@ -336,7 +416,12 @@ function showPizzaOptions() {
 
         let pizzaName = document.createElement("span");
         pizzaName.classList.add("pizzaName");
-        pizzaName.innerText = value;
+        pizzaName.innerHTML = `
+            <div class="pizzaInfo">
+                <div class="presetName">${value.name}</div>
+                <div class="presetInfo"><span class="crustInfo">${value.crust}</span> - <span class="toppingInfo">${value.toppings}</span></div>
+            </div>
+        `
 
         let pizzaPrice = document.createElement("span");
         pizzaPrice.classList.add("pizzaName");

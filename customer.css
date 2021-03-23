@@ -243,19 +243,41 @@ body {
 }
 
 .maincontent .currentList .currentItem{
-    /* border: 1px solid red; */
+    /* border: 1px solid black; */
     font-size:1.0vw;
     margin:0.25rem;
+    padding-right:0;
     display:flex;
+    border-bottom: 1px solid black;
+}
+
+.maincontent .currentList .currentItem:last-child{
+    /* border: 1px solid black; */
+    border:none;
+}
+
+.maincontent .currentList .currentItem .delbtn{
+    /* border: 1px solid red; */
+    color:blue;
+    text-decoration: underline;
+    font-size:1.0vw;
+    margin-top:0.25rem;
+    margin-left:0.25rem;
+    margin-right:0.25rem;
+    display:flex;
+    text-align: right;
+    justify-content: center;
+    align-items: center;
     /* border-bottom: 1px solid black; */
 }
 
 .maincontent .currentList .currentItem .currentItemText{
     /* border: 1px solid black; */
     font-size:1.0vw;
-    padding:0.25rem;
+    padding:0;
+    margin-bottom:0.25rem;
     height:100%;
-    width: 80%;
+    width: 75%;
     flex:1;
 }
 
@@ -275,7 +297,7 @@ body {
     margin-bottom: 1rem;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    /* justify-content: center; */
     /* border: 2px solid black; */
 }
 
@@ -294,7 +316,7 @@ body {
 
 .maincontent .pizzaName:not(.price) {
     margin: 0;
-    padding:1rem;
+    padding:0;
     width: 80%;
     /* border-right: 1px solid black; */
     font-weight: bolder;
@@ -303,6 +325,38 @@ body {
     flex: 1;
     text-align: left;
     text-indent: 1.0rem;
+}
+
+.maincontent .pizzaName:not(.price) .pizzaInfo{
+    width:100%;
+    /* border: 1px solid black; */
+    display:flex;
+    flex-direction: column;
+}
+
+.maincontent .pizzaInfoList {
+    display:flex;
+    flex-direction: column;
+    /* border: 1px solid black; */
+    width:80%;
+    flex:1;
+}
+
+.maincontent .pizzaName:not(.price) .presetName{
+    width:100%;
+    margin:0;
+    margin-top: 0.25rem;
+    padding:0;
+    font-size:1.5vw;
+    /* border: 1px solid black; */
+    flex:1;
+    color:maroon;
+}
+.maincontent .pizzaName:not(.price) .presetInfo{
+    width:100%;
+    margin:0;
+    margin-bottom:0.25rem;
+    /* border: 1px solid black; */
 }
 
 .maincontent .pizzaName.price {
@@ -315,6 +369,8 @@ body {
 }
 
 .maincontent .pizzaName:last-child {
+    padding:0.5rem;
+    font-size:2.50vw;
     border-right:none;
     border-bottom: 1px solid black;
 }
@@ -363,7 +419,7 @@ body {
 }
 
 .maincontent .comp h3 {
-    margin-top: 0;
+    margin-top: 1rem;
     text-align: center;
 }
 
