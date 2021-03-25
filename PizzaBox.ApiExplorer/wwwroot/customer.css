@@ -2,7 +2,7 @@
 
 
 body {
-    background-color:cyan;
+    background-color:slategrey;
     margin:0;
 }
 
@@ -118,7 +118,7 @@ body {
 }
 
 .maincontent .order:nth-child(even) {
-    background-color:slategrey;
+    background-color:darkgray;
 }
 
 .maincontent .ordering .orderNow {
@@ -174,7 +174,7 @@ body {
     display:inline-block;
 }
 
-.maincontent .ordering .currentorder .priceOrder {
+.maincontent .priceOrder {
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 1rem;
@@ -183,14 +183,8 @@ body {
     /* border: 1px solid black; */
     align-content: center;
     height:10%;
-}
-
-.maincontent .priceOrder {
-    margin-top: 2.25em;
-    display:flex;
+    margin-top: 1.0rem;
     flex-direction: column;
-    justify-content: flex-end;
-    /* border: 1px solid black; */
 }
 
 .maincontent .priceOrder .totalprice {
@@ -484,7 +478,7 @@ body {
 
 #name {
     font-family: 'Dancing Script', cursive;
-    background-color:cyan;
+    background-color:slategrey;
     color:darkred;
     border:none;
 }

@@ -13,10 +13,10 @@ namespace PizzaBox.Domain.Models
             SizeList = new List<Size>();
             CrustList = new List<Crust>();
 
-            /* InitToppings();
+            InitToppings();
             InitSize();
             InitCrust();
-            InitPresetPizza(); */
+            InitPresetPizza();
         }
 
         protected override void InitToppings()
@@ -49,28 +49,28 @@ namespace PizzaBox.Domain.Models
 
         protected override void InitPresetPizza()
         {
-            // /*Meat*/
-            // BasicPizza tempP = new BasicPizza();
-            // tempP.Type = "Meat Pizza";
-            // tempP.AddCrust(CrustList[0]);
-            // tempP.AddTopping(ToppingsList[0]);
-            // tempP.AddTopping(ToppingsList[10]);
-            // tempP.AddTopping(ToppingsList[2]);
-            // tempP.AddTopping(ToppingsList[6]);
-            // tempP.AddTopping(ToppingsList[8]);
-            // tempP.CalculatePrice();
-            // PresetPizza.Add(tempP);
-            // /*Deluxe*/
-            // tempP = new BasicPizza();
-            // tempP.Type = "Deluxe Pizza";
-            // tempP.AddCrust(CrustList[0]);
-            // tempP.AddTopping(ToppingsList[6]);
-            // tempP.AddTopping(ToppingsList[9]);
-            // tempP.AddTopping(ToppingsList[3]);
-            // tempP.AddTopping(ToppingsList[5]);
-            // tempP.AddTopping(ToppingsList[11]);
-            // tempP.CalculatePrice();
-            // PresetPizza.Add(tempP);
+            /*Meat*/
+            PresetPizza tempP = new PresetPizza();
+            tempP.Type = "Meat Pizza";
+            tempP.AddCrust(CrustList[0]);
+            tempP.AddTopping(ToppingsList[0]);
+            tempP.AddTopping(ToppingsList[10]);
+            tempP.AddTopping(ToppingsList[2]);
+            tempP.AddTopping(ToppingsList[6]);
+            tempP.AddTopping(ToppingsList[8]);
+            tempP.CalculatePrice();
+            PresetPizzas.Add(tempP);
+            /*Deluxe*/
+            tempP = new PresetPizza();
+            tempP.Type = "Deluxe Pizza";
+            tempP.AddCrust(CrustList[0]);
+            tempP.AddTopping(ToppingsList[6]);
+            tempP.AddTopping(ToppingsList[9]);
+            tempP.AddTopping(ToppingsList[3]);
+            tempP.AddTopping(ToppingsList[5]);
+            tempP.AddTopping(ToppingsList[11]);
+            tempP.CalculatePrice();
+            PresetPizzas.Add(tempP);
         }
     }
 }

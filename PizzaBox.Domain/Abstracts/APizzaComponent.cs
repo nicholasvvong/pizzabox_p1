@@ -9,7 +9,7 @@ namespace PizzaBox.Domain.Abstracts
         public Guid CompID { get; set; } = new Guid();
         public string Name { get; protected set; }
         public decimal Price { get; protected set; }
-
+        public int Inventory { get; protected set; }
         protected APizzaComponent()
         {
 
@@ -28,6 +28,6 @@ namespace PizzaBox.Domain.Abstracts
 
         protected abstract void AddName(string type);
         protected abstract void AddPrice(decimal p);
-
+        protected abstract void AddInventory(int p);
     }
 }

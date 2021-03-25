@@ -19,10 +19,10 @@ namespace PizzaBox.Domain.Abstracts
         public int MaxToppings { get; protected set; }
         public int MaxPrice { get; protected set; }
         public int MaxPizzas { get; protected set; }
-        public ICollection<PresetPizza> PresetPizzas { get; protected set; }
-        public ICollection<Topping> ToppingsList { get; protected set; }
-        public ICollection<Size> SizeList { get; protected set; }
-        public ICollection<Crust> CrustList { get; protected set; }
+        public IList<PresetPizza> PresetPizzas { get; protected set; }
+        public IList<Topping> ToppingsList { get; protected set; }
+        public IList<Size> SizeList { get; protected set; }
+        public IList<Crust> CrustList { get; protected set; }
 
         protected AStore()
         {

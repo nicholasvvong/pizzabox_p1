@@ -1,10 +1,11 @@
 "use strict"
 
-let storeList = ["California Store", "Chicago Store", "Freddy's Store", "New York Store", "Some Other Store", "Another One", "Just to see how long"];
+let storeObjList = [];
+let storeList = [];
 let pizzaList = [];
-let possibleSizes = ["Small", "Medium", "Large"];
-let possibleCrust = ["Crust1", "Crust2", "Crust3", "Crust4"];
-let possibleToppings = ["Topping1", "Topping2", "Topping3", "Topping4", "Topping5", "Topping6"];
+let possibleSizes = [];
+let possibleCrust = [];
+let possibleToppings = [];
 
 let currentOrder = [createCustomPizza("custom","small", "crust1", ["topping1, topping2"])];
 
@@ -13,6 +14,39 @@ let toppingLimit = 5;
 const topbar = document.querySelector('.topbar');
 const main = document.querySelector('.maincontent');
 var storeID = "";
+var storeIndex = 0;
+var storeObj;
+
+fetch('api/Store', {
+    method: 'GET',
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type':'application/json'
+    },})
+    .then(response => {
+        if(!response.ok) {
+            throw new Error(`Network reponse was not ok (${reponse.status})`);
+        }
+        else
+            return response.json();
+    })
+    .then((jsonReponse) => {
+        console.log(jsonReponse);
+        // let obj = JSON.parse(jsonReponse[0]);
+        // alert(`${jsonReponse[1].name}`);
+        jsonReponse.forEach(value =>{
+            console.log(value.name);
+            storeList.push(value.name);
+            storeObjList.push(value);
+        })
+    })
+    .catch(function(err) {
+        console.log("Failed to fetch page: ", err);
+    });
+
+
+
+//-------------------------------------------------------------------//
 
 function createCustomPizza(cName, cSize, cCrust, cToppings)  {
     return {
@@ -23,17 +57,25 @@ function createCustomPizza(cName, cSize, cCrust, cToppings)  {
     }
 }
 
+function createComp(cName, cPrice) {
+    return {
+        name: cName,
+        price: cPrice
+    }
+}
+
 (function initPresetPizza() {
-    let newCustom = createCustomPizza("Meat Pizza","", "Crust", ["Meat1, Meat2, Meat3, Meat4"]);
-    pizzaList.push(newCustom);
-    newCustom = createCustomPizza("Hawaiin Pizza","", "Crust", ["Meat1, Meat2, Meat3, Meat4"]);
-    pizzaList.push(newCustom);
-    newCustom = createCustomPizza("Deluxe Pizza","", "Crust", ["Meat1, Meat2, Meat3, Meat4"]);
-    pizzaList.push(newCustom);
-    newCustom = createCustomPizza("Other Pizza","", "Crust", ["Meat1, Meat2, Meat3, Meat4"]);
-    pizzaList.push(newCustom);
-    newCustom = createCustomPizza("AnoooOther Pizza","", "Crust", ["Meat1, Meat2, Meat3, Meat4"]);
-    pizzaList.push(newCustom);
+
+    // let newCustom = createCustomPizza("Meat Pizza","", "Crust", ["Meat1, Meat2, Meat3, Meat4"]);
+    // pizzaList.push(newCustom);
+    // newCustom = createCustomPizza("Hawaiin Pizza","", "Crust", ["Meat1, Meat2, Meat3, Meat4"]);
+    // pizzaList.push(newCustom);
+    // newCustom = createCustomPizza("Deluxe Pizza","", "Crust", ["Meat1, Meat2, Meat3, Meat4"]);
+    // pizzaList.push(newCustom);
+    // newCustom = createCustomPizza("Other Pizza","", "Crust", ["Meat1, Meat2, Meat3, Meat4"]);
+    // pizzaList.push(newCustom);
+    // newCustom = createCustomPizza("AnoooOther Pizza","", "Crust", ["Meat1, Meat2, Meat3, Meat4"]);
+    // pizzaList.push(newCustom);
 })();
 
 
@@ -72,6 +114,36 @@ topbar.addEventListener("click", (event) => {
     }
 })
 
+function initStoreInfo() {
+    possibleCrust = [];
+    possibleSizes = [];
+    possibleToppings = [];
+    pizzaList = [];
+
+    storeObj.crustList.forEach(value => {
+        possibleCrust.push(createComp(value.name, value.price));
+    })
+
+    storeObj.sizeList.forEach(value => {
+        possibleSizes.push(createComp(value.name, value.price));
+    })
+
+    storeObj.toppingsList.forEach(value => {
+        possibleToppings.push(createComp(value.name, value.price));
+    })
+
+    storeObj.presetPizzas.forEach(value => {
+        let toppings = [];
+        value.toppings.forEach(tValue => {
+            toppings.push(createComp(tValue.name, tValue.price));
+        })
+
+        let presetP = createCustomPizza(value.type, "", createComp(value.crust.name, value.crust.price), toppings);
+
+        pizzaList.push(presetP);
+    })
+}
+
 function initOrderButtons() {
     const orderhistory = document.querySelector('.allorders');
 
@@ -108,6 +180,8 @@ function initStoreButtons() {
         {
             // console.log(event.target.id);
             storeID = event.target.id;
+            storeIndex = storeList.indexOf(storeID);
+            storeObj = storeObjList[storeIndex];
             startOrder();
         }
     })
@@ -389,6 +463,7 @@ function startOrder() {
     insideOrder.lastElementChild.setAttribute("id", "storeselected");
     insideOrder.innerHTML = currentOrderHTML + insideOrder.innerHTML;
 
+    initStoreInfo();
     initDeleteButton();
     showPizzaOptions();
 }
@@ -416,10 +491,16 @@ function showPizzaOptions() {
 
         let pizzaName = document.createElement("span");
         pizzaName.classList.add("pizzaName");
+
+        let toppingsStrings = "";
+        value.toppings.forEach(value => {
+            toppingsStrings += value.name + " ";
+        })
+
         pizzaName.innerHTML = `
             <div class="pizzaInfo">
                 <div class="presetName">${value.name}</div>
-                <div class="presetInfo"><span class="crustInfo">${value.crust}</span> - <span class="toppingInfo">${value.toppings}</span></div>
+                <div class="presetInfo"><span class="crustInfo">${value.crust.name}</span> - <span class="toppingInfo">${toppingsStrings}</span></div>
             </div>
         `
 
@@ -497,7 +578,7 @@ function getSizeHTML() {
     `
     
     possibleSizes.forEach(value => {
-        sizeHtml += `<option value="${value.toLowerCase()}">${value}</option>`
+        sizeHtml += `<option value="${value.name.toLowerCase()}">$${value.price} ${value.name.charAt(0).toUpperCase() + value.name.slice(1)}</option>`
     })
 
     sizeHtml += `</select>`;
@@ -513,8 +594,8 @@ function getCrustHtml() {
     possibleCrust.forEach(value => {
         crustHtml += `
         <div class="compOptions">
-            <input type="radio" id="${value.toLowerCase()}" name="crust" value="${value.toLowerCase()}">
-            <label for="${value.toLowerCase()}">${value}</label><span class="price">$1</span>
+            <input type="radio" id="${value.name.toLowerCase()}" name="crust" value="${value.name.toLowerCase()}">
+            <label for="${value.name.toLowerCase()}">${value.name.charAt(0).toUpperCase() + value.name.slice(1)}</label><span class="price">$${value.price}</span>
         </div>
         `
     })
@@ -532,8 +613,8 @@ function getSizeCustHtml() {
     possibleSizes.forEach(value => {
         sizeHtml += `
         <div class="compOptions">
-            <input type="radio" id="${value.toLowerCase()}" name="size" value="${value.toLowerCase()}">
-            <label for="${value.toLowerCase()}" name="lsize">${value}</label><span class="price">$1</span>
+            <input type="radio" id="${value.name.toLowerCase()}" name="size" value="${value.name.toLowerCase()}">
+            <label for="${value.name.toLowerCase()}" name="lsize">${value.name.charAt(0).toUpperCase() + value.name.slice(1)}</label><span class="price">$${value.price}</span>
         </div>
         `
     })
@@ -551,8 +632,8 @@ function getToppingsHtml() {
     possibleToppings.forEach((value, index) => {
         toppingsHtml += `
         <div class="compOptions toppings">
-            <input type="checkbox" id="${value.toLowerCase()}" name="topping" value="${value.toLowerCase()}">
-            <label for="${value.toLowerCase()}">${value}</label><span class="price">$1</span>
+            <input type="checkbox" id="${value.name.toLowerCase()}" name="topping" value="${value.name.toLowerCase()}">
+            <label for="${value.name.toLowerCase()}">${value.name.charAt(0).toUpperCase() + value.name.slice(1)}</label><span class="price">$${value.price}</span>
         </div>
         `
     })

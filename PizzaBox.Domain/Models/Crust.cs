@@ -24,6 +24,10 @@ namespace PizzaBox.Domain.Abstracts
         {
             Price = p;
         }
+        protected override void AddInventory(int p)
+        {
+            Inventory = p;
+        }
         protected void ChangeStuffedCrust()
         {
             if(CheeseStuffed)

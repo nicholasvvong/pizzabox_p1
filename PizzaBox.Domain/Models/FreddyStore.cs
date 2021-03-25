@@ -13,10 +13,10 @@ namespace PizzaBox.Domain.Models
             SizeList = new List<Size>();
             CrustList = new List<Crust>();
 
-            /* InitToppings();
+            InitToppings();
             InitSize();
             InitCrust();
-            InitPresetPizza(); */
+            InitPresetPizza();
         }
 
         protected override void InitToppings()
@@ -43,16 +43,16 @@ namespace PizzaBox.Domain.Models
 
         protected override void InitPresetPizza()
         {
-            // /*Veggie*/
-            // BasicPizza tempP = new BasicPizza();
-            // tempP.Type = "Basic Veggie Pizza";
-            // tempP.AddCrust(CrustList[0]);
-            // tempP.AddTopping(ToppingsList[0]);
-            // tempP.AddTopping(ToppingsList[1]);
-            // tempP.AddTopping(ToppingsList[4]);
-            // tempP.AddTopping(ToppingsList[6]);
-            // tempP.CalculatePrice();
-            // PresetPizza.Add(tempP);
+            /*Veggie*/
+            PresetPizza tempP = new PresetPizza();
+            tempP.Type = "Basic Veggie Pizza";
+            tempP.AddCrust(CrustList[0]);
+            tempP.AddTopping(ToppingsList[0]);
+            tempP.AddTopping(ToppingsList[1]);
+            tempP.AddTopping(ToppingsList[4]);
+            tempP.AddTopping(ToppingsList[6]);
+            tempP.CalculatePrice();
+            PresetPizzas.Add(tempP);
         }
     }
 }

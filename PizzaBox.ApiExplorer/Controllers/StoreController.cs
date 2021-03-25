@@ -22,6 +22,7 @@ namespace PizzaBox.ApiExplorer
         {
             List<AStore> stores = storeLogic.GetStores();
             stores.Add(new CaliforniaStore());
+            stores.Add(new NewYorkStore());
             return stores;
         }
     }

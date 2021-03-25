@@ -10,3 +10,15 @@ C:\Users\Nicholas\Desktop\projects\p1app\PizzaBox.Domain\obj\Debug\net5.0\PizzaB
 C:\Users\Nicholas\Desktop\projects\p1app\PizzaBox.Domain\obj\Debug\net5.0\PizzaBox.Domain.dll
 C:\Users\Nicholas\Desktop\projects\p1app\PizzaBox.Domain\obj\Debug\net5.0\ref\PizzaBox.Domain.dll
 C:\Users\Nicholas\Desktop\projects\p1app\PizzaBox.Domain\obj\Debug\net5.0\PizzaBox.Domain.pdb
+C:\Users\NIcholas Wong\revature\projects\pizzabox_p1\PizzaBox.Domain\bin\Debug\net5.0\PizzaBox.Domain.deps.json
+C:\Users\NIcholas Wong\revature\projects\pizzabox_p1\PizzaBox.Domain\bin\Debug\net5.0\PizzaBox.Domain.dll
+C:\Users\NIcholas Wong\revature\projects\pizzabox_p1\PizzaBox.Domain\bin\Debug\net5.0\ref\PizzaBox.Domain.dll
+C:\Users\NIcholas Wong\revature\projects\pizzabox_p1\PizzaBox.Domain\bin\Debug\net5.0\PizzaBox.Domain.pdb
+C:\Users\NIcholas Wong\revature\projects\pizzabox_p1\PizzaBox.Domain\obj\Debug\net5.0\PizzaBox.Domain.csprojAssemblyReference.cache
+C:\Users\NIcholas Wong\revature\projects\pizzabox_p1\PizzaBox.Domain\obj\Debug\net5.0\PizzaBox.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\NIcholas Wong\revature\projects\pizzabox_p1\PizzaBox.Domain\obj\Debug\net5.0\PizzaBox.Domain.AssemblyInfoInputs.cache
+C:\Users\NIcholas Wong\revature\projects\pizzabox_p1\PizzaBox.Domain\obj\Debug\net5.0\PizzaBox.Domain.AssemblyInfo.cs
+C:\Users\NIcholas Wong\revature\projects\pizzabox_p1\PizzaBox.Domain\obj\Debug\net5.0\PizzaBox.Domain.csproj.CoreCompileInputs.cache
+C:\Users\NIcholas Wong\revature\projects\pizzabox_p1\PizzaBox.Domain\obj\Debug\net5.0\PizzaBox.Domain.dll
+C:\Users\NIcholas Wong\revature\projects\pizzabox_p1\PizzaBox.Domain\obj\Debug\net5.0\ref\PizzaBox.Domain.dll
+C:\Users\NIcholas Wong\revature\projects\pizzabox_p1\PizzaBox.Domain\obj\Debug\net5.0\PizzaBox.Domain.pdb
