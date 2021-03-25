@@ -1,0 +1,17 @@
+C:\Users\Nicholas\Desktop\projects\p1app\PizzaBox.Logic\bin\Debug\net5.0\PizzaBox.Logic.deps.json
+C:\Users\Nicholas\Desktop\projects\p1app\PizzaBox.Logic\bin\Debug\net5.0\PizzaBox.Logic.dll
+C:\Users\Nicholas\Desktop\projects\p1app\PizzaBox.Logic\bin\Debug\net5.0\ref\PizzaBox.Logic.dll
+C:\Users\Nicholas\Desktop\projects\p1app\PizzaBox.Logic\bin\Debug\net5.0\PizzaBox.Logic.pdb
+C:\Users\Nicholas\Desktop\projects\p1app\PizzaBox.Logic\bin\Debug\net5.0\PizzaBox.Domain.dll
+C:\Users\Nicholas\Desktop\projects\p1app\PizzaBox.Logic\bin\Debug\net5.0\PizzaBox.Repository.dll
+C:\Users\Nicholas\Desktop\projects\p1app\PizzaBox.Logic\bin\Debug\net5.0\PizzaBox.Domain.pdb
+C:\Users\Nicholas\Desktop\projects\p1app\PizzaBox.Logic\bin\Debug\net5.0\PizzaBox.Repository.pdb
+C:\Users\Nicholas\Desktop\projects\p1app\PizzaBox.Logic\obj\Debug\net5.0\PizzaBox.Logic.csprojAssemblyReference.cache
+C:\Users\Nicholas\Desktop\projects\p1app\PizzaBox.Logic\obj\Debug\net5.0\PizzaBox.Logic.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Nicholas\Desktop\projects\p1app\PizzaBox.Logic\obj\Debug\net5.0\PizzaBox.Logic.AssemblyInfoInputs.cache
+C:\Users\Nicholas\Desktop\projects\p1app\PizzaBox.Logic\obj\Debug\net5.0\PizzaBox.Logic.AssemblyInfo.cs
+C:\Users\Nicholas\Desktop\projects\p1app\PizzaBox.Logic\obj\Debug\net5.0\PizzaBox.Logic.csproj.CoreCompileInputs.cache
+C:\Users\Nicholas\Desktop\projects\p1app\PizzaBox.Logic\obj\Debug\net5.0\PizzaBox.Logic.csproj.CopyComplete
+C:\Users\Nicholas\Desktop\projects\p1app\PizzaBox.Logic\obj\Debug\net5.0\PizzaBox.Logic.dll
+C:\Users\Nicholas\Desktop\projects\p1app\PizzaBox.Logic\obj\Debug\net5.0\ref\PizzaBox.Logic.dll
+C:\Users\Nicholas\Desktop\projects\p1app\PizzaBox.Logic\obj\Debug\net5.0\PizzaBox.Logic.pdb

@@ -120,3 +120,28 @@ function checkAlreadyAccount() {
         return true;
     }
 }
+
+fetch('api/Store', {
+    method: 'GET',
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type':'application/json'
+    },})
+    .then(response => {
+        if(!response.ok) {
+            throw new Error(`Network reponse was not ok (${reponse.status})`);
+        }
+        else
+            return response.json();
+    })
+    .then((jsonReponse) => {
+        console.log(jsonReponse);
+        // let obj = JSON.parse(jsonReponse[0]);
+        // alert(`${jsonReponse[1].name}`);
+        jsonReponse.forEach(value =>{
+            console.log(value.name);
+        })
+    })
+    .catch(function(err) {
+        console.log("Failed to fetch page: ", err);
+    });
