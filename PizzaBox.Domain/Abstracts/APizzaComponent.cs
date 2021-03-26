@@ -3,31 +3,35 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PizzaBox.Domain.Abstracts
 {
-    public abstract class APizzaComponent
+    public class APizzaComponent
     {
         [Key]
         public Guid CompID { get; set; } = new Guid();
-        public string Name { get; protected set; }
-        public decimal Price { get; protected set; }
-        public int Inventory { get; protected set; }
-        protected APizzaComponent()
+        public string Name { get; set; }
+        public string Type { get; set; }
+        public APizzaComponent()
         {
 
         }
 
-        public APizzaComponent(string type, decimal p)
+        public APizzaComponent(string n, string t)
         {
-            FactoryMethod(type, p);
+            FactoryMethod(n, t);
         }
 
-        private void FactoryMethod(string type, decimal p)
+        private void FactoryMethod(string n, string t)
         {
-            AddName(type);
-            AddPrice(p);
+            AddName(n);
+            AddType(t);
         }
 
-        protected abstract void AddName(string type);
-        protected abstract void AddPrice(decimal p);
-        protected abstract void AddInventory(int p);
+        protected virtual void AddName(string n) 
+        {
+            Name = n;
+        }
+        protected virtual void AddType(string t)
+        {
+            Type = t;
+        }
     }
 }

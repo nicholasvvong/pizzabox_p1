@@ -14,10 +14,10 @@ namespace PizzaBox.Domain.Abstracts
     public class AStore
     {
         [Key]
-        public Guid StoreID { get; set; } = new Guid();
+        public Guid StoreID { get; set; } = Guid.NewGuid();
         public string Name{ get; protected set; } //Property
         public int MaxToppings { get; protected set; }
-        public int MaxPrice { get; protected set; }
+        public decimal MaxPrice { get; protected set; }
         public int MaxPizzas { get; protected set; }
         public IList<PresetPizza> PresetPizzas { get; protected set; }
         public IList<Topping> ToppingsList { get; protected set; }
@@ -29,17 +29,17 @@ namespace PizzaBox.Domain.Abstracts
             
         }
 
-        protected virtual void AddTopping(string type, decimal price)
+        protected virtual void AddTopping(decimal p, int i, string t, string n)
         {
-            ToppingsList.Add(new Topping(type, price));
+            ToppingsList.Add(new Topping(this, p, i, t, n));
         }
-        protected virtual void AddSize(string type, decimal price)
+        protected virtual void AddSize(decimal p, int i, string t, string n)
         {
-            SizeList.Add(new Size(type, price));
+            SizeList.Add(new Size(this, p, i, t, n));
         }
-        protected virtual void AddCrust(string type, decimal price)
+        protected virtual void AddCrust(decimal p, int i, string t, string n)
         {
-            CrustList.Add(new Crust(type, price));
+            CrustList.Add(new Crust(this, p, i, t, n));
         }
 
         protected virtual void InitToppings(){}

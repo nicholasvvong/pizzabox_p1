@@ -130,3 +130,5 @@ C:\Users\NIcholas Wong\revature\projects\pizzabox_p1\PizzaBox.ApiExplorer\obj\De
 C:\Users\NIcholas Wong\revature\projects\pizzabox_p1\PizzaBox.ApiExplorer\obj\Debug\net5.0\PizzaBox.ApiExplorer.genruntimeconfig.cache
 C:\Users\NIcholas Wong\revature\projects\pizzabox_p1\PizzaBox.ApiExplorer\bin\Debug\net5.0\Humanizer.dll
 C:\Users\NIcholas Wong\revature\projects\pizzabox_p1\PizzaBox.ApiExplorer\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Design.dll
+C:\Users\Nicholas\Desktop\projects\p1app\PizzaBox.ApiExplorer\bin\Debug\net5.0\Humanizer.dll
+C:\Users\Nicholas\Desktop\projects\p1app\PizzaBox.ApiExplorer\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Design.dll

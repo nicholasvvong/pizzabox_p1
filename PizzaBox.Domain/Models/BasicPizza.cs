@@ -12,7 +12,7 @@ namespace PizzaBox.Domain.Models
     public class BasicPizza
     {
         [Key]
-        public Guid PresetID { get; set; }
+        public Guid PresetID { get; set; } = Guid.NewGuid();
         public string Type { get; set; }
         public decimal PizzaPrice { get; protected set; }
         public List<Topping> Toppings { get; set; }
@@ -28,8 +28,6 @@ namespace PizzaBox.Domain.Models
         {
             PizzaPrice = 0;
             Toppings = new List<Topping>();
-            AddCrust(new Crust("",0m));
-            AddSize(new Size("", 0m));
         }
 
         public void AddCrust(Crust c)
@@ -49,7 +47,7 @@ namespace PizzaBox.Domain.Models
             PizzaPrice = 0;
             if(Crust != null)
             {
-                PizzaPrice += Crust.Price;
+                //PizzaPrice += Crust.Price;
             
                 if(Crust.CheeseStuffed)
                     PizzaPrice += Crust.StuffedPrice;
@@ -57,13 +55,13 @@ namespace PizzaBox.Domain.Models
 
             if(Size != null)
             {
-                PizzaPrice += Size.Price;
+                //PizzaPrice += Size.Price;
             }
             if(Toppings != null)
             {
                 foreach(Topping t in Toppings)
                 {
-                    PizzaPrice += t.Price;
+                    //PizzaPrice += t.Price;
                 }
             }
 

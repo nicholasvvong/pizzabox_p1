@@ -1,23 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\NIcholas Wong\\revature\\projects\\pizzabox_p1\\PizzaBox.Domain\\PizzaBox.Domain.csproj": {}
+    "C:\\Users\\Nicholas\\Desktop\\projects\\p1app\\PizzaBox.Domain\\PizzaBox.Domain.csproj": {}
   },
   "projects": {
-    "C:\\Users\\NIcholas Wong\\revature\\projects\\pizzabox_p1\\PizzaBox.Domain\\PizzaBox.Domain.csproj": {
+    "C:\\Users\\Nicholas\\Desktop\\projects\\p1app\\PizzaBox.Domain\\PizzaBox.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\NIcholas Wong\\revature\\projects\\pizzabox_p1\\PizzaBox.Domain\\PizzaBox.Domain.csproj",
+        "projectUniqueName": "C:\\Users\\Nicholas\\Desktop\\projects\\p1app\\PizzaBox.Domain\\PizzaBox.Domain.csproj",
         "projectName": "PizzaBox.Domain",
-        "projectPath": "C:\\Users\\NIcholas Wong\\revature\\projects\\pizzabox_p1\\PizzaBox.Domain\\PizzaBox.Domain.csproj",
-        "packagesPath": "C:\\Users\\NIcholas Wong\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\NIcholas Wong\\revature\\projects\\pizzabox_p1\\PizzaBox.Domain\\obj\\",
+        "projectPath": "C:\\Users\\Nicholas\\Desktop\\projects\\p1app\\PizzaBox.Domain\\PizzaBox.Domain.csproj",
+        "packagesPath": "C:\\Users\\Nicholas\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Nicholas\\Desktop\\projects\\p1app\\PizzaBox.Domain\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\NIcholas Wong\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Nicholas\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
@@ -55,7 +52,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.103\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.201\\RuntimeIdentifierGraph.json"
         }
       }
     }

@@ -10,8 +10,8 @@ using PizzaBox.Repository;
 namespace PizzaBox.Repository.Migrations
 {
     [DbContext(typeof(DatabaseCreationContext))]
-    [Migration("20210324235559_InitDB")]
-    partial class InitDB
+    [Migration("20210326034547_InitTest3")]
+    partial class InitTest3
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,23 @@ namespace PizzaBox.Repository.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.4")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("PizzaBox.Domain.Abstracts.APizzaComponent", b =>
+                {
+                    b.Property<Guid>("CompID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("CompID");
+
+                    b.ToTable("Comps");
+                });
 
             modelBuilder.Entity("PizzaBox.Domain.Abstracts.AStore", b =>
                 {
@@ -42,83 +59,6 @@ namespace PizzaBox.Repository.Migrations
                     b.HasKey("StoreID");
 
                     b.ToTable("Stores");
-                });
-
-            modelBuilder.Entity("PizzaBox.Domain.Abstracts.Crust", b =>
-                {
-                    b.Property<Guid>("CompID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("AStoreStoreID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("CheeseStuffed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("StuffedPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("CompID");
-
-                    b.HasIndex("AStoreStoreID");
-
-                    b.ToTable("Crust");
-                });
-
-            modelBuilder.Entity("PizzaBox.Domain.Abstracts.Size", b =>
-                {
-                    b.Property<Guid>("CompID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("AStoreStoreID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("CompID");
-
-                    b.HasIndex("AStoreStoreID");
-
-                    b.ToTable("Size");
-                });
-
-            modelBuilder.Entity("PizzaBox.Domain.Abstracts.Topping", b =>
-                {
-                    b.Property<Guid>("CompID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("AStoreStoreID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("BasicPizzaPresetID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("CompID");
-
-                    b.HasIndex("AStoreStoreID");
-
-                    b.HasIndex("BasicPizzaPresetID");
-
-                    b.ToTable("Topping");
                 });
 
             modelBuilder.Entity("PizzaBox.Domain.Models.BasicPizza", b =>
@@ -177,9 +117,14 @@ namespace PizzaBox.Repository.Migrations
                     b.Property<string>("Lname")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("StoreMangerStoreID")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("CustomerID");
 
                     b.HasIndex("LastStoreStoreID");
+
+                    b.HasIndex("StoreMangerStoreID");
 
                     b.ToTable("Customers");
                 });
@@ -211,6 +156,89 @@ namespace PizzaBox.Repository.Migrations
                     b.ToTable("Orders");
                 });
 
+            modelBuilder.Entity("PizzaBox.Domain.Abstracts.Crust", b =>
+                {
+                    b.HasBaseType("PizzaBox.Domain.Abstracts.APizzaComponent");
+
+                    b.Property<Guid?>("AStoreStoreID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("CheeseStuffed")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("CrustID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Inventory")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("StoreID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("StuffedPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasIndex("AStoreStoreID");
+
+                    b.ToTable("Crusts");
+                });
+
+            modelBuilder.Entity("PizzaBox.Domain.Abstracts.Size", b =>
+                {
+                    b.HasBaseType("PizzaBox.Domain.Abstracts.APizzaComponent");
+
+                    b.Property<Guid?>("AStoreStoreID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Inventory")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("SizeID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("StoreID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasIndex("AStoreStoreID");
+
+                    b.ToTable("Sizes");
+                });
+
+            modelBuilder.Entity("PizzaBox.Domain.Abstracts.Topping", b =>
+                {
+                    b.HasBaseType("PizzaBox.Domain.Abstracts.APizzaComponent");
+
+                    b.Property<Guid?>("AStoreStoreID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("BasicPizzaPresetID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Inventory")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("StoreID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ToppingID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasIndex("AStoreStoreID");
+
+                    b.HasIndex("BasicPizzaPresetID");
+
+                    b.ToTable("Toppings");
+                });
+
             modelBuilder.Entity("PizzaBox.Domain.Models.PresetPizza", b =>
                 {
                     b.HasBaseType("PizzaBox.Domain.Models.BasicPizza");
@@ -221,31 +249,6 @@ namespace PizzaBox.Repository.Migrations
                     b.HasIndex("StoreID");
 
                     b.HasDiscriminator().HasValue("PresetPizza");
-                });
-
-            modelBuilder.Entity("PizzaBox.Domain.Abstracts.Crust", b =>
-                {
-                    b.HasOne("PizzaBox.Domain.Abstracts.AStore", null)
-                        .WithMany("CrustList")
-                        .HasForeignKey("AStoreStoreID");
-                });
-
-            modelBuilder.Entity("PizzaBox.Domain.Abstracts.Size", b =>
-                {
-                    b.HasOne("PizzaBox.Domain.Abstracts.AStore", null)
-                        .WithMany("SizeList")
-                        .HasForeignKey("AStoreStoreID");
-                });
-
-            modelBuilder.Entity("PizzaBox.Domain.Abstracts.Topping", b =>
-                {
-                    b.HasOne("PizzaBox.Domain.Abstracts.AStore", null)
-                        .WithMany("ToppingsList")
-                        .HasForeignKey("AStoreStoreID");
-
-                    b.HasOne("PizzaBox.Domain.Models.BasicPizza", null)
-                        .WithMany("Toppings")
-                        .HasForeignKey("BasicPizzaPresetID");
                 });
 
             modelBuilder.Entity("PizzaBox.Domain.Models.BasicPizza", b =>
@@ -273,7 +276,13 @@ namespace PizzaBox.Repository.Migrations
                         .WithMany()
                         .HasForeignKey("LastStoreStoreID");
 
+                    b.HasOne("PizzaBox.Domain.Abstracts.AStore", "StoreManger")
+                        .WithMany()
+                        .HasForeignKey("StoreMangerStoreID");
+
                     b.Navigation("LastStore");
+
+                    b.Navigation("StoreManger");
                 });
 
             modelBuilder.Entity("PizzaBox.Domain.Models.Order", b =>
@@ -289,6 +298,49 @@ namespace PizzaBox.Repository.Migrations
                     b.Navigation("Cust");
 
                     b.Navigation("Store");
+                });
+
+            modelBuilder.Entity("PizzaBox.Domain.Abstracts.Crust", b =>
+                {
+                    b.HasOne("PizzaBox.Domain.Abstracts.AStore", null)
+                        .WithMany("CrustList")
+                        .HasForeignKey("AStoreStoreID");
+
+                    b.HasOne("PizzaBox.Domain.Abstracts.APizzaComponent", null)
+                        .WithOne()
+                        .HasForeignKey("PizzaBox.Domain.Abstracts.Crust", "CompID")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PizzaBox.Domain.Abstracts.Size", b =>
+                {
+                    b.HasOne("PizzaBox.Domain.Abstracts.AStore", null)
+                        .WithMany("SizeList")
+                        .HasForeignKey("AStoreStoreID");
+
+                    b.HasOne("PizzaBox.Domain.Abstracts.APizzaComponent", null)
+                        .WithOne()
+                        .HasForeignKey("PizzaBox.Domain.Abstracts.Size", "CompID")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PizzaBox.Domain.Abstracts.Topping", b =>
+                {
+                    b.HasOne("PizzaBox.Domain.Abstracts.AStore", null)
+                        .WithMany("ToppingsList")
+                        .HasForeignKey("AStoreStoreID");
+
+                    b.HasOne("PizzaBox.Domain.Models.BasicPizza", null)
+                        .WithMany("Toppings")
+                        .HasForeignKey("BasicPizzaPresetID");
+
+                    b.HasOne("PizzaBox.Domain.Abstracts.APizzaComponent", null)
+                        .WithOne()
+                        .HasForeignKey("PizzaBox.Domain.Abstracts.Topping", "CompID")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PizzaBox.Domain.Models.PresetPizza", b =>
