@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using PizzaBox.Domain.Models;
 
 namespace PizzaBox.Domain.Abstracts
 {
@@ -17,7 +18,7 @@ namespace PizzaBox.Domain.Abstracts
         {
             
         }
-        public Size(AStore store, decimal p, int i, string n, string t) : base(n, t)
+        public Size(AStore store, decimal p, int i, string n, ItemType t) : base(n, t)
         {
             StoreID = store.StoreID;
             Price = p;
@@ -32,9 +33,9 @@ namespace PizzaBox.Domain.Abstracts
         {
             Name = n;
         }
-        protected override void AddType(string t)
+        protected override void AddType(ItemType t)
         {
-            Type = t;
+            IType = t;
         }
         protected void SetInventory(int p)
         {

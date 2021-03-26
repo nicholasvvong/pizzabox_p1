@@ -10,8 +10,8 @@ using PizzaBox.Repository;
 namespace PizzaBox.Repository.Migrations
 {
     [DbContext(typeof(DatabaseCreationContext))]
-    [Migration("20210326052109_InitTest10")]
-    partial class InitTest10
+    [Migration("20210326171641_TypeInit")]
+    partial class TypeInit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,123 +27,21 @@ namespace PizzaBox.Repository.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("ITypeTypeID")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Type")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("CompID");
+
+                    b.HasIndex("ITypeTypeID");
 
                     b.HasIndex("Name")
                         .IsUnique()
                         .HasFilter("[Name] IS NOT NULL");
 
                     b.ToTable("Comps");
-
-                    b.HasData(
-                        new
-                        {
-                            CompID = new Guid("442138dc-4cf1-40fa-93d5-8769e58a85ad"),
-                            Name = "beef",
-                            Type = "topping"
-                        },
-                        new
-                        {
-                            CompID = new Guid("44fca71d-de55-4f63-8f03-1769b9940cb0"),
-                            Name = "chicken",
-                            Type = "topping"
-                        },
-                        new
-                        {
-                            CompID = new Guid("a41882f1-f83e-4480-a439-aee7fdeef264"),
-                            Name = "ham",
-                            Type = "topping"
-                        },
-                        new
-                        {
-                            CompID = new Guid("13b21b42-484e-4409-9686-18c61ddf517d"),
-                            Name = "mushroom",
-                            Type = "topping"
-                        },
-                        new
-                        {
-                            CompID = new Guid("305f30ee-abac-4713-8170-7b96b3f96113"),
-                            Name = "olive",
-                            Type = "topping"
-                        },
-                        new
-                        {
-                            CompID = new Guid("d6adf42e-fb03-4ea2-84c0-cfa4ecfc6420"),
-                            Name = "peppers",
-                            Type = "topping"
-                        },
-                        new
-                        {
-                            CompID = new Guid("46612f32-7608-4491-b24a-cd8b33452b8a"),
-                            Name = "pepporoni",
-                            Type = "topping"
-                        },
-                        new
-                        {
-                            CompID = new Guid("53d91efa-8222-4873-b119-96b547ff67ef"),
-                            Name = "pineapple",
-                            Type = "topping"
-                        },
-                        new
-                        {
-                            CompID = new Guid("a1e96236-67d4-4cc2-9d15-a9c5de523062"),
-                            Name = "salami",
-                            Type = "topping"
-                        },
-                        new
-                        {
-                            CompID = new Guid("4d6e00cb-b1ce-4e84-9022-bfd75477ecb7"),
-                            Name = "sausage",
-                            Type = "topping"
-                        },
-                        new
-                        {
-                            CompID = new Guid("ff2d88de-fb67-4e6b-b3af-421a3d9d5838"),
-                            Name = "small",
-                            Type = "size"
-                        },
-                        new
-                        {
-                            CompID = new Guid("b2b3bc21-3287-4716-88b2-d2685d338b3f"),
-                            Name = "medium",
-                            Type = "size"
-                        },
-                        new
-                        {
-                            CompID = new Guid("c6ceb6b5-782b-4f6c-8cda-c2fb09352e83"),
-                            Name = "large",
-                            Type = "size"
-                        },
-                        new
-                        {
-                            CompID = new Guid("2916da14-44aa-479b-91b7-a70621209e72"),
-                            Name = "extra large",
-                            Type = "size"
-                        },
-                        new
-                        {
-                            CompID = new Guid("f7e58f1d-f758-4564-82ff-90e47ad749cf"),
-                            Name = "regular",
-                            Type = "crust"
-                        },
-                        new
-                        {
-                            CompID = new Guid("8af74dd7-3f5d-4c60-9b3b-a55463735b55"),
-                            Name = "hand-tossed",
-                            Type = "crust"
-                        },
-                        new
-                        {
-                            CompID = new Guid("825975d9-9890-41e2-9b73-c6b7e890a7fd"),
-                            Name = "thin",
-                            Type = "crust"
-                        });
                 });
 
             modelBuilder.Entity("PizzaBox.Domain.Abstracts.AStore", b =>
@@ -172,14 +70,17 @@ namespace PizzaBox.Repository.Migrations
             modelBuilder.Entity("PizzaBox.Domain.Models.BasicPizza", b =>
                 {
                     b.Property<Guid>("PresetID")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("AStoreStoreID")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<Guid?>("CrustCompID")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("OrderID")
                         .HasColumnType("uniqueidentifier");
@@ -190,12 +91,7 @@ namespace PizzaBox.Repository.Migrations
                     b.Property<Guid?>("SizeCompID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Type")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("PresetID");
-
-                    b.HasIndex("AStoreStoreID");
+                    b.HasKey("PresetID", "Type");
 
                     b.HasIndex("CrustCompID");
 
@@ -204,6 +100,8 @@ namespace PizzaBox.Repository.Migrations
                     b.HasIndex("SizeCompID");
 
                     b.ToTable("BasicPizza");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("BasicPizza");
                 });
 
             modelBuilder.Entity("PizzaBox.Domain.Models.Customer", b =>
@@ -234,6 +132,24 @@ namespace PizzaBox.Repository.Migrations
                     b.HasIndex("StoreMangerStoreID");
 
                     b.ToTable("Customers");
+                });
+
+            modelBuilder.Entity("PizzaBox.Domain.Models.ItemType", b =>
+                {
+                    b.Property<Guid>("TypeID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("TypeID");
+
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
+
+                    b.ToTable("ItemType");
                 });
 
             modelBuilder.Entity("PizzaBox.Domain.Models.Order", b =>
@@ -327,6 +243,9 @@ namespace PizzaBox.Repository.Migrations
                     b.Property<Guid?>("BasicPizzaPresetID")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("BasicPizzaType")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("Inventory")
                         .HasColumnType("int");
 
@@ -341,17 +260,37 @@ namespace PizzaBox.Repository.Migrations
 
                     b.HasIndex("AStoreStoreID");
 
-                    b.HasIndex("BasicPizzaPresetID");
+                    b.HasIndex("BasicPizzaPresetID", "BasicPizzaType");
 
                     b.ToTable("Toppings");
                 });
 
+            modelBuilder.Entity("PizzaBox.Domain.Models.PresetPizza", b =>
+                {
+                    b.HasBaseType("PizzaBox.Domain.Models.BasicPizza");
+
+                    b.Property<Guid>("BasicPizzaID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("StoreID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasIndex("StoreID");
+
+                    b.HasDiscriminator().HasValue("PresetPizza");
+                });
+
+            modelBuilder.Entity("PizzaBox.Domain.Abstracts.APizzaComponent", b =>
+                {
+                    b.HasOne("PizzaBox.Domain.Models.ItemType", "IType")
+                        .WithMany()
+                        .HasForeignKey("ITypeTypeID");
+
+                    b.Navigation("IType");
+                });
+
             modelBuilder.Entity("PizzaBox.Domain.Models.BasicPizza", b =>
                 {
-                    b.HasOne("PizzaBox.Domain.Abstracts.AStore", null)
-                        .WithMany("PresetPizzas")
-                        .HasForeignKey("AStoreStoreID");
-
                     b.HasOne("PizzaBox.Domain.Abstracts.Crust", "Crust")
                         .WithMany()
                         .HasForeignKey("CrustCompID");
@@ -431,15 +370,24 @@ namespace PizzaBox.Repository.Migrations
                         .WithMany("ToppingsList")
                         .HasForeignKey("AStoreStoreID");
 
-                    b.HasOne("PizzaBox.Domain.Models.BasicPizza", null)
-                        .WithMany("Toppings")
-                        .HasForeignKey("BasicPizzaPresetID");
-
                     b.HasOne("PizzaBox.Domain.Abstracts.APizzaComponent", null)
                         .WithOne()
                         .HasForeignKey("PizzaBox.Domain.Abstracts.Topping", "CompID")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
+
+                    b.HasOne("PizzaBox.Domain.Models.BasicPizza", null)
+                        .WithMany("Toppings")
+                        .HasForeignKey("BasicPizzaPresetID", "BasicPizzaType");
+                });
+
+            modelBuilder.Entity("PizzaBox.Domain.Models.PresetPizza", b =>
+                {
+                    b.HasOne("PizzaBox.Domain.Abstracts.AStore", "store")
+                        .WithMany("PresetPizzas")
+                        .HasForeignKey("StoreID");
+
+                    b.Navigation("store");
                 });
 
             modelBuilder.Entity("PizzaBox.Domain.Abstracts.AStore", b =>

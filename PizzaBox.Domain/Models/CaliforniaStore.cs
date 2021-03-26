@@ -26,29 +26,29 @@ namespace PizzaBox.Domain.Models
 
         protected override void InitToppings()
         {
-            AddTopping(0.66m, 100, "topping", "beef");
-            AddTopping(0.66m, 100, "topping", "chicken");
-            AddTopping(0.66m, 100, "topping", "ham");
-            AddTopping(0.66m, 100, "topping", "mushroom");
-            AddTopping(0.66m, 100, "topping", "olive");
-            AddTopping(0.66m, 100, "topping", "peppers");
-            AddTopping(0.66m, 100, "topping", "pepporoni");
-            AddTopping(0.66m, 100, "topping", "pineapple");
-            AddTopping(0.66m, 100, "topping", "salami");
-            AddTopping (0.66m, 100, "topping", "sausage");
+            AddTopping(0.66m, 100, "beef", new ItemType("topping"));
+            AddTopping(0.66m, 100, "chicken", new ItemType("topping"));
+            AddTopping(0.66m, 100, "ham", new ItemType("topping"));
+            AddTopping(0.66m, 100, "mushroom", new ItemType("topping"));
+            AddTopping(0.66m, 100, "olive", new ItemType("topping"));
+            AddTopping(0.66m, 100, "peppers", new ItemType("topping"));
+            AddTopping(0.66m, 100, "pepporoni", new ItemType("topping"));
+            AddTopping(0.66m, 100, "pineapple", new ItemType("topping"));
+            AddTopping(0.66m, 100, "salami", new ItemType("topping"));
+            AddTopping (0.66m, 100, "sausage", new ItemType("topping"));
         }
         protected override void InitSize()
         {
-            AddSize(3.0m, 100, "size", "small");
-            AddSize(4.0m, 100, "size", "medium");
-            AddSize(5.0m, 100, "size", "large");
-            AddSize (6.0m, 100, "size", "extra large");
+            AddSize(3.0m, 100, "small", new ItemType("size"));
+            AddSize(4.0m, 100, "medium", new ItemType("size"));
+            AddSize(5.0m, 100, "large", new ItemType("size"));
+            AddSize (6.0m, 100, "extra large", new ItemType("size"));
         }
         protected override void InitCrust()
         {
-            AddCrust(1.0m, 100, "crust", "regular");
-            AddCrust(1.5m, 100, "crust", "hand-tossed");
-            AddCrust(1.0m, 100, "crust", "thin");
+            AddCrust(1.0m, 100, "regular", new ItemType("crust"));
+            AddCrust(1.5m, 100, "hand-tossed", new ItemType("crust"));
+            AddCrust(1.0m, 100, "thin", new ItemType("crust"));
         }
         
         protected override void InitPresetPizza()

@@ -8,6 +8,10 @@ namespace PizzaBox.Repository
     public class StoreContext : DbContext
     {
         public DbSet<AStore> Stores { get; set; }
+        public DbSet<PresetPizza> PresetPizzas { get; set; }
+        public DbSet<Topping> Toppings { get; set; }
+        public DbSet<Size> Sizes { get; set; }
+        public DbSet<Crust> Crusts { get; set; }
         public StoreContext(DbContextOptions<StoreContext> options) : base(options)
         {
 

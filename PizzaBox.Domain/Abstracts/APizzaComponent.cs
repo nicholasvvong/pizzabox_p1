@@ -1,5 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using PizzaBox.Domain.Models;
 
 namespace PizzaBox.Domain.Abstracts
 {
@@ -8,18 +10,18 @@ namespace PizzaBox.Domain.Abstracts
         [Key]
         public Guid CompID { get; set; } = new Guid();
         public string Name { get; set; }
-        public string Type { get; set; }
+        public ItemType IType { get; set; }
         public APizzaComponent()
         {
 
         }
 
-        public APizzaComponent(string n, string t)
+        public APizzaComponent(string n, ItemType t)
         {
             FactoryMethod(n, t);
         }
 
-        private void FactoryMethod(string n, string t)
+        private void FactoryMethod(string n, ItemType t)
         {
             AddName(n);
             AddType(t);
@@ -29,9 +31,9 @@ namespace PizzaBox.Domain.Abstracts
         {
             Name = n;
         }
-        protected virtual void AddType(string t)
+        protected virtual void AddType(ItemType t)
         {
-            Type = t;
+            IType = t;
         }
     }
 }
