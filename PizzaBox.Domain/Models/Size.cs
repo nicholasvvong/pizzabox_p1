@@ -8,19 +8,16 @@ namespace PizzaBox.Domain.Abstracts
     [Table("Sizes")]
     public class Size : APizzaComponent
     {
-        [Column(Order = 0), ForeignKey("CompID")]
-        public Guid SizeID { get; set; }
-        [Column(Order = 1), ForeignKey("StoreID")]
-        public Guid StoreID { get; set; }
         public decimal Price { get; protected set; }
         public int Inventory { get; protected set; }
+        public AStore Store { get; set; }
         protected Size()
         {
             
         }
         public Size(AStore store, decimal p, int i, string n, ItemType t) : base(n, t)
         {
-            StoreID = store.StoreID;
+            Store = store;
             Price = p;
             Inventory = i;
         }

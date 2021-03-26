@@ -5,6 +5,7 @@ using PizzaBox.Domain.Models;
 
 namespace PizzaBox.Domain.Abstracts
 {
+    [Table("Comps")]
     public class APizzaComponent
     {
         [Key]

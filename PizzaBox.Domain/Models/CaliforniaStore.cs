@@ -9,7 +9,7 @@ namespace PizzaBox.Domain.Models
         public CaliforniaStore()
         {
             Name = "CPK";
-            PresetPizzas = new List<PresetPizza>();
+            PresetPizzas = new List<BasicPizza>();
             ToppingsList = new List<Topping>();
             SizeList = new List<Size>();
             CrustList = new List<Crust>();
@@ -18,9 +18,9 @@ namespace PizzaBox.Domain.Models
             MaxPrice = 250.0m;
             
             InitToppings();
-            InitSize();
-            InitCrust();  
-            InitPresetPizza();
+            // InitSize();
+            //InitCrust();  
+            // InitPresetPizza();
             
         }
 
@@ -54,7 +54,7 @@ namespace PizzaBox.Domain.Models
         protected override void InitPresetPizza()
         {
             /*Meat*/
-            PresetPizza tempP = new PresetPizza(this);
+            BasicPizza tempP = new BasicPizza();
             tempP.Type = "Meat Pizza";
             tempP.AddCrust(CrustList[0]);
             tempP.AddTopping(ToppingsList[0]);
@@ -65,7 +65,7 @@ namespace PizzaBox.Domain.Models
             tempP.CalculatePrice();
             PresetPizzas.Add(tempP);
             /*Hawaiian*/
-            tempP = new PresetPizza(this);
+            tempP = new BasicPizza();
             tempP.Type = "Hawaiian Pizza";
             tempP.AddCrust(CrustList[0]);
             tempP.AddTopping(ToppingsList[2]);

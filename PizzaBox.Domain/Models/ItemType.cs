@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PizzaBox.Domain.Models
 {
+    [Table("ItemType")]
     public class ItemType
     {
         [Key]

@@ -5,19 +5,14 @@ using PizzaBox.Domain.Abstracts;
 
 namespace PizzaBox.Domain.Models
 {
-    public class PresetPizza : BasicPizza
+    public class PresetPizza
     {
+        [ForeignKey("StoreID")]
+        public Guid StoreID { get; set; }
         [ForeignKey("PresetID")]
-        public Guid BasicPizzaID { get; set; }
+        public Guid PresetID { get; set; }
+        
         public AStore store { get; set; }
-
-        public PresetPizza() : base()
-        {
-            
-        }
-        public PresetPizza(AStore s) : base()
-        {
-            store = s;
-        }
+        public BasicPizza BasicPizza { get; set; }
     }
 }

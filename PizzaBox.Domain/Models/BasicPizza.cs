@@ -11,7 +11,6 @@ namespace PizzaBox.Domain.Models
     /// 
     public class BasicPizza
     {
-        [Key]
         public Guid PresetID { get; set; } = Guid.NewGuid();
         public string Type { get; set; }
         public decimal PizzaPrice { get; protected set; }

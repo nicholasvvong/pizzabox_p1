@@ -8,7 +8,7 @@ namespace PizzaBox.Domain.Models
         public NewYorkStore()
         {
             Name = "NewYork Pizza Store";
-            PresetPizzas = new List<PresetPizza>();
+            PresetPizzas = new List<BasicPizza>();
             ToppingsList = new List<Topping>();
             SizeList = new List<Size>();
             CrustList = new List<Crust>();

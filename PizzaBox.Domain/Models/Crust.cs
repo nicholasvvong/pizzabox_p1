@@ -8,14 +8,13 @@ namespace PizzaBox.Domain.Abstracts
     [Table("Crusts")]
     public class Crust : APizzaComponent
     {
-        [Column(Order = 0), ForeignKey("CompID")]
-        public Guid CrustID { get; set; }
-        [Column(Order = 1), ForeignKey("StoreID")]
-        public Guid StoreID { get; set; }
         public decimal Price { get; protected set; }
         public int Inventory { get; protected set; }
         public bool CheeseStuffed { get; set; }
         public decimal StuffedPrice { get; private set; }
+
+        public AStore Store { get; set; }
+
         protected Crust()
         {
 
@@ -24,7 +23,7 @@ namespace PizzaBox.Domain.Abstracts
         {
             CheeseStuffed = false;
             StuffedPrice = 1.50m;
-            StoreID = store.StoreID;
+            Store = store;
             Price = p;
             Inventory = i;
         }
