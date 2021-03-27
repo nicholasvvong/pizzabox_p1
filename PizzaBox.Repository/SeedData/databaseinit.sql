@@ -22,7 +22,7 @@ SELECT newid(), 'olive', TypeID FROM ItemType WHERE ItemType.Name = 'topping'
 INSERT INTO Comps(CompID, Name, ITypeTypeID)
 SELECT newid(), 'peppers', TypeID FROM ItemType WHERE ItemType.Name = 'topping'
 INSERT INTO Comps(CompID, Name, ITypeTypeID)
-SELECT newid(), 'pepporoni', TypeID FROM ItemType WHERE ItemType.Name = 'topping'
+SELECT newid(), 'pepperoni', TypeID FROM ItemType WHERE ItemType.Name = 'topping'
 INSERT INTO Comps(CompID, Name, ITypeTypeID)
 SELECT newid(), 'pineapple', TypeID FROM ItemType WHERE ItemType.Name = 'topping'
 INSERT INTO Comps(CompID, Name, ITypeTypeID)

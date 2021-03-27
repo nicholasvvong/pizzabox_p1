@@ -2,15 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Xml.Serialization;
 using PizzaBox.Domain.Models;
 
 namespace PizzaBox.Domain.Abstracts
 {
-    [XmlInclude(typeof(CaliforniaStore))]
-    [XmlInclude(typeof(FreddyStore))]
-    [XmlInclude(typeof(ChicagoStore))]
-    [XmlInclude(typeof(NewYorkStore))]
     public class AStore
     {
         [Key]
@@ -42,10 +37,10 @@ namespace PizzaBox.Domain.Abstracts
             CrustList.Add(new Crust(this, p, i, n, t));
         }
 
-        protected virtual void InitToppings(){}
-        protected virtual void InitCrust(){}
-        protected virtual void InitSize(){}
-        protected virtual void InitPresetPizza(){}
+        public virtual void InitToppings(){}
+        public virtual void InitCrust(){}
+        public virtual void InitSize(){}
+        public virtual void InitPresetPizza(){}
 
         public override string ToString()
         {

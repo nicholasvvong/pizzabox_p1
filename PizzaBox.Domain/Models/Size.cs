@@ -5,34 +5,28 @@ using PizzaBox.Domain.Models;
 
 namespace PizzaBox.Domain.Abstracts
 {
-    [Table("Sizes")]
-    public class Size : APizzaComponent
+    public class Size
     {
+        public Guid SizeID { get; set; } = Guid.NewGuid();
         public decimal Price { get; protected set; }
         public int Inventory { get; protected set; }
         public AStore Store { get; set; }
+        public APizzaComponent PizzaType { get; set; }
         protected Size()
         {
             
         }
-        public Size(AStore store, decimal p, int i, string n, ItemType t) : base(n, t)
+        public Size(AStore store, decimal p, int i, string n, ItemType t)
         {
             Store = store;
             Price = p;
             Inventory = i;
+            PizzaType = new APizzaComponent(n, t);
         }
 
         protected void AddPrice(decimal p)
         {
             Price = p;
-        }
-        protected override void AddName(string n)
-        {
-            Name = n;
-        }
-        protected override void AddType(ItemType t)
-        {
-            IType = t;
         }
         protected void SetInventory(int p)
         {

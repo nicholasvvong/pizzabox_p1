@@ -41,6 +41,8 @@ fetch('api/Store', {
         for(const [key, value] of Object.entries(jsonReponse)) {
             storeList.push(key);
         }
+
+        console.log(storeList);
     })
     .catch(function(err) {
         console.log("Failed to fetch page: ", err);

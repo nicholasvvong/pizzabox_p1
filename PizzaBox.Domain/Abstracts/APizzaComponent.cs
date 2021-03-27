@@ -9,9 +9,10 @@ namespace PizzaBox.Domain.Abstracts
     public class APizzaComponent
     {
         [Key]
-        public Guid CompID { get; set; } = new Guid();
+        public Guid CompID { get; set; } = Guid.NewGuid();
         public string Name { get; set; }
         public ItemType IType { get; set; }
+        
         public APizzaComponent()
         {
 

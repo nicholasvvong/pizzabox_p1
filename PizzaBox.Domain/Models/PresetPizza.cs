@@ -7,10 +7,9 @@ namespace PizzaBox.Domain.Models
 {
     public class PresetPizza
     {
-        public Guid PizzaID { get; set; }
-        
-        public AStore store { get; set; }
+        public Guid BasicPizzaID { get; set; }
         public BasicPizza BasicPizza { get; set; }
+        public Guid ToppingID { get; set; }
         public Topping Topping { get; set; }
     }
 }

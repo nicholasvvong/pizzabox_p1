@@ -5,13 +5,14 @@ using PizzaBox.Domain.Models;
 
 namespace PizzaBox.Domain.Abstracts
 {
-    [Table("Crusts")]
-    public class Crust : APizzaComponent
+    public class Crust
     {
+        public Guid CrustID { get; set; } = Guid.NewGuid();
         public decimal Price { get; protected set; }
         public int Inventory { get; protected set; }
         public bool CheeseStuffed { get; set; }
         public decimal StuffedPrice { get; private set; }
+        public APizzaComponent PizzaType { get; set; }
 
         public AStore Store { get; set; }
 
@@ -19,26 +20,19 @@ namespace PizzaBox.Domain.Abstracts
         {
 
         }
-        public Crust(AStore store, decimal p, int i, string n, ItemType t) : base(n, t)
+        public Crust(AStore store, decimal p, int i, string n, ItemType t)
         {
             CheeseStuffed = false;
             StuffedPrice = 1.50m;
             Store = store;
             Price = p;
             Inventory = i;
+            PizzaType = new APizzaComponent(n, t);
         }
 
         protected void AddPrice(decimal p)
         {
             Price = p;
-        }
-        protected override void AddName(string n)
-        {
-            Name = n;
-        }
-        protected override void AddType(ItemType t)
-        {
-            IType = t;
         }
         protected void SetInventory(int p)
         {

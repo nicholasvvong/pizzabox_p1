@@ -19,32 +19,35 @@ namespace PizzaBox.Domain.Models
             // InitPresetPizza();
         }
 
-        // protected override void InitToppings()
+        // public override void InitToppings()
         // {
-        //     AddTopping("mushroom", 1.00m);
-        //     AddTopping("olive", 0.40m);
-        //     AddTopping("peppers", 0.45m);
-        //     AddTopping("pineapple", 0.75m);
-        //     AddTopping("onions", 0.33m);
-        //     AddTopping("tomatoes", 0.50m);
-        //     AddTopping("spinach", 0.60m);
+        //     ItemType toppings = new ItemType("topping");
+        //     AddTopping(1.00m, 100, "mushroom", toppings);
+        //     AddTopping(0.40m, 100, "olive", toppings);
+        //     AddTopping(0.45m, 100, "peppers", toppings);
+        //     AddTopping(0.75m, 100, "pineapple", toppings);
+        //     AddTopping(0.33m, 100, "opnions", toppings);
+        //     AddTopping(0.50m, 100, "tomatoes", toppings);
+        //     AddTopping(0.60m, 100, "spinach", toppings);
         // }
-        // protected override void InitSize()
+        // public override void InitSize()
         // {
-        //     AddSize("medium", 5.0m);
-        //     AddSize("large", 6.0m);
+        //     ItemType size = new ItemType("size");
+        //     AddSize(5.0m, 100, "medium", size);
+        //     AddSize(6.0m, 100, "large", size);
         // }
-        // protected override void InitCrust()
+        // public override void InitCrust()
         // {
-        //     AddCrust("regular", 1.5m);
-        //     AddCrust("hand-tossed", 2.0m);
-        //     AddCrust("thin", 1.0m);
+        //     ItemType crust = new ItemType("crust");
+        //     AddCrust(1.5m, 100, "regular", crust);
+        //     AddCrust(2.0m, 100, "hand-tossed", crust);
+        //     AddCrust(1.0m, 100, "thin", crust);
         // }
 
-        // protected override void InitPresetPizza()
+        // public override void InitPresetPizza()
         // {
         //     /*Veggie*/
-        //     PresetPizza tempP = new PresetPizza();
+        //     BasicPizza tempP = new BasicPizza();
         //     tempP.Type = "Basic Veggie Pizza";
         //     tempP.AddCrust(CrustList[0]);
         //     tempP.AddTopping(ToppingsList[0]);

@@ -18,40 +18,43 @@ namespace PizzaBox.Domain.Models
             MaxPrice = 250.0m;
             
             InitToppings();
-            // InitSize();
-            //InitCrust();  
-            // InitPresetPizza();
+            InitSize();
+            InitCrust();  
+            InitPresetPizza();
             
         }
 
-        protected override void InitToppings()
+        public override void InitToppings()
         {
-            AddTopping(0.66m, 100, "beef", new ItemType("topping"));
-            AddTopping(0.66m, 100, "chicken", new ItemType("topping"));
-            AddTopping(0.66m, 100, "ham", new ItemType("topping"));
-            AddTopping(0.66m, 100, "mushroom", new ItemType("topping"));
-            AddTopping(0.66m, 100, "olive", new ItemType("topping"));
-            AddTopping(0.66m, 100, "peppers", new ItemType("topping"));
-            AddTopping(0.66m, 100, "pepporoni", new ItemType("topping"));
-            AddTopping(0.66m, 100, "pineapple", new ItemType("topping"));
-            AddTopping(0.66m, 100, "salami", new ItemType("topping"));
-            AddTopping (0.66m, 100, "sausage", new ItemType("topping"));
+            ItemType toppings = new ItemType("toppings");
+            AddTopping(0.66m, 100, "beef", toppings);
+            AddTopping(0.75m, 100, "chicken", toppings);
+            AddTopping(0.50m, 100, "ham", toppings);
+            AddTopping(0.60m, 100, "mushroom", toppings);
+            AddTopping(0.30m, 100, "olive", toppings);
+            AddTopping(0.40m, 100, "peppers", toppings);
+            AddTopping(0.50m, 100, "pepporoni", toppings);
+            AddTopping(0.35m, 100, "pineapple", toppings);
+            AddTopping(0.45m, 100, "salami", toppings);
+            AddTopping (0.55m, 100, "sausage", toppings);
         }
-        protected override void InitSize()
+        public override void InitSize()
         {
-            AddSize(3.0m, 100, "small", new ItemType("size"));
-            AddSize(4.0m, 100, "medium", new ItemType("size"));
-            AddSize(5.0m, 100, "large", new ItemType("size"));
-            AddSize (6.0m, 100, "extra large", new ItemType("size"));
+            ItemType size = new ItemType("size");
+            AddSize(3.0m, 100, "small", size);
+            AddSize(4.0m, 100, "medium", size);
+            AddSize(5.0m, 100, "large", size);
+            AddSize (6.0m, 100, "extra large", size);
         }
-        protected override void InitCrust()
+        public override void InitCrust()
         {
-            AddCrust(1.0m, 100, "regular", new ItemType("crust"));
-            AddCrust(1.5m, 100, "hand-tossed", new ItemType("crust"));
-            AddCrust(1.0m, 100, "thin", new ItemType("crust"));
+            ItemType crust = new ItemType("crust");
+            AddCrust(1.0m, 100, "regular", crust);
+            AddCrust(1.5m, 100, "hand-tossed", crust);
+            AddCrust(1.0m, 100, "thin", crust);
         }
         
-        protected override void InitPresetPizza()
+        public override void InitPresetPizza()
         {
             /*Meat*/
             BasicPizza tempP = new BasicPizza();
@@ -63,6 +66,9 @@ namespace PizzaBox.Domain.Models
             tempP.AddTopping(ToppingsList[6]);
             tempP.AddTopping(ToppingsList[8]);
             tempP.CalculatePrice();
+            // PresetPizza presetP = new PresetPizza();
+            // presetP.BasicPizza = tempP;
+            // presetP.StoreID = this.StoreID;
             PresetPizzas.Add(tempP);
             /*Hawaiian*/
             tempP = new BasicPizza();
@@ -72,6 +78,9 @@ namespace PizzaBox.Domain.Models
             tempP.AddTopping(ToppingsList[5]);
             tempP.AddTopping(ToppingsList[7]);
             tempP.CalculatePrice();
+            // presetP = new PresetPizza();
+            // presetP.BasicPizza = tempP;
+            // presetP.StoreID = this.StoreID;
             PresetPizzas.Add(tempP);
         }
         
