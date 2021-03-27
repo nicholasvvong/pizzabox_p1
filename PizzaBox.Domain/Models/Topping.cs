@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using PizzaBox.Domain.Models;
@@ -11,6 +12,9 @@ namespace PizzaBox.Domain.Abstracts
         public decimal Price { get; protected set; }
         public int Inventory { get; protected set; }
         public AStore Store { get; set; }
+
+        public ICollection<BasicPizza>  Pizzas { get; set; }
+        public ICollection<PresetPizza> PresetPizzas { get; set; }
 
         protected Topping()
         {

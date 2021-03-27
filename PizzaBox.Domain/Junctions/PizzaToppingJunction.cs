@@ -12,7 +12,7 @@ namespace PizzaBox.Domain.Junctions
         [ForeignKey("ToppingID")]
         public Guid ToppingID { get; set; }
 
-        public virtual PresetPizza PresetPizza { get; set; }
+        public virtual BasicPizza PresetPizza { get; set; }
         public virtual Topping Topping { get; set; }
     }
 }

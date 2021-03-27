@@ -24,7 +24,7 @@ namespace PizzaBox.Domain.Abstracts
         public IList<Size> SizeList { get; set; }
         public IList<Crust> CrustList { get; set; }
 
-        protected AStore()
+        public AStore()
         {
             
         }

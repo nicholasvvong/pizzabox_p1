@@ -7,12 +7,10 @@ namespace PizzaBox.Domain.Models
 {
     public class PresetPizza
     {
-        [ForeignKey("StoreID")]
-        public Guid StoreID { get; set; }
-        [ForeignKey("PresetID")]
-        public Guid PresetID { get; set; }
+        public Guid PizzaID { get; set; }
         
         public AStore store { get; set; }
         public BasicPizza BasicPizza { get; set; }
+        public Topping Topping { get; set; }
     }
 }

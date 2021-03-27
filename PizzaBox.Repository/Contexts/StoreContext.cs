@@ -15,7 +15,6 @@ namespace PizzaBox.Repository
         public DbSet<ItemType> ItemTypes { get; set; }
         public DbSet<APizzaComponent> Comps { get; set; }
         public DbSet<BasicPizza> PrePizzas { get; set; }
-        public DbSet<PresetPizza> PrePizzaset { get; set; }
         public DbSet<PizzaToppingJunction> PTJunc { get; set; }
 
         public StoreContext(DbContextOptions<StoreContext> options) : base(options)
@@ -46,12 +45,6 @@ namespace PizzaBox.Repository
                 {
                     o.HasKey(ky => new{ky.PresetPizzaID, ky.ToppingID});
                 });
-            modelBuilder.Entity<PresetPizza>(
-                o=>
-                {
-                    o.HasKey(ky => new{ky.StoreID, ky.PresetID});
-                });
-
             modelBuilder.Entity<BasicPizza>(
                 eb =>
                 {

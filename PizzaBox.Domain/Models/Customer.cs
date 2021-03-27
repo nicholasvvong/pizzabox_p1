@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Security.Cryptography;
 using PizzaBox.Domain.Abstracts;
 
 namespace PizzaBox.Domain.Models
@@ -12,7 +13,7 @@ namespace PizzaBox.Domain.Models
         public Guid CustomerID { get; set; }
         public string Fname { get; set; }
         public string Lname { get; set; }
-        private string _password { get; set; }
+        public string Password { get; set; }
         public DateTime LastTimeOrdered { get; protected set; }
         public AStore LastStore { get; protected set; }
         public AStore StoreManger { get; protected set; }
@@ -25,7 +26,7 @@ namespace PizzaBox.Domain.Models
         {
             Fname = fname;
             Lname = lname;
-            _password = password;
+            Password = password;
         }
 
         private bool CanOrder()

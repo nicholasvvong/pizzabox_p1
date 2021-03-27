@@ -14,9 +14,12 @@ namespace PizzaBox.Domain.Models
         public Guid PresetID { get; set; } = Guid.NewGuid();
         public string Type { get; set; }
         public decimal PizzaPrice { get; protected set; }
-        public List<Topping> Toppings { get; set; }
+        //public List<Topping> Toppings { get; set; }
         public Crust Crust { get; set; }
         public Size Size{ get; set; }
+
+        public ICollection<Topping> Toppings { get; set; }
+        public ICollection<PresetPizza> PresetPizzas { get; set; }
 
         public BasicPizza()
         {

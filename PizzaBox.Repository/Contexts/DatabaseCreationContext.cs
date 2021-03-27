@@ -11,7 +11,6 @@ namespace PizzaBox.Repository
         public DbSet<AStore> Stores { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<PresetPizza> PrePizzas { get; set; }
         public DbSet<APizzaComponent> Comps { get; set; }
         public DbSet<PizzaToppingJunction> PTJunc { get; set; }
         public DbSet<PizzaOrderJunction> POJunc { get; set; }
@@ -54,16 +53,15 @@ namespace PizzaBox.Repository
                 {
                     o.HasKey(ky => new{ky.OrderID, ky.CustomerID});
                 });
-            modelBuilder.Entity<PresetPizza>(
-                o=>
-                {
-                    o.HasKey(ky => new{ky.StoreID, ky.PresetID});
-                });
 
             modelBuilder.Entity<BasicPizza>(
                 eb =>
                 {
                     eb.HasKey(ky => new {ky.PresetID}); //ky.Type});
+                    eb.HasMany(u => u.Toppings)
+                    .WithMany(g => g.Pizzas).UsingEntity<PresetPizza>(
+                        j => j.HasOne(w => w.Topping).WithMany(g => g.PresetPizzas),
+                        j => j.HasOne(w => w.BasicPizza).WithMany(u => u.PresetPizzas));
                 });
 
             modelBuilder.Entity<AStore>(

@@ -13,6 +13,7 @@ let toppingLimit = 5;
 
 const topbar = document.querySelector('.topbar');
 const main = document.querySelector('.maincontent');
+var storeName = "";
 var storeID = "";
 var storeIndex = 0;
 var storeObj;
@@ -31,18 +32,24 @@ fetch('api/Store', {
             return response.json();
     })
     .then((jsonReponse) => {
-        console.log(jsonReponse);
-        // let obj = JSON.parse(jsonReponse[0]);
-        // alert(`${jsonReponse[1].name}`);
-        jsonReponse.forEach(value =>{
-            console.log(value.name);
-            storeList.push(value.name);
-            storeObjList.push(value);
-        })
+        const storeObjects = Object.entries(jsonReponse)
+        for(const store of storeObjects)
+        {
+            storeObjList.push(store);
+        }
+
+        for(const [key, value] of Object.entries(jsonReponse)) {
+            storeList.push(key);
+        }
     })
     .catch(function(err) {
         console.log("Failed to fetch page: ", err);
     });
+
+function FetchStoreObject()
+{
+
+}
 
 
 
@@ -120,6 +127,7 @@ function initStoreInfo() {
     possibleToppings = [];
     pizzaList = [];
 
+    FetchStoreObject();
     storeObj.crustList.forEach(value => {
         possibleCrust.push(createComp(value.name, value.price));
     })
@@ -179,9 +187,9 @@ function initStoreButtons() {
         if(event.target.classList.contains("storebtn"))
         {
             // console.log(event.target.id);
-            storeID = event.target.id;
-            storeIndex = storeList.indexOf(storeID);
-            storeObj = storeObjList[storeIndex];
+            storeName = event.target.id;
+            storeIndex = storeList.indexOf(storeName);
+            storeID = storeObjList[storeIndex][1];
             startOrder();
         }
     })
@@ -449,7 +457,7 @@ function startOrder() {
     const currentOrderHTML = `
         <div class="currentorder">
             <h1>Current Order</h1>
-            <h2>${storeID}</h2>
+            <h2>${storeName}</h2>
             <ul class="currentList">
                 
             </ul>

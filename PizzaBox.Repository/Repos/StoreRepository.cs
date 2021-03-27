@@ -18,37 +18,105 @@ namespace PizzaBox.Repository
 
         public List<AStore> GetStores()
         {
-            List<AStore> stores = new List<AStore>();
-            stores.Add(new FreddyStore());
-            InitStores();
+            List<AStore> stores = context.Stores.ToList();
+
+            //InitStores();
             return stores;
         }
-
-        private void InitStores()
+        public int GetMaxPizzas(Guid id)
         {
-            AStore cpk = new CaliforniaStore();
-            AStore store = context.Stores.SingleOrDefault(name => name.Name == "CPK");
-            Guid sID = Guid.NewGuid();
-            
+            AStore store = context.Stores.SingleOrDefault(id => Guid.Equals(id.StoreID, id));
             if(store is AStore)
             {
-                sID = store.StoreID;
-                Console.WriteLine(sID);
-                // foreach(Topping t in cpk.ToppingsList)
-                // {
-                //     APizzaComponent compExist = context.Comps.SingleOrDefault(name => name.Name == t.Name);
-                //     if(compExist is APizzaComponent)
-                //     {
-                //         Guid compID = compExist.CompID;
-                //         t.StoreID = sID;
-                //         t.CompID = compID;
-                //         t.ToppingID = Guid.NewGuid();
-                //         context.Add<Topping>(t);
-                //     }
-                // }
+                return store.MaxPizzas;
             }
-
-            context.SaveChanges();
+            return -1;
         }
+
+        public int GetMaxToppings(Guid id)
+        {
+            AStore store = context.Stores.SingleOrDefault(id => Guid.Equals(id.StoreID, id));
+            if(store is AStore)
+            {
+                return store.MaxToppings;
+            }
+            return -1;
+        }
+
+        public IList<Crust> GetCrusts(Guid id)
+        {
+            List<Crust> CrustList = new List<Crust>();
+            CrustList = context.Crusts.Where(n => Guid.Equals(n.Store.StoreID, id)).ToList();
+            return CrustList;
+        }
+
+        public IList<Topping> GetToppings(Guid id)
+        {
+            List<Topping> ToppingsList = new List<Topping>();
+            ToppingsList = context.Toppings.Where(n => Guid.Equals(n.Store.StoreID, id)).ToList();
+            return ToppingsList;
+        }
+
+        public IList<BasicPizza> GetPresets(Guid id)
+        {
+            List<BasicPizza> PresetPizzas = new List<BasicPizza>();
+
+
+            return PresetPizzas;
+        }
+
+        public IList<Size> GetSizes(Guid id)
+        {
+            List<Size> SizeList = new List<Size>();
+            SizeList = context.Sizes.Where(n => Guid.Equals(n.Store.StoreID, id)).ToList();
+            return SizeList;
+        }
+
+        public string GetName(Guid id)
+        {
+            AStore store = context.Stores.SingleOrDefault(id => Guid.Equals(id.StoreID, id));
+            if(store is AStore)
+            {
+                return store.Name;
+            }
+            return "";
+        }
+
+        public decimal GetMaxPrice(Guid id)
+        {
+            AStore store = context.Stores.SingleOrDefault(id => Guid.Equals(id.StoreID, id));
+            if(store is AStore)
+            {
+                return store.MaxPrice;
+            }
+            return -1;
+        }
+
+        // private void InitStores()
+        // {
+        //     AStore cpk = new CaliforniaStore();
+        //     AStore store = context.Stores.SingleOrDefault(name => name.Name == "CPK");
+        //     Guid sID = Guid.NewGuid();
+
+        //     if(store is AStore)
+        //     {
+        //         sID = store.StoreID;
+        //         Console.WriteLine(sID);
+        //         // foreach(Topping t in cpk.ToppingsList)
+        //         // {
+        //         //     APizzaComponent compExist = context.Comps.SingleOrDefault(name => name.Name == t.Name);
+        //         //     if(compExist is APizzaComponent)
+        //         //     {
+        //         //         Guid compID = compExist.CompID;
+        //         //         t.StoreID = sID;
+        //         //         t.CompID = compID;
+        //         //         t.ToppingID = Guid.NewGuid();
+        //         //         context.Add<Topping>(t);
+        //         //     }
+        //         // }
+        //     }
+
+        //     context.SaveChanges();
+        // }
     }
 }
