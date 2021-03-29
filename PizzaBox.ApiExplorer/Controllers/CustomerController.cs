@@ -39,6 +39,12 @@ namespace PizzaBox.ApiExplorer
             return JsonSerializer.Serialize<Customer>(cust);
         }
 
+        [HttpPost("init")]
+        public void Init()
+        {
+            customerLogic.LogicRepoGap();
+        }
+
         // [HttpPost]
         // [ActionName("Create")]
         // public Customer Create([FromBody] string jsonString)

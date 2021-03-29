@@ -17,7 +17,7 @@ namespace PizzaBox.Domain.Models
         public string Email { get; set; }
         public DateTime LastTimeOrdered { get; protected set; }
         public AStore LastStore { get; set; }
-        public AStore StoreManger { get; set; }
+        public Guid StoreManger { get; set; }
         public Customer()
         {
             LastTimeOrdered = DateTime.MinValue;

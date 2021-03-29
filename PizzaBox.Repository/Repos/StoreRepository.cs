@@ -20,6 +20,7 @@ namespace PizzaBox.Repository
         {
             // CaliforniaStore cpk = new CaliforniaStore();
             // context.Add<AStore>(cpk);
+            // context.SaveChanges();
             // InitChicagoStore();
             // InitFreddyStore();
             // InitNewYorkStore();
@@ -33,7 +34,7 @@ namespace PizzaBox.Repository
         public List<AStore> GetStores()
         {
             List<AStore> stores = context.Stores.ToList();
-            // StoresInit();
+            //StoresInit();
             return stores;
         }
         public int GetMaxPizzas(Guid id)

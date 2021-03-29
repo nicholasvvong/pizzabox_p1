@@ -195,3 +195,41 @@ function logIn() {
     //     }
     // }
 }
+
+fetch('api/Customer/init',
+    {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type':'application/json'
+        },
+        body: JSON.stringify(),
+    })       
+    .then(response => {
+        if(!response.ok) {
+            throw new Error(`Network reponse was not ok (${reponse.status})`);
+        }
+        else {
+            return response.json();
+        }
+    })
+    .then((jsonReponse) => {
+        console.log(jsonReponse);
+        if(jsonReponse == 'null') {
+            let findValid = document.querySelector("#invalidEmail");
+            if(!findValid) {
+                let incorrectText = document.createElement("span");
+                incorrectText.classList.add("formItem");
+                incorrectText.classList.add("incorrect");
+                incorrectText.setAttribute("id", "invalidEmail");
+                
+                incorrectText.innerText = "Email already exists";
+
+                form.insertBefore(incorrectText, form.lastElementChild);
+            }
+        }
+        else {
+            console.log("Account Created");
+            accountLogInForm();
+        }
+    })

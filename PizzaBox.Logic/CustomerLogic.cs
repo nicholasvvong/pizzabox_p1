@@ -14,6 +14,11 @@ namespace PizzaBox.Logic
             customerRepo = r;
         }
 
+        public void LogicRepoGap()
+        {
+            customerRepo.RunInits();
+        }
+
         public Customer CreateCustomer(Customer obj)
         {
             if(customerRepo.IsExistingAccount(obj.Email.ToLower()))
@@ -25,7 +30,7 @@ namespace PizzaBox.Logic
                 obj.Email.ToLower();
                 obj.Password = PasswordHash(obj.Password);
                 obj.LastStore = null;
-                obj.StoreManger = null;
+                obj.StoreManger = Guid.Empty;
                 customerRepo.AddNewCustomer(obj);
             }
 

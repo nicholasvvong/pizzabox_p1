@@ -6,6 +6,7 @@ using PizzaBox.Domain.Models;
 
 namespace PizzaBox.Domain.Abstracts
 {
+    [Table("Stores")]
     public class AStore
     {
         [Key]
