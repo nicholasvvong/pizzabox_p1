@@ -21,7 +21,10 @@ namespace PizzaBox.Domain.Abstracts
 
         public AStore()
         {
-            
+            PresetPizzas = new List<BasicPizza>();
+            ToppingsList = new List<Topping>();
+            SizeList = new List<Size>();
+            CrustList = new List<Crust>();
         }
 
         protected virtual void AddTopping(decimal p, int i, string n, ItemType t)
@@ -35,6 +38,19 @@ namespace PizzaBox.Domain.Abstracts
         protected virtual void AddCrust(decimal p, int i, string n, ItemType t)
         {
             CrustList.Add(new Crust(this, p, i, n, t));
+        }
+
+        protected virtual void AddTopping(decimal p, int i, APizzaComponent apc)
+        {
+            ToppingsList.Add(new Topping(this, p, i, apc));
+        }
+        protected virtual void AddSize(decimal p, int i, APizzaComponent apc)
+        {
+            SizeList.Add(new Size(this, p, i, apc));
+        }
+        protected virtual void AddCrust(decimal p, int i, APizzaComponent apc)
+        {
+            CrustList.Add(new Crust(this, p, i, apc));
         }
 
         public virtual void InitToppings(){}

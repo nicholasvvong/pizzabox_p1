@@ -29,6 +29,15 @@ namespace PizzaBox.Domain.Abstracts
             Inventory = i;
             PizzaType = new APizzaComponent(n, t);
         }
+        public Crust(AStore store, decimal p, int i, APizzaComponent apc)
+        {
+            CheeseStuffed = false;
+            StuffedPrice = 1.50m;
+            Store = store;
+            Price = p;
+            Inventory = i;
+            PizzaType = apc;
+        }
 
         protected void AddPrice(decimal p)
         {

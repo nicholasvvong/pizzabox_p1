@@ -1,5 +1,9 @@
 "use strict"
 
+console.log(localStorage.getItem("customerInfo"));
+let customerObj = JSON.parse(localStorage.getItem("customerInfo"));
+document.querySelector('#name').firstElementChild.innerText = customerObj.Fname + " " + customerObj.Lname;
+
 let storeObjList = [];
 let storeList = [];
 let pizzaList = [];

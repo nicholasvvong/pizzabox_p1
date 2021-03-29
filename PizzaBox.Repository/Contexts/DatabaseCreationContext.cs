@@ -11,7 +11,10 @@ namespace PizzaBox.Repository
         public DbSet<AStore> Stores { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<ItemType> ItemTypes { get; set; }
         public DbSet<APizzaComponent> Comps { get; set; }
+        public DbSet<BasicPizza> BasicPizza { get; set; }
+        public DbSet<PresetPizza> PresetPizza { get; set; }
         public DbSet<Topping> Toppings { get; set; }
         public DbSet<Size> Sizes { get; set; }
         public DbSet<Crust> Crusts { get; set; }

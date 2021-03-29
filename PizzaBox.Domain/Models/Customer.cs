@@ -10,13 +10,14 @@ namespace PizzaBox.Domain.Models
     public class Customer
     {
         [Key]
-        public Guid CustomerID { get; set; }
+        public Guid CustomerID { get; set; } = Guid.NewGuid();
         public string Fname { get; set; }
         public string Lname { get; set; }
         public string Password { get; set; }
+        public string Email { get; set; }
         public DateTime LastTimeOrdered { get; protected set; }
-        public AStore LastStore { get; protected set; }
-        public AStore StoreManger { get; protected set; }
+        public AStore LastStore { get; set; }
+        public AStore StoreManger { get; set; }
         public Customer()
         {
             LastTimeOrdered = DateTime.MinValue;

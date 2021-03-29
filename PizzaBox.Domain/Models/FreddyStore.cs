@@ -44,18 +44,18 @@ namespace PizzaBox.Domain.Models
         //     AddCrust(1.0m, 100, "thin", crust);
         // }
 
-        // public override void InitPresetPizza()
-        // {
-        //     /*Veggie*/
-        //     BasicPizza tempP = new BasicPizza();
-        //     tempP.Type = "Basic Veggie Pizza";
-        //     tempP.AddCrust(CrustList[0]);
-        //     tempP.AddTopping(ToppingsList[0]);
-        //     tempP.AddTopping(ToppingsList[1]);
-        //     tempP.AddTopping(ToppingsList[4]);
-        //     tempP.AddTopping(ToppingsList[6]);
-        //     tempP.CalculatePrice();
-        //     PresetPizzas.Add(tempP);
-        // }
+        public override void InitPresetPizza()
+        {
+            /*Veggie*/
+            BasicPizza tempP = new BasicPizza();
+            tempP.Type = "Basic Veggie Pizza";
+            tempP.AddCrust(CrustList[0]);
+            tempP.AddTopping(ToppingsList[0]);
+            tempP.AddTopping(ToppingsList[1]);
+            tempP.AddTopping(ToppingsList[4]);
+            tempP.AddTopping(ToppingsList[6]);
+            //tempP.CalculatePrice();
+            PresetPizzas.Add(tempP);
+        }
     }
 }

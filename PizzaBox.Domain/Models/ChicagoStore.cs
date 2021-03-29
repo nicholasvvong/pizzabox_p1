@@ -19,21 +19,33 @@ namespace PizzaBox.Domain.Models
             // InitPresetPizza();
         }
 
-        public void InitTs(ItemType toppings)
+        public void InitTs(APizzaComponent apc)
         {
             //ItemType toppings = new ItemType("topping");
-            AddTopping(0.75m, 100, "beef", toppings);
-            AddTopping(1.50m, 100, "chicken", toppings);
-            AddTopping(0.57m, 100, "ham", toppings);
-            AddTopping(0.45m, 100, "mushroom", toppings);
-            AddTopping(0.25m, 100, "olive", toppings);
-            AddTopping(0.30m, 100, "peppers", toppings);
-            AddTopping(0.50m, 100, "pineapple", toppings);
-            AddTopping(0.70m, 100, "salami", toppings);
-            AddTopping(0.70m, 100, "sausage", toppings);
-            AddTopping(0.50m, 100, "bacon", toppings);
-            AddTopping(1.00m, 100, "onion", toppings);
-            AddTopping(0.25m, 100, "pepporoni", toppings);
+            // AddTopping(0.75m, 100, "beef", apc);
+            // AddTopping(1.50m, 100, "chicken", apc);
+            // AddTopping(0.57m, 100, "ham", apc);
+            // AddTopping(0.45m, 100, "mushroom", apc);
+            // AddTopping(0.25m, 100, "olive", apc);
+            // AddTopping(0.30m, 100, "peppers", apc);
+            // AddTopping(0.50m, 100, "pineapple", apc);
+            // AddTopping(0.70m, 100, "salami", apc);
+            // AddTopping(0.70m, 100, "sausage", apc);
+            // AddTopping(0.50m, 100, "bacon", apc);
+            // AddTopping(1.00m, 100, "onion", apc);
+            // AddTopping(0.25m, 100, "pepporoni", apc);
+            AddTopping(0.75m, 100, apc);
+            AddTopping(1.50m, 100, apc);
+            AddTopping(0.57m, 100, apc);
+            AddTopping(0.45m, 100, apc);
+            AddTopping(0.25m, 100, apc);
+            AddTopping(0.30m, 100, apc);
+            AddTopping(0.50m, 100, apc);
+            AddTopping(0.70m, 100, apc);
+            AddTopping(0.70m, 100, apc);
+            AddTopping(0.50m, 100, apc);
+            AddTopping(1.00m, 100, apc);
+            AddTopping(0.25m, 100, apc);
         }
         public override void InitSize()
         {
@@ -61,7 +73,7 @@ namespace PizzaBox.Domain.Models
             tempP.AddTopping(ToppingsList[2]);
             tempP.AddTopping(ToppingsList[6]);
             tempP.AddTopping(ToppingsList[8]);
-            tempP.CalculatePrice();
+            //tempP.CalculatePrice();
             PresetPizzas.Add(tempP);
             /*Deluxe*/
             tempP = new BasicPizza();
@@ -72,7 +84,7 @@ namespace PizzaBox.Domain.Models
             tempP.AddTopping(ToppingsList[3]);
             tempP.AddTopping(ToppingsList[5]);
             tempP.AddTopping(ToppingsList[11]);
-            tempP.CalculatePrice();
+            //tempP.CalculatePrice();
             PresetPizzas.Add(tempP);
         }
     }

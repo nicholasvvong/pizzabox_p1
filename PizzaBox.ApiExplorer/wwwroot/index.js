@@ -1,5 +1,7 @@
 "use strict"
 
+const uri = document.documentURI;
+
 const form = document.querySelector(".login")
 accountLogInForm();
 
@@ -25,22 +27,30 @@ form.addEventListener("click", (event) => {
     }
 })
 
+form.addEventListener("keyup", (event) => {
+    event.preventDefault();
+    if(event.keyCode === 13) {
+        console.log("pressed enter");
+        //logIn();
+    }
+})
+
 function accountLogInForm() {
     const changeHTML = `
     <span class="formItem">
         <label for="email">Email: </label>
-        <input type="text" class="textinput" name="email">
+        <input type="email" class="textinput" name="email">
     </span>
     <span class="formItem">
         <label for="password">Password: </label>
-        <input type="text" class="textinput" name="password">
+        <input type="password" class="textinput" name="password">
     </span>
     <span class="formitem">
         <span><button type="submit" class="create">Create New Account</button></span>
-        <span><button type="submit" class="login">Login</button></span>
+        <span><button type="submit" class="login" default>Login</button></span>
     </span>
     `
-
+    //window.history.pushState({}, "Login Page", uri + "/login");
     form.innerHTML = changeHTML;
 }
 
@@ -48,75 +58,140 @@ function accountCreateForm() {
     const changeHTML = `
     <span class="formItem">
         <label for="email">Email: </label>
-        <input type="text" class="textinput" name="email">
+        <input type="email" class="textinput" name="email" required>
     </span>
     <span class="formItem">
         <label for="password">Password: </label>
-        <input type="text" class="textinput" name="password">
+        <input type="password" class="textinput" name="password" required>
     </span>
     <span class="formItem">
         <label for="fname">First Name: </label>
-        <input type="text" class="textinput" name="fname">
+        <input type="text" class="textinput" name="fname" required>
     </span>
     <span class="formItem">
         <label for="lname">Last Name: </label>
-        <input type="text" class="textinput" name="lname">
+        <input type="text" class="textinput" name="lname" required>
     </span>
     <button type="submit" class="creating">Create</button>
     `
+
+    //window.history.pushState({}, "Create Page", uri + "/create");
     form.innerHTML = changeHTML;
 }
 
 function createAccount() {
+    let reg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if(!reg.test(form.email.value))
+    {
+        console.log("failed"); 
+        return;
+    }
     
-    if(checkAlreadyAccount()) {
-        console.log("creating account");
-        accountLogInForm();
+    const Customer = {
+        Email: form.email.value,
+        Password: form.password.value,
+        Fname: form.fname.value,
+        Lname: form.lname.value
     }
-    else {
-        let incorrectText = document.createElement("span");
-        incorrectText.classList.add("formItem");
-        incorrectText.classList.add("incorrect");
-        incorrectText.innerText = "Email already exists";
 
-        form.insertBefore(incorrectText, form.lastElementChild);
-    }
+    fetch('api/Customer/create',
+    {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type':'application/json'
+        },
+        body: JSON.stringify(Customer),
+    })       
+    .then(response => {
+        if(!response.ok) {
+            throw new Error(`Network reponse was not ok (${reponse.status})`);
+        }
+        else {
+            return response.json();
+        }
+    })
+    .then((jsonReponse) => {
+        console.log(jsonReponse);
+        if(jsonReponse == 'null') {
+            let findValid = document.querySelector("#invalidEmail");
+            if(!findValid) {
+                let incorrectText = document.createElement("span");
+                incorrectText.classList.add("formItem");
+                incorrectText.classList.add("incorrect");
+                incorrectText.setAttribute("id", "invalidEmail");
+                
+                incorrectText.innerText = "Email already exists";
+
+                form.insertBefore(incorrectText, form.lastElementChild);
+            }
+        }
+        else {
+            console.log("Account Created");
+            accountLogInForm();
+        }
+    })
 }
 
 function logIn() {
-    if(checkValidLogin()) {
-        window.location.replace("customer.html");
-    } 
-    else {
-        let incorrectText = document.createElement("span");
-        incorrectText.classList.add("formItem");
-        incorrectText.classList.add("incorrect");
-        incorrectText.innerText = "Incorrect email and/or password";
+    const loginInfo = {
+        email: form.email.value,
+        password: form.password.value
+    };
 
-        form.insertBefore(incorrectText, form.lastElementChild);
-    }
-}
+    fetch('api/Customer/login',
+    {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type':'application/json'
+        },
+        body: JSON.stringify(loginInfo),
+    })       
+    .then(response => {
+        if(!response.ok) {
+            throw new Error(`Network reponse was not ok (${reponse.status})`);
+        }
+        else {
+            return response.json();
+        }
+    })
+    .then((jsonReponse) => {
+        console.log(jsonReponse);
+        if(jsonReponse == 'null') {
+            let findValid = document.querySelector("#invalidLogin");
+            if(!findValid) {
+                let incorrectText = document.createElement("span");
+                incorrectText.classList.add("formItem");
+                incorrectText.classList.add("incorrect");
+                incorrectText.setAttribute("id", "invalidLogin");
+                incorrectText.innerText = "Incorrect email and/or password";   
 
-function checkValidLogin() {
-    let emailInput = form.email.value;
-    let pwInput = form.password.value;
+                form.insertBefore(incorrectText, form.lastElementChild);
+            }
+        }
+        else {
+            console.log("Logging in");
+            localStorage.setItem("customerInfo", jsonReponse);
+            window.location.replace("customer.html");
+            //window.history.pushState(jsonReponse, "PizzaHub!", "customer.html");
+        }
+    })
 
-    if(emailInput == correctLogin.email && pwInput === correctLogin.password) {
-        return true;
-    }
-    
-    else {
-        return false;
-    }
-}
 
-function checkAlreadyAccount() {
-    let emailInput = form.email.value;
+    // if(checkValidLogin()) {
+    //     window.location.replace("customer.html");
+    // } 
+    // else {
+    //     let findValid = document.querySelector("#invalidLogin");
+    //     if(!findValid) {
+    //         let incorrectText = document.createElement("span");
+    //         incorrectText.classList.add("formItem");
+    //         incorrectText.classList.add("incorrect");
+    //         incorrectText.setAttribute("id", "invalidLogin");
+    //         incorrectText.innerText = "Incorrect email and/or password";   
 
-    if(correctLogin.email == emailInput) {
-        return false;
-    }
-    else {
-        return true;
-    }
+    //         form.insertBefore(incorrectText, form.lastElementChild);
+    //     }
+    // }
 }

@@ -17,20 +17,20 @@ namespace PizzaBox.ApiExplorer
             storeLogic = sL;
         }
 
-        [HttpGet("{id}")]
-        public AStore Get(Guid id)
-        {
-            AStore store = storeLogic.GetStoreObject(id);
-
-            return store;
-        }
-
         [HttpGet]
         public Dictionary<string, Guid> Get()
         {
             Dictionary<string, Guid> stores = storeLogic.GetStoresStrings();
 
             return stores;
+        }
+
+        [HttpGet("{id}")]
+        public AStore Get(Guid id)
+        {
+            AStore store = storeLogic.GetStoreObject(id);
+
+            return store;
         }
     }
 }
