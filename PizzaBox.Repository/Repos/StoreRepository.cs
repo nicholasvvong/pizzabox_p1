@@ -19,12 +19,12 @@ namespace PizzaBox.Repository
 
         private void StoresInit()
         {
-            // CaliforniaStore cpk = new CaliforniaStore();
-            // context.Add<AStore>(cpk);
-            // context.SaveChanges();
-            // InitChicagoStore();
-            // InitFreddyStore();
-            // InitNewYorkStore();
+            CaliforniaStore cpk = new CaliforniaStore();
+            context.Add<AStore>(cpk);
+            context.SaveChanges();
+            InitChicagoStore();
+            InitFreddyStore();
+            InitNewYorkStore();
         }
 
         public void AddTopping(string name, APizzaComponent apc)

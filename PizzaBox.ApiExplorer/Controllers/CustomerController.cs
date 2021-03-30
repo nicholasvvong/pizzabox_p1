@@ -33,7 +33,7 @@ namespace PizzaBox.ApiExplorer
         }
 
         [HttpPost("create")]
-        public string Create([FromBody] Customer obj)
+        public string Create([FromBody] RawCustomer obj)
         {
             Customer cust = customerLogic.CreateCustomer(obj);
             return JsonSerializer.Serialize<Customer>(cust);

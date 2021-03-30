@@ -39,7 +39,7 @@ function accountLogInForm() {
     const changeHTML = `
     <span class="formItem">
         <label for="email">Email: </label>
-        <input type="email" class="textinput" name="email">
+        <input type="email" class="textinput" name="email" autocomplete="off">
     </span>
     <span class="formItem">
         <label for="password">Password: </label>
@@ -58,7 +58,7 @@ function accountCreateForm() {
     const changeHTML = `
     <span class="formItem">
         <label for="email">Email: </label>
-        <input type="email" class="textinput" name="email" required>
+        <input type="email" class="textinput" name="email" autocomplete="off" required>
     </span>
     <span class="formItem">
         <label for="password">Password: </label>
@@ -66,11 +66,11 @@ function accountCreateForm() {
     </span>
     <span class="formItem">
         <label for="fname">First Name: </label>
-        <input type="text" class="textinput" name="fname" required>
+        <input type="text" class="textinput" name="fname" autocomplete="off" required>
     </span>
     <span class="formItem">
         <label for="lname">Last Name: </label>
-        <input type="text" class="textinput" name="lname" required>
+        <input type="text" class="textinput" name="lname" autocomplete="off" required>
     </span>
     <button type="submit" class="creating">Create</button>
     `
@@ -88,10 +88,10 @@ function createAccount() {
     }
     
     const Customer = {
-        Email: form.email.value,
+        Email: form.email.value.trim(),
         Password: form.password.value,
-        Fname: form.fname.value,
-        Lname: form.lname.value
+        Fname: form.fname.value.trim(),
+        Lname: form.lname.value.trim()
     }
 
     fetch('api/Customer/create',
@@ -135,7 +135,7 @@ function createAccount() {
 
 function logIn() {
     const loginInfo = {
-        email: form.email.value,
+        email: form.email.value.trim(),
         password: form.password.value
     };
 

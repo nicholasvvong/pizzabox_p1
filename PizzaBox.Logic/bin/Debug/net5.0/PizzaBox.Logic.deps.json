@@ -8,6 +8,7 @@
     ".NETCoreApp,Version=v5.0": {
       "PizzaBox.Logic/1.0.0": {
         "dependencies": {
+          "Microsoft.EntityFrameworkCore": "5.0.4",
           "PizzaBox.Domain": "1.0.0",
           "PizzaBox.Repository": "1.0.0"
         },

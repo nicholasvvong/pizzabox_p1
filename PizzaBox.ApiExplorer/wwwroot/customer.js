@@ -12,9 +12,9 @@ let possibleCrust = [];
 let possibleToppings = [];
 let currentTotal = 0;
 
-let currentOrder = [createCustomPizza("custom","small", "crust1", ["topping1, topping2"])];
+let orderstarted = false;
 
-let toppingLimit = 5;
+let currentOrder = [];
 
 const topbar = document.querySelector('.topbar');
 const main = document.querySelector('.maincontent');
@@ -75,7 +75,7 @@ async function FetchStoreObject()
         console.log("Failed to fetch page: ", err);
     });
     
-    console.log("Toppings -----------------");
+ 
     await fetch('api/Store/Toppings', {
         method: 'POST',
         headers: {
@@ -97,7 +97,7 @@ async function FetchStoreObject()
     .catch(function(err) {
         console.log("Failed to fetch page: ", err);
     });
-    console.log("Crusts -----------------");
+ 
     await fetch('api/Store/Crusts', {
         method: 'POST',
         headers: {
@@ -120,7 +120,7 @@ async function FetchStoreObject()
         console.log("Failed to fetch page: ", err);
     });
 
-    console.log("Sizes -----------------");
+ 
     await fetch('api/Store/Sizes', {
         method: 'POST',
         headers: {
@@ -143,7 +143,7 @@ async function FetchStoreObject()
         console.log("Failed to fetch page: ", err);
     });
 
-    console.log("Presets -----------------");
+
     await fetch('api/Store/Presets', {
         method: 'POST',
         headers: {
@@ -167,6 +167,35 @@ async function FetchStoreObject()
     });
 }
 
+function FetchSubmitOrder() {
+    let orderInfo = {
+        pizzas: currentOrder,
+        store: storeID,
+        customer: customerObj.CustomerID
+    }
+
+    fetch('api/Orders/Submit', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type':'application/json'
+        },
+        body: JSON.stringify(orderInfo)
+    })
+    .then(response => {
+        if(!response.ok) {
+            throw new Error(`Network reponse was not ok (${reponse.status})`);
+        }
+        else
+            return response.json();
+    })
+    .then((jsonReponse) => {
+        console.log(jsonReponse);
+    })
+    .catch(function(err) {
+        console.log("Failed to fetch page: ", err);
+    });
+}
 
 
 //-------------------------------------------------------------------//
@@ -224,7 +253,6 @@ function createComp(cName, cPrice) {
 
 topbar.addEventListener("click", (event) => {
     if(event.target.parentNode.id == "name") {
-        // console.log("name");
         return;
     }
     if(event.target.id == "logout") {
@@ -232,18 +260,45 @@ topbar.addEventListener("click", (event) => {
         logOut();
     }
     if(event.target.id == 'selected') {
-        // console.log("selected1");
+
     }
     else {
-        switchSelected(event.target);
+        let cancel = true;
+        if(orderstarted) {
+            if(confirm("Are you sure you want to cancel your order?")) {
+                orderstarted = false;
+                cancel = true;
+            }
+            else {
+                cancel = false;
+            }
+        }
+        if(cancel) {
+            switchSelected(event.target);
+        }
     }
 })
+
+function initSubmitOrder() {
+    let submitbtn = document.querySelector(".orderbutton");
+    submitbtn.addEventListener("click", (event) => {
+            if(currentOrder.length < 1) {
+            alert("No items added to order");
+        }
+        else {
+            console.log(currentOrder);
+            showOrderHistory();
+            //FetchSubmitOrder();
+        }
+    })
+}
 
 function initStoreInfo() {
     possibleCrust = [];
     possibleSizes = [];
     possibleToppings = [];
     pizzaList = [];
+    currentOrder = [];
     currentTotal = 0.00;
 
     storeObj.toppingsList.forEach(value => {
@@ -268,6 +323,8 @@ function initStoreInfo() {
         presetP.price = value.pizzaPrice;
         pizzaList.push(presetP);
     })
+
+    console.log(storeObj);
 }
 
 function initOrderButtons() {
@@ -276,7 +333,6 @@ function initOrderButtons() {
     orderhistory.addEventListener("click", (event) => {
         if(event.target.classList.contains("information")) {
             if(!event.target.classList.contains("expanded")) {
-                // console.log(event.target.innerText);
                 
                 event.target.classList.add("expanded");
                 const additionalInformation = document.createElement("ol");
@@ -304,12 +360,10 @@ function initStoreButtons() {
 
         if(event.target.classList.contains("storebtn"))
         {
-            console.log(event.target.id);
             storeName = event.target.id;
             storeIndex = storeList.indexOf(storeName);
             storeID = storeObjList[storeIndex][1];
-            console.log(storeID);
-            
+            orderstarted = true;
             startOrder();
         }
     })
@@ -360,29 +414,31 @@ function initToppingLimit() {
         
         if(enoughToppings())
         {
-            // console.log("click");
+
         }
         
     }))
 }
 
 function initDeleteButton() {
-    let delcurrentBtn = document.querySelectorAll(".delbtn");
+    let allDeleteBtns = document.querySelectorAll(".delbtn");
+    let lastDeleBtn = allDeleteBtns[allDeleteBtns.length - 1];
 
-    delcurrentBtn.forEach(value => value.addEventListener("click", (event) => {
-        
-        // console.log(event.target.parentNode);
-        let deletePrice = event.target.parentNode.querySelector(".price").innerText;
+    lastDeleBtn.addEventListener("click", (event) =>{  
+        let deletePrice = event.target.parentNode.querySelector(".price").innerText.slice(1);
         currentTotal = parseFloat(currentTotal) - parseFloat(deletePrice);
+        currentOrder.splice(event.target.parentNode.value, 1);
         event.target.parentNode.remove();
+
+        updateOrderListValues();
         updatePrice();
-    }))
+    }) 
 }
 
 function enoughToppings() {
     let totalSelectedTopping = document.querySelectorAll('input[name="topping"]:checked');
 
-    if(totalSelectedTopping.length >= 5) {
+    if(totalSelectedTopping.length >= storeObj.maxToppings) {
         let unCheckedTopping = document.querySelectorAll('input[name="topping"]');
         unCheckedTopping.forEach(value => {
             if(!value.checked) {
@@ -405,11 +461,11 @@ function switchSelected(target) {
     document.getElementById('selected').removeAttribute('id');
     target.id = "selected";
     if(target.innerText == "Order History"){
-        // console.log("order history");
+
         showOrderHistory();
     }
     if(target.innerText == "Order Now"){
-        // console.log("order now");
+
         orderNowSwitch();
     }
 }
@@ -442,7 +498,7 @@ function addToOrder(target) {
             }
         }
         
-        let newPresetPizza = createCustomPizza(pizzaName, sizevalue, pizzaCrust, pizzaToppings);
+        let newPresetPizza = createCustomPizza(pizzaName.innerText, sizevalue, pizzaCrust, pizzaToppings.split(" "));
         newPresetPizza.price = (parseFloat(pizzaValue.slice(1)) + possibleSizes[sizeIndex].price).toFixed(2);
         
         const insideHtml = `
@@ -450,13 +506,12 @@ function addToOrder(target) {
             <div class="currentitemtext">${sizevalue.charAt(0).toUpperCase() + sizevalue.slice(1)} ${target.parentNode.querySelector(".presetName").innerText}</div>
             <div class="currentitemtext">${pizzaCrust} - ${pizzaToppings}</div>
         </span>
-        <span class="price">${newPresetPizza.price}</span>
+        <span class="price">$${newPresetPizza.price}</span>
         `
 
         let deleteButton = document.createElement("span");
         deleteButton.classList.add("delbtn");
         deleteButton.innerText = "(R)";
-
 
         listItem.appendChild(deleteButton);
 
@@ -466,6 +521,9 @@ function addToOrder(target) {
 
         target.previousElementSibling.selectedIndex = 0;
 
+        currentOrder.push(newPresetPizza);
+        //console.log(currentOrder);
+        updateOrderListValues();
         initDeleteButton();
         calculateNewTotal(newPresetPizza.price);
     }
@@ -518,7 +576,6 @@ function updateCurrentOrderList(newPizza) {
     deleteButton.classList.add("delbtn");
     deleteButton.innerText = "(R)";
 
-    // console.log(newPizza);
 
     let custompizza = `
         <span class="pizzaInfoList">
@@ -535,20 +592,32 @@ function updateCurrentOrderList(newPizza) {
 
     curOrder.appendChild(listItem);
 
+    currentOrder.push(newPizza);
+    //console.log(currentOrder);
+    updateOrderListValues();
     calculateNewTotal(newPizza.price);
     updatePrice();
     initDeleteButton();
+}
+
+function updateOrderListValues() {
+    let curOrderList = document.querySelector(".currentList").firstElementChild;
+    let index = 0;
+    while(curOrderList != null) {
+        //console.log(index);
+        curOrderList.setAttribute("value", index);
+        curOrderList = curOrderList.nextElementSibling;
+        index++;
+    }
 }
 
 function checkCrust(customPizza) {
     const crustRadio = document.querySelector('input[name="crust"]:checked');
 
     if(crustRadio == null) {
-        console.log('nothing selected')
         return false;
     }
     else {
-        // console.log(crustRadio.value);
         customPizza.crust = crustRadio.value;
         return true;
     }
@@ -558,11 +627,9 @@ function checkSize(customPizza) {
     const sizeRadio = document.querySelector('input[name="size"]:checked');
 
     if(sizeRadio == null) {
-        console.log('nothing selected')
         return false;
     }
     else {
-        // console.log(sizeRadio.value);
         customPizza.size = sizeRadio.value;
         return true;
     }
@@ -572,13 +639,10 @@ function checkTopping(customPizza) {
     const toppingRadio = document.querySelectorAll('input[name="topping"]:checked');
 
     if(toppingRadio == null || toppingRadio.length == 0) {
-        console.log('nothing selected')
         return false;
     }
     else {
-        // console.log(toppingRadio);
         toppingRadio.forEach(element => customPizza.toppings.push(element.value));
-        // console.log(customPizza.toppings.length)
         return true;
     }
 }
@@ -611,12 +675,6 @@ function startCustomPizza() {
     initAddPizza();
 }
 
-{/* <li class="currentitem"><span class="delbtn">(R)</span><span class="currentitemtext">Toppings</span><span class="price">$10</span></li>
-<li class="currentitem"><span class="delbtn">(R)</span><span class="currentitemtext">Toppings</span><span class="price">$10</span></li>
-<li class="currentitem"><span class="delbtn">(R)</span><span class="currentitemtext">Toppings</span><span class="price">$10</span></li>
-<li class="currentitem"><span class="delbtn">(R)</span><span class="currentitemtext">Toppings</span><span class="price">$10</span></li>
-<li class="currentitem"><span class="delbtn">(R)</span><span class="currentitemtext">Toppings</span><span class="price">$10</span></li>
-<li class="currentitem"><span class="delbtn">(R)</span><span class="currentitemtext">Toppings</span><span class="price">$10</span></li> */}
 async function startOrder() {
     await FetchStoreObject();
  
@@ -629,7 +687,7 @@ async function startOrder() {
             </ul>
             <div class="priceOrder">
                 <div class="totalprice">Total: $0.00</div>
-                <div class="orderbutton"><button type="submit" name="submitbtn">Place Order</button></div>
+                <div class="orderbutton"><button type="submit" name="submitbtn" class="submitorder">Place Order</button></div>
             </div>
         </div>
     `
@@ -638,7 +696,8 @@ async function startOrder() {
     insideOrder.innerHTML = currentOrderHTML + insideOrder.innerHTML;
 
     initStoreInfo();
-    initDeleteButton();
+    initSubmitOrder();
+    //initDeleteButton();
     showPizzaOptions();
 }
 
@@ -805,14 +864,14 @@ function getSizeCustHtml() {
 
 function getToppingsHtml() {
     let toppingsHtml = `
-    <span class="comp"><h3>Toppings(Max ${toppingLimit})</h3>
+    <span class="comp"><h3>Toppings(Max ${storeObj.maxToppings})</h3>
     `
 
     possibleToppings.forEach((value, index) => {
         toppingsHtml += `
         <div class="compOptions toppings">
             <input type="checkbox" id="${value.name.toLowerCase()}" name="topping" value="${value.name.toLowerCase()}">
-            <label for="${value.name.toLowerCase()}">${value.name.charAt(0).toUpperCase() + value.name.slice(1)}</label><span class="price">$${value.price}</span>
+            <label for="${value.name.toLowerCase()}">${value.name.charAt(0).toUpperCase() + value.name.slice(1)}</label><span class="price">$${value.price.toFixed(2)}</span>
         </div>
         `
     })

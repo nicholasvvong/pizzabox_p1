@@ -9,6 +9,7 @@ namespace PizzaBox.Logic
     public class CustomerLogic
     {
         private readonly CustomerRepository customerRepo;
+        private readonly Mapper mapper = new Mapper();
         public CustomerLogic(CustomerRepository r)
         {
             customerRepo = r;
@@ -19,23 +20,27 @@ namespace PizzaBox.Logic
             customerRepo.RunInits();
         }
 
-        public Customer CreateCustomer(Customer obj)
+        public Customer CreateCustomer(RawCustomer obj)
         {
+            Customer newCustomer;
             if(customerRepo.IsExistingAccount(obj.Email.ToLower()))
             {
                 return null;
             }
             else
             {
-                obj.Email.ToLower();
-                Console.WriteLine(obj);
-                obj.Password = PasswordHash(obj.Password);
-                obj.LastStore = Guid.Empty;
-                obj.StoreManger = Guid.Empty;
-                customerRepo.AddNewCustomer(obj);
+                newCustomer = mapper.CustomerMapper(obj);
+                newCustomer.Fname = obj.Fname;
+                newCustomer.Lname = obj.Lname;
+                newCustomer.Password = obj.Password;
+                newCustomer.Email = obj.Email.ToLower();
+                //obj.Password = PasswordHash(obj.Password);
+                newCustomer.LastStore = Guid.Empty;
+                newCustomer.StoreManger = Guid.Empty;
+                customerRepo.AddNewCustomer(newCustomer);
             }
 
-            return obj;
+            return newCustomer;
         }
 
         /// <summary>
