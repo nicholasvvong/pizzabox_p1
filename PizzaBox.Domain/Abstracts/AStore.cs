@@ -15,10 +15,10 @@ namespace PizzaBox.Domain.Abstracts
         public int MaxToppings { get; set; }
         public decimal MaxPrice { get; set; }
         public int MaxPizzas { get; set; }
-        public IList<BasicPizza> PresetPizzas { get; set; }
-        public IList<Topping> ToppingsList { get; set; }
-        public IList<Size> SizeList { get; set; }
-        public IList<Crust> CrustList { get; set; }
+        public List<BasicPizza> PresetPizzas { get; set; }
+        public List<Topping> ToppingsList { get; set; }
+        public List<Size> SizeList { get; set; }
+        public List<Crust> CrustList { get; set; }
 
         public AStore()
         {

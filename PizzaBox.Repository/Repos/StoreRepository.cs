@@ -4,6 +4,7 @@ using System.Linq;
 using PizzaBox.Domain.Abstracts;
 using PizzaBox.Domain.Models;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace PizzaBox.Repository
 {
@@ -39,7 +40,7 @@ namespace PizzaBox.Repository
         }
         public int GetMaxPizzas(Guid id)
         {
-            AStore store = context.Stores.SingleOrDefault(id => Guid.Equals(id.StoreID, id));
+            AStore store = context.Stores.SingleOrDefault(n => Guid.Equals(n.StoreID, id));
             if(store is AStore)
             {
                 return store.MaxPizzas;
@@ -49,7 +50,7 @@ namespace PizzaBox.Repository
 
         public int GetMaxToppings(Guid id)
         {
-            AStore store = context.Stores.SingleOrDefault(id => Guid.Equals(id.StoreID, id));
+            AStore store = context.Stores.SingleOrDefault(n => Guid.Equals(n.StoreID, id));
             if(store is AStore)
             {
                 return store.MaxToppings;
@@ -57,38 +58,40 @@ namespace PizzaBox.Repository
             return -1;
         }
 
-        public IList<Crust> GetCrusts(Guid id)
+        public List<Crust> GetCrusts(Guid id)
         {
             List<Crust> CrustList = new List<Crust>();
-            CrustList = context.Crusts.Where(n => Guid.Equals(n.Store.StoreID, id)).ToList();
+            CrustList = context.Crusts.Include(c => c.PizzaType).Where(n => Guid.Equals(n.Store.StoreID, id)).ToList();
             return CrustList;
         }
 
-        public IList<Topping> GetToppings(Guid id)
+        public List<Topping> GetToppings(Guid id)
         {
             List<Topping> ToppingsList = new List<Topping>();
-            ToppingsList = context.Toppings.Where(n => Guid.Equals(n.Store.StoreID, id)).ToList();
+            ToppingsList = context.Toppings.Include(c => c.PizzaType).Where(n => Guid.Equals(n.Store.StoreID, id)).ToList();
             return ToppingsList;
         }
 
-        public IList<BasicPizza> GetPresets(Guid id)
+        public List<BasicPizza> GetPresets(Guid id)
         {
-            List<BasicPizza> PresetPizzas = new List<BasicPizza>();
-
-
-            return PresetPizzas;
+            var pre = context.Stores.Include(s => s.PresetPizzas).ThenInclude(top => top.Toppings).ThenInclude(comp => comp.PizzaType)
+                                    .Include(st => st.PresetPizzas).ThenInclude(ts => ts.Crust).ThenInclude(comp => comp.PizzaType)
+                        .Where(st => Guid.Equals(st.StoreID, id)).Select(p => p.PresetPizzas);
+            var list = pre.ToList();
+            
+            return list[0];
         }
 
-        public IList<Size> GetSizes(Guid id)
+        public List<Size> GetSizes(Guid id)
         {
             List<Size> SizeList = new List<Size>();
-            SizeList = context.Sizes.Where(n => Guid.Equals(n.Store.StoreID, id)).ToList();
+            SizeList = context.Sizes.Include(s => s.PizzaType).Where(n => Guid.Equals(n.Store.StoreID, id)).ToList();
             return SizeList;
         }
 
         public string GetName(Guid id)
         {
-            AStore store = context.Stores.SingleOrDefault(id => Guid.Equals(id.StoreID, id));
+            AStore store = context.Stores.SingleOrDefault(n => Guid.Equals(n.StoreID, id));
             if(store is AStore)
             {
                 return store.Name;
@@ -98,12 +101,25 @@ namespace PizzaBox.Repository
 
         public decimal GetMaxPrice(Guid id)
         {
-            AStore store = context.Stores.SingleOrDefault(id => Guid.Equals(id.StoreID, id));
+            AStore store = context.Stores.SingleOrDefault(n => Guid.Equals(n.StoreID, id));
             if(store is AStore)
             {
                 return store.MaxPrice;
             }
             return -1;
+        }
+
+        public AStore FindStore(Guid id)
+        {
+            var store = context.Stores.SingleOrDefault(n => Guid.Equals(n.StoreID, id));
+            if(store is AStore)
+            {
+                return store;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         //------------------------------------------------------------------------------------------------------------------------------//
@@ -122,14 +138,14 @@ namespace PizzaBox.Repository
             chicagoToppings.Add("sausage", 0.70m);
             chicagoToppings.Add("bacon", 0.50m);
             chicagoToppings.Add("onion", 1.00m);
-            Dictionary<string, decimal> chicagoCrust = new Dictionary<string, decimal>();
-            chicagoCrust.Add("small", 4.50m);
-            chicagoCrust.Add("medium", 5.50m);
-            chicagoCrust.Add("large", 6.50m);
             Dictionary<string, decimal> chicagoSize = new Dictionary<string, decimal>();
-            chicagoSize.Add("regular", 0.50m);
-            chicagoSize.Add("hand-tossed", 1.00m);
-            chicagoSize.Add("thin", 0.50m);
+            chicagoSize.Add("small", 4.50m);
+            chicagoSize.Add("medium", 5.50m);
+            chicagoSize.Add("large", 6.50m);
+            Dictionary<string, decimal> chicagoCrust = new Dictionary<string, decimal>();
+            chicagoCrust.Add("regular", 0.50m);
+            chicagoCrust.Add("hand-tossed", 1.00m);
+            chicagoCrust.Add("thin", 0.50m);
 
             ChicagoStore initChicago = new ChicagoStore();
             initChicago.MaxPizzas = 50;
@@ -238,14 +254,14 @@ namespace PizzaBox.Repository
             toppings.Add("sausage", (rng.Next(1, 101)/100.0m));
             toppings.Add("meat ball", (rng.Next(1, 101)/100.0m));
             toppings.Add("anchovies", (rng.Next(1, 101)/100.0m));
-            Dictionary<string, decimal> crusts = new Dictionary<string, decimal>();
-            crusts.Add("small", 4.50m);
-            crusts.Add("large", 5.50m);
-            crusts.Add("extra large", 6.50m);
             Dictionary<string, decimal> sizes = new Dictionary<string, decimal>();
-            sizes.Add("regular", 1.00m);
-            sizes.Add("hand-tossed", 1.00m);
-            sizes.Add("thin", 1.00m);
+            sizes.Add("small", 4.50m);
+            sizes.Add("large", 5.50m);
+            sizes.Add("extra large", 6.50m);
+            Dictionary<string, decimal> crusts = new Dictionary<string, decimal>();
+            crusts.Add("regular", 1.00m);
+            crusts.Add("hand-tossed", 1.00m);
+            crusts.Add("thin", 1.00m);
             //7, 250.00, 50)
             AStore tempStore = InitNewStore("NewYork Pizza Store", 50, 7, 200.0m, toppings, crusts, sizes);
 

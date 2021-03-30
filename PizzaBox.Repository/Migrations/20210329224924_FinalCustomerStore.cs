@@ -3,10 +3,28 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace PizzaBox.Repository.Migrations
 {
-    public partial class Final0 : Migration
+    public partial class FinalCustomerStore : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Customers",
+                columns: table => new
+                {
+                    CustomerID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Fname = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Lname = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastTimeOrdered = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastStore = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StoreManger = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Customers", x => x.CustomerID);
+                });
+
             migrationBuilder.CreateTable(
                 name: "ItemType",
                 columns: table => new
@@ -40,19 +58,7 @@ namespace PizzaBox.Repository.Migrations
                 {
                     CompID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    ITypeTypeID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    Inventory = table.Column<int>(type: "int", nullable: true),
-                    CheeseStuffed = table.Column<bool>(type: "bit", nullable: true),
-                    StuffedPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    StoreID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    Size_Price = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    Size_Inventory = table.Column<int>(type: "int", nullable: true),
-                    Size_StoreID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    Topping_Price = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    Topping_Inventory = table.Column<int>(type: "int", nullable: true),
-                    Topping_StoreID = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    ITypeTypeID = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -62,53 +68,6 @@ namespace PizzaBox.Repository.Migrations
                         column: x => x.ITypeTypeID,
                         principalTable: "ItemType",
                         principalColumn: "TypeID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Comps_Stores_Size_StoreID",
-                        column: x => x.Size_StoreID,
-                        principalTable: "Stores",
-                        principalColumn: "StoreID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Comps_Stores_StoreID",
-                        column: x => x.StoreID,
-                        principalTable: "Stores",
-                        principalColumn: "StoreID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Comps_Stores_Topping_StoreID",
-                        column: x => x.Topping_StoreID,
-                        principalTable: "Stores",
-                        principalColumn: "StoreID",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Customers",
-                columns: table => new
-                {
-                    CustomerID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Fname = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Lname = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastTimeOrdered = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastStoreStoreID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    StoreMangerStoreID = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Customers", x => x.CustomerID);
-                    table.ForeignKey(
-                        name: "FK_Customers_Stores_LastStoreStoreID",
-                        column: x => x.LastStoreStoreID,
-                        principalTable: "Stores",
-                        principalColumn: "StoreID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Customers_Stores_StoreMangerStoreID",
-                        column: x => x.StoreMangerStoreID,
-                        principalTable: "Stores",
-                        principalColumn: "StoreID",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -140,14 +99,97 @@ namespace PizzaBox.Repository.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Crusts",
+                columns: table => new
+                {
+                    CrustID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Inventory = table.Column<int>(type: "int", nullable: false),
+                    CheeseStuffed = table.Column<bool>(type: "bit", nullable: false),
+                    StuffedPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    PizzaTypeCompID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    StoreID = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Crusts", x => x.CrustID);
+                    table.ForeignKey(
+                        name: "FK_Crusts_Comps_PizzaTypeCompID",
+                        column: x => x.PizzaTypeCompID,
+                        principalTable: "Comps",
+                        principalColumn: "CompID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Crusts_Stores_StoreID",
+                        column: x => x.StoreID,
+                        principalTable: "Stores",
+                        principalColumn: "StoreID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Sizes",
+                columns: table => new
+                {
+                    SizeID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Inventory = table.Column<int>(type: "int", nullable: false),
+                    StoreID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    PizzaTypeCompID = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Sizes", x => x.SizeID);
+                    table.ForeignKey(
+                        name: "FK_Sizes_Comps_PizzaTypeCompID",
+                        column: x => x.PizzaTypeCompID,
+                        principalTable: "Comps",
+                        principalColumn: "CompID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Sizes_Stores_StoreID",
+                        column: x => x.StoreID,
+                        principalTable: "Stores",
+                        principalColumn: "StoreID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Toppings",
+                columns: table => new
+                {
+                    ToppingID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Inventory = table.Column<int>(type: "int", nullable: false),
+                    StoreID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    PizzaTypeCompID = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Toppings", x => x.ToppingID);
+                    table.ForeignKey(
+                        name: "FK_Toppings_Comps_PizzaTypeCompID",
+                        column: x => x.PizzaTypeCompID,
+                        principalTable: "Comps",
+                        principalColumn: "CompID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Toppings_Stores_StoreID",
+                        column: x => x.StoreID,
+                        principalTable: "Stores",
+                        principalColumn: "StoreID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "BasicPizza",
                 columns: table => new
                 {
                     PresetID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PizzaPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    CrustCompID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    SizeCompID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CrustID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    SizeID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     AStoreStoreID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     OrderID = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
@@ -155,22 +197,22 @@ namespace PizzaBox.Repository.Migrations
                 {
                     table.PrimaryKey("PK_BasicPizza", x => x.PresetID);
                     table.ForeignKey(
-                        name: "FK_BasicPizza_Comps_CrustCompID",
-                        column: x => x.CrustCompID,
-                        principalTable: "Comps",
-                        principalColumn: "CompID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_BasicPizza_Comps_SizeCompID",
-                        column: x => x.SizeCompID,
-                        principalTable: "Comps",
-                        principalColumn: "CompID",
+                        name: "FK_BasicPizza_Crusts_CrustID",
+                        column: x => x.CrustID,
+                        principalTable: "Crusts",
+                        principalColumn: "CrustID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_BasicPizza_Orders_OrderID",
                         column: x => x.OrderID,
                         principalTable: "Orders",
                         principalColumn: "OrderID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_BasicPizza_Sizes_SizeID",
+                        column: x => x.SizeID,
+                        principalTable: "Sizes",
+                        principalColumn: "SizeID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_BasicPizza_Stores_AStoreStoreID",
@@ -197,10 +239,10 @@ namespace PizzaBox.Repository.Migrations
                         principalColumn: "PresetID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PresetPizza_Comps_ToppingID",
+                        name: "FK_PresetPizza_Toppings_ToppingID",
                         column: x => x.ToppingID,
-                        principalTable: "Comps",
-                        principalColumn: "CompID",
+                        principalTable: "Toppings",
+                        principalColumn: "ToppingID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -210,9 +252,9 @@ namespace PizzaBox.Repository.Migrations
                 column: "AStoreStoreID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BasicPizza_CrustCompID",
+                name: "IX_BasicPizza_CrustID",
                 table: "BasicPizza",
-                column: "CrustCompID");
+                column: "CrustID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BasicPizza_OrderID",
@@ -220,9 +262,9 @@ namespace PizzaBox.Repository.Migrations
                 column: "OrderID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BasicPizza_SizeCompID",
+                name: "IX_BasicPizza_SizeID",
                 table: "BasicPizza",
-                column: "SizeCompID");
+                column: "SizeID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comps_ITypeTypeID",
@@ -237,29 +279,14 @@ namespace PizzaBox.Repository.Migrations
                 filter: "[Name] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comps_Size_StoreID",
-                table: "Comps",
-                column: "Size_StoreID");
+                name: "IX_Crusts_PizzaTypeCompID",
+                table: "Crusts",
+                column: "PizzaTypeCompID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comps_StoreID",
-                table: "Comps",
+                name: "IX_Crusts_StoreID",
+                table: "Crusts",
                 column: "StoreID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Comps_Topping_StoreID",
-                table: "Comps",
-                column: "Topping_StoreID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Customers_LastStoreStoreID",
-                table: "Customers",
-                column: "LastStoreStoreID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Customers_StoreMangerStoreID",
-                table: "Customers",
-                column: "StoreMangerStoreID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ItemType_Name",
@@ -282,6 +309,26 @@ namespace PizzaBox.Repository.Migrations
                 name: "IX_PresetPizza_ToppingID",
                 table: "PresetPizza",
                 column: "ToppingID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sizes_PizzaTypeCompID",
+                table: "Sizes",
+                column: "PizzaTypeCompID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sizes_StoreID",
+                table: "Sizes",
+                column: "StoreID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Toppings_PizzaTypeCompID",
+                table: "Toppings",
+                column: "PizzaTypeCompID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Toppings_StoreID",
+                table: "Toppings",
+                column: "StoreID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -293,19 +340,28 @@ namespace PizzaBox.Repository.Migrations
                 name: "BasicPizza");
 
             migrationBuilder.DropTable(
-                name: "Comps");
+                name: "Toppings");
+
+            migrationBuilder.DropTable(
+                name: "Crusts");
 
             migrationBuilder.DropTable(
                 name: "Orders");
 
             migrationBuilder.DropTable(
-                name: "ItemType");
+                name: "Sizes");
 
             migrationBuilder.DropTable(
                 name: "Customers");
 
             migrationBuilder.DropTable(
+                name: "Comps");
+
+            migrationBuilder.DropTable(
                 name: "Stores");
+
+            migrationBuilder.DropTable(
+                name: "ItemType");
         }
     }
 }

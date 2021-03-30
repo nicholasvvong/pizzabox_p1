@@ -42,7 +42,7 @@ namespace PizzaBox.ApiExplorer
         [HttpPost("init")]
         public void Init()
         {
-            customerLogic.LogicRepoGap();
+            //customerLogic.LogicRepoGap();
         }
 
         // [HttpPost]

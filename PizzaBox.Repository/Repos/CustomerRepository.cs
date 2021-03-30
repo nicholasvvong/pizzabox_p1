@@ -10,15 +10,17 @@ namespace PizzaBox.Repository
     public class CustomerRepository
     {
         private readonly CustomerContext context;
+        //private readonly StoreContext sContext;
 
         public void RunInits()
         {
-            InitStoreOwners();
+            //InitStoreOwners();
         }
 
-        public CustomerRepository(CustomerContext c)
+        public CustomerRepository(CustomerContext c)//, StoreContext sc)
         {
             context = c;
+            //sContext = sc;
         }
 
         public void AddNewCustomer(Customer newCustomer)
@@ -54,56 +56,57 @@ namespace PizzaBox.Repository
             return customerInfo;
         }
 
-        private void InitStoreOwners()
-        {
-            // Customer cpkOwner = new Customer();
-            // cpkOwner.Email = "cpk@gmail.com";
-            // cpkOwner.Fname = "CPK";
-            // cpkOwner.Lname = "Nick";
-            // cpkOwner.Password = "kciN";
-            // cpkOwner.LastStore = null;
-            // var cpkStore = sContext.Stores.SingleOrDefault(n => n.Name == "CPK");
-            // if(cpkStore is null)
-            //     return;
-            // cpkOwner.StoreManger = cpkStore.StoreID;
-            // AddNewCustomer(cpkOwner);
+        
+        //------------------------------------------------------------------------//
+        // private void InitStoreOwners()
+        // {
+        //     Customer cpkOwner = new Customer();
+        //     cpkOwner.Email = "cpk@gmail.com";
+        //     cpkOwner.Fname = "CPK";
+        //     cpkOwner.Lname = "Nick";
+        //     cpkOwner.Password = "kciN";
+        //     cpkOwner.LastStore = Guid.Empty;
+        //     var cpkStore = sContext.Stores.SingleOrDefault(n => n.Name == "CPK");
+        //     if(cpkStore is null)
+        //         return;
+        //     cpkOwner.StoreManger = cpkStore.StoreID;
+        //     AddNewCustomer(cpkOwner);
 
-            // Customer chicagoOwner = new Customer();
-            // chicagoOwner.Email = "chicago@gmail.com";
-            // chicagoOwner.Fname = "Chicago";
-            // chicagoOwner.Lname = "Nick";
-            // chicagoOwner.Password = "kciN";
-            // chicagoOwner.LastStore = null;
-            // var chicago = sContext.Stores.SingleOrDefault(n => n.Name == "Chicago Pizza Store");
-            // if(chicago is null)
-            //     return;
-            // chicagoOwner.StoreManger = chicago.StoreID;
-            // AddNewCustomer(chicagoOwner);
+        //     Customer chicagoOwner = new Customer();
+        //     chicagoOwner.Email = "chicago@gmail.com";
+        //     chicagoOwner.Fname = "Chicago";
+        //     chicagoOwner.Lname = "Nick";
+        //     chicagoOwner.Password = "kciN";
+        //     chicagoOwner.LastStore = Guid.Empty;
+        //     var chicago = sContext.Stores.SingleOrDefault(n => n.Name == "Chicago Pizza Store");
+        //     if(chicago is null)
+        //         return;
+        //     chicagoOwner.StoreManger = chicago.StoreID;
+        //     AddNewCustomer(chicagoOwner);
 
-            // Customer freddyOwner = new Customer();
-            // freddyOwner.Email = "freddy@gmail.com";
-            // freddyOwner.Fname = "Freddy ";
-            // freddyOwner.Lname = "Nick";
-            // freddyOwner.Password = "kciN";
-            // freddyOwner.LastStore = null;
-            // var freddy = sContext.Stores.SingleOrDefault(n => n.Name == "Freddy's Pizza Store");
-            // if(freddy is null)
-            //     return;
-            // freddyOwner.StoreManger = freddy.StoreID;
-            // AddNewCustomer(freddyOwner);
+        //     Customer freddyOwner = new Customer();
+        //     freddyOwner.Email = "freddy@gmail.com";
+        //     freddyOwner.Fname = "Freddy ";
+        //     freddyOwner.Lname = "Nick";
+        //     freddyOwner.Password = "kciN";
+        //     freddyOwner.LastStore = Guid.Empty;
+        //     var freddy = sContext.Stores.SingleOrDefault(n => n.Name == "Freddy's Pizza Store");
+        //     if(freddy is null)
+        //         return;
+        //     freddyOwner.StoreManger = freddy.StoreID;
+        //     AddNewCustomer(freddyOwner);
 
-            // Customer nyOwner = new Customer();
-            // nyOwner.Email = "newyork@gmail.com";
-            // nyOwner.Fname = "NewYork";
-            // nyOwner.Lname = "Nick";
-            // nyOwner.Password = "kciN";
-            // nyOwner.LastStore = null;
-            // var ny = sContext.Stores.SingleOrDefault(n => n.Name == "NewYork Pizza Store");
-            // if(ny is null)
-            //     return;
-            // nyOwner.StoreManger = ny.StoreID;
-            // AddNewCustomer(nyOwner);
-
-        }
+        //     Customer nyOwner = new Customer();
+        //     nyOwner.Email = "newyork@gmail.com";
+        //     nyOwner.Fname = "NewYork";
+        //     nyOwner.Lname = "Nick";
+        //     nyOwner.Password = "kciN";
+        //     nyOwner.LastStore = Guid.Empty;
+        //     var ny = sContext.Stores.SingleOrDefault(n => n.Name == "NewYork Pizza Store");
+        //     if(ny is null)
+        //         return;
+        //     nyOwner.StoreManger = ny.StoreID;
+        //     AddNewCustomer(nyOwner);
+        // }
     }
 }

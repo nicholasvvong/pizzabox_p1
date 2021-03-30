@@ -3,18 +3,24 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using PizzaBox.Domain.Models;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace PizzaBox.Domain.Abstracts
 {
     public class Topping
     {
         public Guid ToppingID { get; set; } = Guid.NewGuid();
+        [NotMapped]
+        public string Name { get; set; }
         public decimal Price { get; protected set; }
         public int Inventory { get; protected set; }
         public AStore Store { get; set; }
         public APizzaComponent PizzaType { get; set; }
 
+        [JsonIgnore]
         public ICollection<BasicPizza>  Pizzas { get; set; }
+        [JsonIgnore]
         public ICollection<PresetPizza> PresetPizzas { get; set; }
 
         protected Topping()

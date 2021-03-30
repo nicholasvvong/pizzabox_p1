@@ -5999,23 +5999,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\NIcholas Wong\\.nuget\\packages\\": {},
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+    "C:\\Users\\Nicholas\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\NIcholas Wong\\revature\\projects\\pizzabox_p1\\PizzaBox.ApiExplorer\\PizzaBox.ApiExplorer.csproj",
+      "projectUniqueName": "C:\\Users\\Nicholas\\Desktop\\projects\\p1app\\PizzaBox.ApiExplorer\\PizzaBox.ApiExplorer.csproj",
       "projectName": "PizzaBox.ApiExplorer",
-      "projectPath": "C:\\Users\\NIcholas Wong\\revature\\projects\\pizzabox_p1\\PizzaBox.ApiExplorer\\PizzaBox.ApiExplorer.csproj",
-      "packagesPath": "C:\\Users\\NIcholas Wong\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\NIcholas Wong\\revature\\projects\\pizzabox_p1\\PizzaBox.ApiExplorer\\obj\\",
+      "projectPath": "C:\\Users\\Nicholas\\Desktop\\projects\\p1app\\PizzaBox.ApiExplorer\\PizzaBox.ApiExplorer.csproj",
+      "packagesPath": "C:\\Users\\Nicholas\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Nicholas\\Desktop\\projects\\p1app\\PizzaBox.ApiExplorer\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-      ],
       "configFilePaths": [
-        "C:\\Users\\NIcholas Wong\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\Nicholas\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
@@ -6027,11 +6023,11 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "projectReferences": {
-            "C:\\Users\\NIcholas Wong\\revature\\projects\\pizzabox_p1\\PizzaBox.Domain\\PizzaBox.Domain.csproj": {
-              "projectPath": "C:\\Users\\NIcholas Wong\\revature\\projects\\pizzabox_p1\\PizzaBox.Domain\\PizzaBox.Domain.csproj"
+            "C:\\Users\\Nicholas\\Desktop\\projects\\p1app\\PizzaBox.Domain\\PizzaBox.Domain.csproj": {
+              "projectPath": "C:\\Users\\Nicholas\\Desktop\\projects\\p1app\\PizzaBox.Domain\\PizzaBox.Domain.csproj"
             },
-            "C:\\Users\\NIcholas Wong\\revature\\projects\\pizzabox_p1\\PizzaBox.Logic\\PizzaBox.Logic.csproj": {
-              "projectPath": "C:\\Users\\NIcholas Wong\\revature\\projects\\pizzabox_p1\\PizzaBox.Logic\\PizzaBox.Logic.csproj"
+            "C:\\Users\\Nicholas\\Desktop\\projects\\p1app\\PizzaBox.Logic\\PizzaBox.Logic.csproj": {
+              "projectPath": "C:\\Users\\Nicholas\\Desktop\\projects\\p1app\\PizzaBox.Logic\\PizzaBox.Logic.csproj"
             }
           }
         }
@@ -6083,7 +6079,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.103\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.201\\RuntimeIdentifierGraph.json"
       }
     }
   }

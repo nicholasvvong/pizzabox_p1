@@ -201,7 +201,7 @@ namespace PizzaBox.Repository.Migrations
                     b.Property<string>("Fname")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("LastStoreStoreID")
+                    b.Property<Guid>("LastStore")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("LastTimeOrdered")
@@ -217,8 +217,6 @@ namespace PizzaBox.Repository.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("CustomerID");
-
-                    b.HasIndex("LastStoreStoreID");
 
                     b.ToTable("Customers");
                 });
@@ -358,15 +356,6 @@ namespace PizzaBox.Repository.Migrations
                     b.Navigation("Crust");
 
                     b.Navigation("Size");
-                });
-
-            modelBuilder.Entity("PizzaBox.Domain.Models.Customer", b =>
-                {
-                    b.HasOne("PizzaBox.Domain.Abstracts.AStore", "LastStore")
-                        .WithMany()
-                        .HasForeignKey("LastStoreStoreID");
-
-                    b.Navigation("LastStore");
                 });
 
             modelBuilder.Entity("PizzaBox.Domain.Models.Order", b =>

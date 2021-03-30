@@ -28,8 +28,9 @@ namespace PizzaBox.Logic
             else
             {
                 obj.Email.ToLower();
+                Console.WriteLine(obj);
                 obj.Password = PasswordHash(obj.Password);
-                obj.LastStore = null;
+                obj.LastStore = Guid.Empty;
                 obj.StoreManger = Guid.Empty;
                 customerRepo.AddNewCustomer(obj);
             }

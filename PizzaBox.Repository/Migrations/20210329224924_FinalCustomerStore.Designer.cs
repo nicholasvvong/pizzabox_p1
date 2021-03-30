@@ -10,8 +10,8 @@ using PizzaBox.Repository;
 namespace PizzaBox.Repository.Migrations
 {
     [DbContext(typeof(DatabaseCreationContext))]
-    [Migration("20210328182513_Final5")]
-    partial class Final5
+    [Migration("20210329224924_FinalCustomerStore")]
+    partial class FinalCustomerStore
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -203,7 +203,7 @@ namespace PizzaBox.Repository.Migrations
                     b.Property<string>("Fname")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("LastStoreStoreID")
+                    b.Property<Guid>("LastStore")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("LastTimeOrdered")
@@ -215,14 +215,10 @@ namespace PizzaBox.Repository.Migrations
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("StoreMangerStoreID")
+                    b.Property<Guid>("StoreManger")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("CustomerID");
-
-                    b.HasIndex("LastStoreStoreID");
-
-                    b.HasIndex("StoreMangerStoreID");
 
                     b.ToTable("Customers");
                 });
@@ -362,21 +358,6 @@ namespace PizzaBox.Repository.Migrations
                     b.Navigation("Crust");
 
                     b.Navigation("Size");
-                });
-
-            modelBuilder.Entity("PizzaBox.Domain.Models.Customer", b =>
-                {
-                    b.HasOne("PizzaBox.Domain.Abstracts.AStore", "LastStore")
-                        .WithMany()
-                        .HasForeignKey("LastStoreStoreID");
-
-                    b.HasOne("PizzaBox.Domain.Abstracts.AStore", "StoreManger")
-                        .WithMany()
-                        .HasForeignKey("StoreMangerStoreID");
-
-                    b.Navigation("LastStore");
-
-                    b.Navigation("StoreManger");
                 });
 
             modelBuilder.Entity("PizzaBox.Domain.Models.Order", b =>

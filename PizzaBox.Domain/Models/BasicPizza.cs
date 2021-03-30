@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using PizzaBox.Domain.Abstracts;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace PizzaBox.Domain.Models
 {
@@ -19,6 +21,7 @@ namespace PizzaBox.Domain.Models
         public Size Size{ get; set; }
 
         public ICollection<Topping> Toppings { get; set; }
+        [JsonIgnore]
         public ICollection<PresetPizza> PresetPizzas { get; set; }
 
         public BasicPizza()
@@ -49,7 +52,7 @@ namespace PizzaBox.Domain.Models
             PizzaPrice = 0;
             if(Crust != null)
             {
-                //PizzaPrice += Crust.Price;
+                PizzaPrice += Crust.Price;
             
                 if(Crust.CheeseStuffed)
                     PizzaPrice += Crust.StuffedPrice;
@@ -57,13 +60,13 @@ namespace PizzaBox.Domain.Models
 
             if(Size != null)
             {
-                //PizzaPrice += Size.Price;
+                PizzaPrice += Size.Price;
             }
             if(Toppings != null)
             {
                 foreach(Topping t in Toppings)
                 {
-                    //PizzaPrice += t.Price;
+                    PizzaPrice += t.Price;
                 }
             }
 

@@ -177,59 +177,42 @@ function logIn() {
             //window.history.pushState(jsonReponse, "PizzaHub!", "customer.html");
         }
     })
-
-
-    // if(checkValidLogin()) {
-    //     window.location.replace("customer.html");
-    // } 
-    // else {
-    //     let findValid = document.querySelector("#invalidLogin");
-    //     if(!findValid) {
-    //         let incorrectText = document.createElement("span");
-    //         incorrectText.classList.add("formItem");
-    //         incorrectText.classList.add("incorrect");
-    //         incorrectText.setAttribute("id", "invalidLogin");
-    //         incorrectText.innerText = "Incorrect email and/or password";   
-
-    //         form.insertBefore(incorrectText, form.lastElementChild);
-    //     }
-    // }
 }
 
-fetch('api/Customer/init',
-    {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type':'application/json'
-        },
-        body: JSON.stringify(),
-    })       
-    .then(response => {
-        if(!response.ok) {
-            throw new Error(`Network reponse was not ok (${reponse.status})`);
-        }
-        else {
-            return response.json();
-        }
-    })
-    .then((jsonReponse) => {
-        console.log(jsonReponse);
-        if(jsonReponse == 'null') {
-            let findValid = document.querySelector("#invalidEmail");
-            if(!findValid) {
-                let incorrectText = document.createElement("span");
-                incorrectText.classList.add("formItem");
-                incorrectText.classList.add("incorrect");
-                incorrectText.setAttribute("id", "invalidEmail");
+// fetch('api/Customer/init',
+//     {
+//         method: 'POST',
+//         headers: {
+//             'Accept': 'application/json',
+//             'Content-Type':'application/json'
+//         },
+//         body: JSON.stringify(),
+//     })       
+//     .then(response => {
+//         if(!response.ok) {
+//             throw new Error(`Network reponse was not ok (${reponse.status})`);
+//         }
+//         else {
+//             return response.json();
+//         }
+//     })
+//     .then((jsonReponse) => {
+//         console.log(jsonReponse);
+//         if(jsonReponse == 'null') {
+//             let findValid = document.querySelector("#invalidEmail");
+//             if(!findValid) {
+//                 let incorrectText = document.createElement("span");
+//                 incorrectText.classList.add("formItem");
+//                 incorrectText.classList.add("incorrect");
+//                 incorrectText.setAttribute("id", "invalidEmail");
                 
-                incorrectText.innerText = "Email already exists";
+//                 incorrectText.innerText = "Email already exists";
 
-                form.insertBefore(incorrectText, form.lastElementChild);
-            }
-        }
-        else {
-            console.log("Account Created");
-            accountLogInForm();
-        }
-    })
+//                 form.insertBefore(incorrectText, form.lastElementChild);
+//             }
+//         }
+//         else {
+//             console.log("Account Created");
+//             accountLogInForm();
+//         }
+//     })

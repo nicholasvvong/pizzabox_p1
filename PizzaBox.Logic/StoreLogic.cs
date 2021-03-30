@@ -24,18 +24,39 @@ namespace PizzaBox.Logic
             return stringStores;
         }
 
-        public AStore GetStoreObject(Guid id)
+        public AStore GetStore(Guid id)
         {
-            AStore returnStore = new AStore();
-            returnStore.Name = storeRepo.GetName(id);
-            returnStore.MaxPizzas = storeRepo.GetMaxPizzas(id);
-            returnStore.MaxToppings = storeRepo.GetMaxToppings(id);
-            returnStore.MaxPrice = storeRepo.GetMaxPrice(id);
-            returnStore.CrustList = storeRepo.GetCrusts(id);
-            // returnStore.SizeList = storeRepo.GetSizes(id);
-            // returnStore.ToppingsList = storeRepo.GetToppings(id);
-            // returnStore.PresetPizzas = storeRepo.GetPresets(id);
+            AStore returnStore = storeRepo.FindStore(id);
+
             return returnStore;
+        }
+
+        public List<Topping> GetStoreToppings(Guid id)
+        {
+            List<Topping> toppings = storeRepo.GetToppings(id);
+
+            return toppings;
+        }
+
+        public List<Crust> GetStoreCrusts(Guid id)
+        {
+            List<Crust> toppings = storeRepo.GetCrusts(id);
+
+            return toppings;
+        }
+
+        public List<Size> GetStoreSizes(Guid id)
+        {
+            List<Size> toppings = storeRepo.GetSizes(id);
+
+            return toppings;
+        }
+
+        public List<BasicPizza> GetStorePresets(Guid id)
+        {
+            List<BasicPizza> presets = storeRepo.GetPresets(id);
+
+            return presets;
         }
     }
 }

@@ -10,6 +10,7 @@ let pizzaList = [];
 let possibleSizes = [];
 let possibleCrust = [];
 let possibleToppings = [];
+let currentTotal = 0;
 
 let currentOrder = [createCustomPizza("custom","small", "crust1", ["topping1, topping2"])];
 
@@ -45,16 +46,125 @@ fetch('api/Store', {
         for(const [key, value] of Object.entries(jsonReponse)) {
             storeList.push(key);
         }
-
-        console.log(storeList);
     })
     .catch(function(err) {
         console.log("Failed to fetch page: ", err);
     });
 
-function FetchStoreObject()
+async function FetchStoreObject()
 {
+    await fetch('api/Store/StoreInfo', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type':'application/json'
+        },
+        body: JSON.stringify(storeID),
+    })
+    .then(response => {
+        if(!response.ok) {
+            throw new Error(`Network reponse was not ok (${reponse.status})`);
+        }
+        else
+            return response.json();
+    })
+    .then((jsonReponse) => {
+        storeObj = jsonReponse;
+    })
+    .catch(function(err) {
+        console.log("Failed to fetch page: ", err);
+    });
+    
+    console.log("Toppings -----------------");
+    await fetch('api/Store/Toppings', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type':'application/json'
+        },
+        body: JSON.stringify(storeID),
+    })
+    .then(response => {
+        if(!response.ok) {
+            throw new Error(`Network reponse was not ok (${reponse.status})`);
+        }
+        else
+            return response.json();
+    })
+    .then((jsonReponse) => {
+        storeObj.toppingsList = jsonReponse;
+    })
+    .catch(function(err) {
+        console.log("Failed to fetch page: ", err);
+    });
+    console.log("Crusts -----------------");
+    await fetch('api/Store/Crusts', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type':'application/json'
+        },
+        body: JSON.stringify(storeID),
+    })
+    .then(response => {
+        if(!response.ok) {
+            throw new Error(`Network reponse was not ok (${reponse.status})`);
+        }
+        else
+            return response.json();
+    })
+    .then((jsonReponse) => {
+        storeObj.crustList = jsonReponse;
+    })
+    .catch(function(err) {
+        console.log("Failed to fetch page: ", err);
+    });
 
+    console.log("Sizes -----------------");
+    await fetch('api/Store/Sizes', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type':'application/json'
+        },
+        body: JSON.stringify(storeID),
+    })
+    .then(response => {
+        if(!response.ok) {
+            throw new Error(`Network reponse was not ok (${reponse.status})`);
+        }
+        else
+            return response.json();
+    })
+    .then((jsonReponse) => {
+        storeObj.sizeList = jsonReponse;
+    })
+    .catch(function(err) {
+        console.log("Failed to fetch page: ", err);
+    });
+
+    console.log("Presets -----------------");
+    await fetch('api/Store/Presets', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type':'application/json'
+        },
+        body: JSON.stringify(storeID),
+    })
+    .then(response => {
+        if(!response.ok) {
+            throw new Error(`Network reponse was not ok (${reponse.status})`);
+        }
+        else
+            return response.json();
+    })
+    .then((jsonReponse) => {
+        storeObj.presetPizzas = jsonReponse;
+    })
+    .catch(function(err) {
+        console.log("Failed to fetch page: ", err);
+    });
 }
 
 
@@ -66,7 +176,8 @@ function createCustomPizza(cName, cSize, cCrust, cToppings)  {
         name: cName,
         size: cSize,
         crust: cCrust,
-        toppings: cToppings
+        toppings: cToppings,
+        price: 0.0
     }
 }
 
@@ -93,7 +204,7 @@ function createComp(cName, cPrice) {
 
 
 (function storeManager() {
-    if(true)
+    if(customerObj.StoreManger != '00000000-0000-0000-0000-000000000000')
     {
         const storemangerelement = document.createElement("li");
         const storemanagerspan = document.createElement("span");
@@ -117,6 +228,7 @@ topbar.addEventListener("click", (event) => {
         return;
     }
     if(event.target.id == "logout") {
+        localStorage.removeItem("customerInfo")
         logOut();
     }
     if(event.target.id == 'selected') {
@@ -132,28 +244,28 @@ function initStoreInfo() {
     possibleSizes = [];
     possibleToppings = [];
     pizzaList = [];
+    currentTotal = 0.00;
 
-    FetchStoreObject();
-    storeObj.crustList.forEach(value => {
-        possibleCrust.push(createComp(value.name, value.price));
+    storeObj.toppingsList.forEach(value => {
+        possibleToppings.push(createComp(value.pizzaType.name, value.price));
     })
 
     storeObj.sizeList.forEach(value => {
-        possibleSizes.push(createComp(value.name, value.price));
+        possibleSizes.push(createComp(value.pizzaType.name, value.price));
     })
 
-    storeObj.toppingsList.forEach(value => {
-        possibleToppings.push(createComp(value.name, value.price));
+    storeObj.crustList.forEach(value => {
+        possibleCrust.push(createComp(value.pizzaType.name, value.price));
     })
 
     storeObj.presetPizzas.forEach(value => {
         let toppings = [];
         value.toppings.forEach(tValue => {
-            toppings.push(createComp(tValue.name, tValue.price));
+            toppings.push(createComp(tValue.pizzaType.name, tValue.price));
         })
 
-        let presetP = createCustomPizza(value.type, "", createComp(value.crust.name, value.crust.price), toppings);
-
+        let presetP = createCustomPizza(value.type, "", createComp(value.crust.pizzaType.name, value.crust.price), toppings);
+        presetP.price = value.pizzaPrice;
         pizzaList.push(presetP);
     })
 }
@@ -192,10 +304,12 @@ function initStoreButtons() {
 
         if(event.target.classList.contains("storebtn"))
         {
-            // console.log(event.target.id);
+            console.log(event.target.id);
             storeName = event.target.id;
             storeIndex = storeList.indexOf(storeName);
             storeID = storeObjList[storeIndex][1];
+            console.log(storeID);
+            
             startOrder();
         }
     })
@@ -258,8 +372,10 @@ function initDeleteButton() {
     delcurrentBtn.forEach(value => value.addEventListener("click", (event) => {
         
         // console.log(event.target.parentNode);
-
+        let deletePrice = event.target.parentNode.querySelector(".price").innerText;
+        currentTotal = parseFloat(currentTotal) - parseFloat(deletePrice);
         event.target.parentNode.remove();
+        updatePrice();
     }))
 }
 
@@ -319,15 +435,22 @@ function addToOrder(target) {
         let pizzaName = parentList.querySelector(".presetName");
         let pizzaCrust = parentList.querySelector(".crustInfo").innerText;
         let pizzaToppings = parentList.querySelector(".toppingInfo").innerText;
-
+        let sizeIndex = 0;
+        for(sizeIndex; sizeIndex < possibleSizes.length; sizeIndex++) {
+            if(possibleSizes[sizeIndex].name == sizevalue) {
+                break;
+            }
+        }
+        
         let newPresetPizza = createCustomPizza(pizzaName, sizevalue, pizzaCrust, pizzaToppings);
+        newPresetPizza.price = (parseFloat(pizzaValue.slice(1)) + possibleSizes[sizeIndex].price).toFixed(2);
         
         const insideHtml = `
         <span class="pizzaInfoList">
             <div class="currentitemtext">${sizevalue.charAt(0).toUpperCase() + sizevalue.slice(1)} ${target.parentNode.querySelector(".presetName").innerText}</div>
             <div class="currentitemtext">${pizzaCrust} - ${pizzaToppings}</div>
         </span>
-        <span class="price">${pizzaValue}</span>
+        <span class="price">${newPresetPizza.price}</span>
         `
 
         let deleteButton = document.createElement("span");
@@ -344,13 +467,46 @@ function addToOrder(target) {
         target.previousElementSibling.selectedIndex = 0;
 
         initDeleteButton();
+        calculateNewTotal(newPresetPizza.price);
     }
+}
+
+function calculateNewTotal(newPrice) {
+    currentTotal = parseFloat(currentTotal) + parseFloat(newPrice);
+    updatePrice();
 }
 
 function addCustomPizza(customPizza) {
     
     // let newCustomPizza = createCustomPizza(customPizza.size, customPizza.crust, customPizza.topping);
     // currentOrder.add(newCustomPizza);
+    let index = 0;
+    for(index; index < possibleCrust.length; index++) {
+        if(possibleCrust[index].name == customPizza.crust) {
+            break;
+        }
+    }
+    customPizza.price = 0;
+    customPizza.price += parseFloat(possibleCrust[index].price);
+
+    index = 0;
+    for(index; index < possibleSizes.length; index++) {
+        if(possibleSizes[index].name == customPizza.size) {
+            break;
+        }
+    }
+    customPizza.price += parseFloat(possibleSizes[index].price);
+
+    customPizza.toppings.forEach(value => {
+        index = 0;
+        for(index; index < possibleToppings.length; index++) {
+            if(possibleToppings[index].name == value) {
+                break;
+            }
+        }
+        customPizza.price += parseFloat(possibleToppings[index].price);
+    });
+    
     updateCurrentOrderList(customPizza);
 }
 
@@ -369,7 +525,7 @@ function updateCurrentOrderList(newPizza) {
             <div class="currentitemtext">${newPizza.size.charAt(0).toUpperCase() + newPizza.size.slice(1)} ${newPizza.name.charAt(0).toUpperCase() + newPizza.name.slice(1)}</div>
             <div class="currentitemtext">${newPizza.crust} - ${newPizza.toppings}</div>
         </span>
-        <span class="price">$10</span>
+        <span class="price">$${newPizza.price.toFixed(2)}</span>
     `
 
     const listItem = document.createElement("li");
@@ -379,6 +535,8 @@ function updateCurrentOrderList(newPizza) {
 
     curOrder.appendChild(listItem);
 
+    calculateNewTotal(newPizza.price);
+    updatePrice();
     initDeleteButton();
 }
 
@@ -459,7 +617,9 @@ function startCustomPizza() {
 <li class="currentitem"><span class="delbtn">(R)</span><span class="currentitemtext">Toppings</span><span class="price">$10</span></li>
 <li class="currentitem"><span class="delbtn">(R)</span><span class="currentitemtext">Toppings</span><span class="price">$10</span></li>
 <li class="currentitem"><span class="delbtn">(R)</span><span class="currentitemtext">Toppings</span><span class="price">$10</span></li> */}
-function startOrder() {
+async function startOrder() {
+    await FetchStoreObject();
+ 
     const currentOrderHTML = `
         <div class="currentorder">
             <h1>Current Order</h1>
@@ -468,7 +628,7 @@ function startOrder() {
                 
             </ul>
             <div class="priceOrder">
-                <div class="totalprice">Total: $190.39</div>
+                <div class="totalprice">Total: $0.00</div>
                 <div class="orderbutton"><button type="submit" name="submitbtn">Place Order</button></div>
             </div>
         </div>
@@ -480,6 +640,11 @@ function startOrder() {
     initStoreInfo();
     initDeleteButton();
     showPizzaOptions();
+}
+
+function updatePrice() {
+    let curPriceInfo = document.querySelector(".totalprice");
+    curPriceInfo.innerText = "$" + parseFloat(currentTotal).toFixed(2);
 }
 
 function showPizzaOptions() {
@@ -521,7 +686,7 @@ function showPizzaOptions() {
         let pizzaPrice = document.createElement("span");
         pizzaPrice.classList.add("pizzaName");
         pizzaPrice.classList.add("price");
-        pizzaPrice.innerText = "$10";
+        pizzaPrice.innerText = '$' + value.price.toFixed(2);
 
         listItem.appendChild(pizzaName);
         listItem.appendChild(pizzaPrice);
