@@ -41,11 +41,17 @@ namespace PizzaBox.ApiExplorer
 			{
 				options.UseSqlServer(connectionString);
 			});
+            services.AddDbContext<OrderContext>(options =>
+			{
+				options.UseSqlServer(connectionString);
+			});
             
 			services.AddScoped<StoreLogic>();
 			services.AddScoped<StoreRepository>();
             services.AddScoped<CustomerLogic>();
             services.AddScoped<CustomerRepository>();
+            services.AddScoped<OrderLogic>();
+            services.AddScoped<OrderRepository>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

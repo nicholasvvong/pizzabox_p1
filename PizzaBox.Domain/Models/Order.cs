@@ -10,8 +10,8 @@ namespace PizzaBox.Domain.Models
     {   
         [Key]
         public Guid OrderID { get; set; }
-        public Customer Cust { get; set; }
-        public AStore Store { get; set; }
+        public Guid Cust { get; set; }
+        public Guid Store { get; set; }
         public decimal CurTotal { get; protected set; }
         public DateTime OrderTime { get; set; }
         [NotMapped]
@@ -25,7 +25,7 @@ namespace PizzaBox.Domain.Models
             OrderTime = DateTime.UtcNow;
         }
 
-        public Order(Customer c, AStore s) : this()
+        public Order(Guid c, Guid s) : this()
         {
             Cust = c;
             Store = s;
