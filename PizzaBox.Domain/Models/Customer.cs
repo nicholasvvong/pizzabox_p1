@@ -15,7 +15,8 @@ namespace PizzaBox.Domain.Models
         public Guid CustomerID { get; set; } = Guid.NewGuid();
         public string Fname { get; set; }
         public string Lname { get; set; }
-        public string Password { get; set; }
+        public byte[] PasswordHash { get; set; }//needed from user... but hashed behind the scenes
+        public byte[] PasswordSalt { get; set; }// comes from the {} in the system
         public string Email { get; set; }
         public DateTime LastTimeOrdered { get; protected set; }
         public Guid LastStore { get; set; }
@@ -25,11 +26,10 @@ namespace PizzaBox.Domain.Models
             LastTimeOrdered = DateTime.MinValue;
         }
 
-        public Customer(string fname, string lname, string password) : this()
+        public Customer(string fname, string lname) : this()
         {
             Fname = fname;
             Lname = lname;
-            Password = password;
         }
 
         // private bool CanOrder()

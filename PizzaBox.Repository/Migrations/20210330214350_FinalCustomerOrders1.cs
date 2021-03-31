@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace PizzaBox.Repository.Migrations
 {
-    public partial class FinalCustomerStore : Migration
+    public partial class FinalCustomerOrders1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,7 +14,8 @@ namespace PizzaBox.Repository.Migrations
                     CustomerID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Fname = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Lname = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastTimeOrdered = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastStore = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -35,6 +36,22 @@ namespace PizzaBox.Repository.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ItemType", x => x.TypeID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Orders",
+                columns: table => new
+                {
+                    OrderID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Cust = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Store = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CurTotal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    OrderTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    JSONPizzaOrder = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orders", x => x.OrderID);
                 });
 
             migrationBuilder.CreateTable(
@@ -68,33 +85,6 @@ namespace PizzaBox.Repository.Migrations
                         column: x => x.ITypeTypeID,
                         principalTable: "ItemType",
                         principalColumn: "TypeID",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Orders",
-                columns: table => new
-                {
-                    OrderID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CustomerID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    StoreID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    CurTotal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    OrderTime = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Orders", x => x.OrderID);
-                    table.ForeignKey(
-                        name: "FK_Orders_Customers_CustomerID",
-                        column: x => x.CustomerID,
-                        principalTable: "Customers",
-                        principalColumn: "CustomerID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Orders_Stores_StoreID",
-                        column: x => x.StoreID,
-                        principalTable: "Stores",
-                        principalColumn: "StoreID",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -296,16 +286,6 @@ namespace PizzaBox.Repository.Migrations
                 filter: "[Name] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_CustomerID",
-                table: "Orders",
-                column: "CustomerID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Orders_StoreID",
-                table: "Orders",
-                column: "StoreID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_PresetPizza_ToppingID",
                 table: "PresetPizza",
                 column: "ToppingID");
@@ -334,6 +314,9 @@ namespace PizzaBox.Repository.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Customers");
+
+            migrationBuilder.DropTable(
                 name: "PresetPizza");
 
             migrationBuilder.DropTable(
@@ -350,9 +333,6 @@ namespace PizzaBox.Repository.Migrations
 
             migrationBuilder.DropTable(
                 name: "Sizes");
-
-            migrationBuilder.DropTable(
-                name: "Customers");
 
             migrationBuilder.DropTable(
                 name: "Comps");

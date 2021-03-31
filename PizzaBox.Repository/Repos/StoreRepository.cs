@@ -32,12 +32,22 @@ namespace PizzaBox.Repository
             
         }
 
+        /// <summary>
+        /// Gets all the stores in the database
+        /// </summary>
+        /// <returns>List of AStores</returns>
         public List<AStore> GetStores()
         {
             List<AStore> stores = context.Stores.ToList();
             //StoresInit();
             return stores;
         }
+
+        /// <summary>
+        /// Gets the max pizza per order a store allows based off store's id
+        /// </summary>
+        /// <param name="id">Store's Guid</param>
+        /// <returns>Max # of pizzas</returns>
         public int GetMaxPizzas(Guid id)
         {
             AStore store = context.Stores.SingleOrDefault(n => Guid.Equals(n.StoreID, id));
@@ -48,6 +58,29 @@ namespace PizzaBox.Repository
             return -1;
         }
 
+        /// <summary>
+        /// Updates the store's inventory after an order has been submitted
+        /// Goes throuhgh each pizza and decrments from database
+        /// </summary>
+        /// <param name="pizzaList">List of pizzas from order</param>
+        public void UpdateInventory(Guid StoreID, List<RawPizza> pizzaList)
+        {
+            foreach(RawPizza rp in pizzaList)
+            {
+                DecrementSize(StoreID, rp.Size);
+                DecrementCrust(StoreID, rp.Crust);
+                foreach(string t in rp.Toppings)
+                {
+                    DecrementTopping(StoreID, t);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the max number of toppings allowed per pizza for a store
+        /// </summary>
+        /// <param name="id">Store's Guid id</param>
+        /// <returns>Max # of toppings per pizza</returns>
         public int GetMaxToppings(Guid id)
         {
             AStore store = context.Stores.SingleOrDefault(n => Guid.Equals(n.StoreID, id));
@@ -58,13 +91,23 @@ namespace PizzaBox.Repository
             return -1;
         }
 
+        /// <summary>
+        /// Gets all the crusts a store offers
+        /// </summary>
+        /// <param name="id">Store's ID</param>
+        /// <returns>List of crusts</returns>
         public List<Crust> GetCrusts(Guid id)
         {
             List<Crust> CrustList = new List<Crust>();
             CrustList = context.Crusts.Include(c => c.PizzaType).Where(n => Guid.Equals(n.Store.StoreID, id)).ToList();
             return CrustList;
         }
-
+        
+        /// <summary>
+        /// Gets all the toppings a store offers
+        /// </summary>
+        /// <param name="id">Store's ID</param>
+        /// <returns>List of Toppings</returns>
         public List<Topping> GetToppings(Guid id)
         {
             List<Topping> ToppingsList = new List<Topping>();
@@ -72,6 +115,11 @@ namespace PizzaBox.Repository
             return ToppingsList;
         }
 
+        /// <summary>
+        /// Gets all the premade pizzas a store offers
+        /// </summary>
+        /// <param name="id">Store's ID</param>
+        /// <returns>List of BasicPizzas</returns>
         public List<BasicPizza> GetPresets(Guid id)
         {
             var pre = context.Stores.Include(s => s.PresetPizzas).ThenInclude(top => top.Toppings).ThenInclude(comp => comp.PizzaType)
@@ -82,6 +130,11 @@ namespace PizzaBox.Repository
             return list[0];
         }
 
+        /// <summary>
+        /// Gets all the sizes a store offers
+        /// </summary>
+        /// <param name="id">Store's ID</param>
+        /// <returns>List of Sizes</returns>
         public List<Size> GetSizes(Guid id)
         {
             List<Size> SizeList = new List<Size>();
@@ -89,6 +142,11 @@ namespace PizzaBox.Repository
             return SizeList;
         }
 
+        /// <summary>
+        /// Gets the name of a store based off the id
+        /// </summary>
+        /// <param name="id">Store's ID</param>
+        /// <returns>Name of the store</returns>
         public string GetName(Guid id)
         {
             AStore store = context.Stores.SingleOrDefault(n => Guid.Equals(n.StoreID, id));
@@ -99,6 +157,11 @@ namespace PizzaBox.Repository
             return "";
         }
 
+        /// <summary>
+        /// Gets the max price per order a store will allow
+        /// </summary>
+        /// <param name="id">Store's ID</param>
+        /// <returns>Max price per order</returns>
         public decimal GetMaxPrice(Guid id)
         {
             AStore store = context.Stores.SingleOrDefault(n => Guid.Equals(n.StoreID, id));
@@ -109,6 +172,12 @@ namespace PizzaBox.Repository
             return -1;
         }
 
+        /// <summary>
+        /// Finds a store in a database based off the id
+        /// Returns the store if found. Returns null if the store was not found
+        /// </summary>
+        /// <param name="id">Store's ID</param>
+        /// <returns>AStore if found, else null</returns>
         public AStore FindStore(Guid id)
         {
             var store = context.Stores.SingleOrDefault(n => Guid.Equals(n.StoreID, id));
@@ -120,6 +189,105 @@ namespace PizzaBox.Repository
             {
                 return null;
             }
+        }
+
+        /// <summary>
+        /// Searches database for the size-store pair and decreases inventory by 1
+        /// </summary>
+        /// /// <param name="id">Store iD</param>
+        /// <param name="size">Name of the size</param>
+        private void DecrementSize(Guid id, string size)
+        {
+            var currentInventoryAmounts =  context.Sizes.Include(c => c.PizzaType)
+                                .Include(st => st.Store)
+                                .Where(s => s.PizzaType.Name == size)
+                                .Where(s => s.Store.StoreID == id)
+                                .Select(i => i.Inventory).FirstOrDefault();
+            Console.WriteLine(currentInventoryAmounts);
+            UpdateSizeInventory(id, size, currentInventoryAmounts - 1);
+        }
+
+        /// <summary>
+        /// Searches database for the crust-store pair and decreases inventory by 1
+        /// </summary>
+        /// <param name="id">Store ID</param>
+        /// <param name="crust">Name of the crust</param>
+        private void DecrementCrust(Guid id, string crust)
+        {
+            var currentInventoryAmounts =  context.Crusts.Include(c => c.PizzaType)
+                                .Include(st => st.Store)
+                                .Where(s => s.PizzaType.Name == crust)
+                                .Where(s => s.Store.StoreID == id)
+                                .Select(i => i.Inventory).FirstOrDefault();
+            Console.WriteLine(currentInventoryAmounts);
+            UpdateCrustInventory(id, crust, currentInventoryAmounts - 1);
+        }
+        
+        /// <summary>
+        /// Searches databse for the topping-store pair and decreases its inventory by 1
+        /// </summary>
+        /// <param name="id">Store ID</param>
+        /// <param name="topping">Name of Topping</param>
+        private void DecrementTopping(Guid id, string topping)
+        {
+            var currentInventoryAmounts =  context.Toppings.Include(c => c.PizzaType)
+                                .Include(st => st.Store)
+                                .Where(s => s.PizzaType.Name == topping)
+                                .Where(s => s.Store.StoreID == id)
+                                .Select(i => i.Inventory).FirstOrDefault();
+            Console.WriteLine(currentInventoryAmounts);
+            UpdateToppingInventory(id, topping, currentInventoryAmounts - 1);
+        }
+
+        /// <summary>
+        /// Updates the inventory of sizes to a set amount
+        /// </summary>
+        /// <param name="id">Store ID</param>
+        /// <param name="size">Size to update</param>
+        /// <param name="v">New inventory amount</param>
+        private void UpdateSizeInventory(Guid id, string size, int v)
+        {
+            var sizeEntry = context.Sizes.Include(c => c.PizzaType) 
+                                .Include(st => st.Store)
+                                .Where(s => s.PizzaType.Name == size)
+                                .Where(s => s.Store.StoreID == id).FirstOrDefault();
+            sizeEntry.Inventory = v;
+            context.SaveChanges();
+            //context.Entry(sizeEntry).CurrentValues.SetValues(v);
+        }
+
+        /// <summary>
+        /// Updates the inventory of crust to a set amount
+        /// </summary>
+        /// <param name="id">Store ID</param>
+        /// <param name="crust">Crust Name</param>
+        /// <param name="v">New inventory amount</param>
+        private void UpdateCrustInventory(Guid id, string crust, int v)
+        {
+            var crustEntry = context.Crusts.Include(c => c.PizzaType) 
+                                .Include(st => st.Store)
+                                .Where(s => s.PizzaType.Name == crust)
+                                .Where(s => s.Store.StoreID == id).FirstOrDefault();
+            crustEntry.Inventory = v;
+            context.SaveChanges();
+            //context.Entry(sizeEntry).CurrentValues.SetValues(v);
+        }
+
+        /// <summary>
+        /// Updates the inventory of a topping to a set amount
+        /// </summary>
+        /// <param name="id">Store ID</param>
+        /// <param name="topping">Topping Name</param>
+        /// <param name="v">New inventory amount</param>
+        private void UpdateToppingInventory(Guid id, string topping, int v)
+        {
+            var toppingEntry = context.Toppings.Include(c => c.PizzaType) 
+                                .Include(st => st.Store)
+                                .Where(s => s.PizzaType.Name == topping)
+                                .Where(s => s.Store.StoreID == id).FirstOrDefault();
+            toppingEntry.Inventory = v;
+            context.SaveChanges();
+            //context.Entry(sizeEntry).CurrentValues.SetValues(v);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------//

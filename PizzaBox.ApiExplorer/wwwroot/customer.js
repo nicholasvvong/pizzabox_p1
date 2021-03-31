@@ -1,6 +1,6 @@
 "use strict"
 
-console.log(localStorage.getItem("customerInfo"));
+//console.log(localStorage.getItem("customerInfo"));
 let customerObj = JSON.parse(localStorage.getItem("customerInfo"));
 document.querySelector('#name').firstElementChild.innerText = "Welcome " + customerObj.Fname + " " + customerObj.Lname;
 
@@ -15,6 +15,7 @@ let currentTotal = 0;
 let orderstarted = false;
 
 let currentOrder = [];
+let currentorderhistory;
 
 const topbar = document.querySelector('.topbar');
 const main = document.querySelector('.maincontent');
@@ -167,14 +168,15 @@ async function FetchStoreObject()
     });
 }
 
-function FetchSubmitOrder() {
+async function FetchSubmitOrder() {
     let orderInfo = {
-        pizzas: currentOrder,
-        store: storeID,
-        customer: customerObj.CustomerID
+        PizzaList: currentOrder,
+        StoreID: storeID,
+        CustomerID: customerObj.CustomerID,
+        Total: currentTotal
     }
 
-    fetch('api/Orders/Submit', {
+    return await fetch('api/Order/submit', {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
@@ -190,12 +192,32 @@ function FetchSubmitOrder() {
             return response.json();
     })
     .then((jsonReponse) => {
-        console.log(jsonReponse);
+        //console.log(jsonReponse);
     })
     .catch(function(err) {
         console.log("Failed to fetch page: ", err);
     });
 }
+
+async function FetchOrderHistory() {
+    await fetch(`api/Order/history/${customerObj.CustomerID}`)
+    .then(response => {
+        if(!response.ok) {
+            throw new Error(`Network reponse was not ok (${reponse.status})`);
+        }
+        else
+            return response.json();
+    })
+    .then((jsonReponse) => {
+        //console.log(jsonReponse);
+        //console.log(JSON.parse(jsonReponse.jsonPizzaOrders[0]));
+        currentorderhistory = jsonReponse;
+    })
+    .catch(function(err) {
+        console.log("Failed to fetch page: ", err);
+    });
+}
+
 
 
 //-------------------------------------------------------------------//
@@ -210,27 +232,13 @@ function createCustomPizza(cName, cSize, cCrust, cToppings)  {
     }
 }
 
-function createComp(cName, cPrice) {
+function createComp(cName, cPrice, cInv) {
     return {
         name: cName,
-        price: cPrice
+        price: cPrice,
+        inventory: cInv
     }
 }
-
-(function initPresetPizza() {
-
-    // let newCustom = createCustomPizza("Meat Pizza","", "Crust", ["Meat1, Meat2, Meat3, Meat4"]);
-    // pizzaList.push(newCustom);
-    // newCustom = createCustomPizza("Hawaiin Pizza","", "Crust", ["Meat1, Meat2, Meat3, Meat4"]);
-    // pizzaList.push(newCustom);
-    // newCustom = createCustomPizza("Deluxe Pizza","", "Crust", ["Meat1, Meat2, Meat3, Meat4"]);
-    // pizzaList.push(newCustom);
-    // newCustom = createCustomPizza("Other Pizza","", "Crust", ["Meat1, Meat2, Meat3, Meat4"]);
-    // pizzaList.push(newCustom);
-    // newCustom = createCustomPizza("AnoooOther Pizza","", "Crust", ["Meat1, Meat2, Meat3, Meat4"]);
-    // pizzaList.push(newCustom);
-})();
-
 
 (function storeManager() {
     if(customerObj.StoreManger != '00000000-0000-0000-0000-000000000000')
@@ -248,6 +256,7 @@ function createComp(cName, cPrice) {
 })();
 
 (function initOption() {
+    //showDumbOrderCountdown(3);
     showOrderHistory();
 })();
 
@@ -281,14 +290,16 @@ topbar.addEventListener("click", (event) => {
 
 function initSubmitOrder() {
     let submitbtn = document.querySelector(".orderbutton");
-    submitbtn.addEventListener("click", (event) => {
+    submitbtn.addEventListener("click", async (event) => {
             if(currentOrder.length < 1) {
             alert("No items added to order");
         }
         else {
-            console.log(currentOrder);
+            await FetchSubmitOrder();
+            switchSelected(topbar.firstElementChild.nextElementSibling.firstElementChild);
+            orderstarted = false;
+            //showDumbOrderCountdown(1);
             showOrderHistory();
-            //FetchSubmitOrder();
         }
     })
 }
@@ -301,30 +312,35 @@ function initStoreInfo() {
     currentOrder = [];
     currentTotal = 0.00;
 
+    //console.log(storeObj);
+
     storeObj.toppingsList.forEach(value => {
-        possibleToppings.push(createComp(value.pizzaType.name, value.price));
+        possibleToppings.push(createComp(value.pizzaType.name, value.price, value.inventory));
     })
 
     storeObj.sizeList.forEach(value => {
-        possibleSizes.push(createComp(value.pizzaType.name, value.price));
+        possibleSizes.push(createComp(value.pizzaType.name, value.price, value.inventory));
     })
 
     storeObj.crustList.forEach(value => {
-        possibleCrust.push(createComp(value.pizzaType.name, value.price));
+        possibleCrust.push(createComp(value.pizzaType.name, value.price, value.inventory));
     })
 
     storeObj.presetPizzas.forEach(value => {
         let toppings = [];
         value.toppings.forEach(tValue => {
-            toppings.push(createComp(tValue.pizzaType.name, tValue.price));
+            toppings.push(createComp(tValue.pizzaType.name, tValue.price, tValue.inventory));
         })
 
-        let presetP = createCustomPizza(value.type, "", createComp(value.crust.pizzaType.name, value.crust.price), toppings);
+        let presetP = createCustomPizza(value.type, "", createComp(value.crust.pizzaType.name, value.crust.price, value.crust.inventory), toppings);
         presetP.price = value.pizzaPrice;
         pizzaList.push(presetP);
     })
 
-    console.log(storeObj);
+    // console.log(possibleCrust);
+    // console.log(possibleSizes);
+    // console.log(possibleToppings);
+    // console.log(storeObj);
 }
 
 function initOrderButtons() {
@@ -337,11 +353,17 @@ function initOrderButtons() {
                 event.target.classList.add("expanded");
                 const additionalInformation = document.createElement("ol");
                 additionalInformation.setAttribute('class', "moreinfo");
-                for(let i = 1; i <= 10; i++) {
+
+                let orderIndex = event.target.parentNode.value;
+                let pizzaorder = JSON.parse(currentorderhistory.jsonPizzaOrders[orderIndex]);
+                //console.log(pizzaorder);
+
+                pizzaorder.forEach(value => {
                     const additionaListItem = document.createElement("li");
-                    additionaListItem.innerText = "Some " + i;
+                    additionaListItem.innerText = `${value.Size} ${value.Name} - ${value.Crust} - ${value.Toppings.join(' ')} - ${value.Price.toFixed(2)}`;
                     additionalInformation.appendChild(additionaListItem);
-                }
+                })
+
                 event.target.parentNode.insertBefore(additionalInformation, event.target.nextSibling);
             }
             else {
@@ -468,6 +490,12 @@ function switchSelected(target) {
 
         orderNowSwitch();
     }
+    if(target.innerText == "Manage Store") {
+        //console.log(customerObj);
+        localStorage.setItem("storeID", customerObj.StoreManger)
+        location = "store.html";
+        //showStoreOptions();
+    }
 }
 
 function addToOrder(target) {
@@ -500,7 +528,19 @@ function addToOrder(target) {
         
         let newPresetPizza = createCustomPizza(pizzaName.innerText, sizevalue, pizzaCrust, pizzaToppings.split(" "));
         newPresetPizza.price = (parseFloat(pizzaValue.slice(1)) + possibleSizes[sizeIndex].price).toFixed(2);
-        
+        console.log(storeObj);
+        if(parseFloat(newPresetPizza.price) + parseFloat(currentTotal) > parseFloat(storeObj.maxPrice)) {
+            alert(`Cannot add more. Max order price of $${storeObj.maxPrice.toFixed(2)}`)
+            return;
+        }
+        if(currentOrder.length + 1 > storeObj.maxPizzas) {
+            alert(`Cannot add more. Max pizza limit of ${storeObj.maxPizzas}`);
+            return;
+        }
+        if(!updateInventory(newPresetPizza)) {
+            return;
+        }
+
         const insideHtml = `
         <span class="pizzaInfoList">
             <div class="currentitemtext">${sizevalue.charAt(0).toUpperCase() + sizevalue.slice(1)} ${target.parentNode.querySelector(".presetName").innerText}</div>
@@ -523,6 +563,7 @@ function addToOrder(target) {
 
         currentOrder.push(newPresetPizza);
         //console.log(currentOrder);
+        
         updateOrderListValues();
         initDeleteButton();
         calculateNewTotal(newPresetPizza.price);
@@ -611,6 +652,53 @@ function updateOrderListValues() {
     }
 }
 
+function updateInventory(newPizza) {
+    console.log(newPizza);
+    for(let i = 0; i < possibleCrust.length; i++) {
+        if(possibleCrust[i].name == newPizza.crust) {
+            if(possibleCrust[i].inventory <= 0) {
+                alert("Sorry. We're out of that crust.");
+                return false;
+            }
+            else {
+                possibleCrust[i].inventory--;
+                break;
+            }
+        }
+    }
+    for(let i = 0; i < possibleSizes.length; i++) {
+        if(possibleSizes[i].name == newPizza.size) {
+            if(possibleSizes[i].inventory <= 0) {
+                alert("Sorry. We're out of dough to make that size");
+                return false;
+            }
+            else {
+                possibleSizes[i].inventory--;
+                break;
+            }
+        }
+    }
+    newPizza.toppings.forEach(value => {
+        for(let i = 0; i < possibleToppings.length; i++) {
+            if(possibleToppings[i].name == value) {
+                if(possibleToppings[i].inventory <= 0) {
+                    alert("Sorry. We're out of " + value);
+                    return false;
+                }
+                else {
+                    possibleToppings[i].inventory--;
+                    break;
+                }
+            }
+        }
+    })
+    // console.log(possibleCrust);
+    // console.log(possibleSizes);
+    // console.log(possibleToppings);
+
+    return true;
+}
+
 function checkCrust(customPizza) {
     const crustRadio = document.querySelector('input[name="crust"]:checked');
 
@@ -662,7 +750,8 @@ function startCustomPizza() {
         </div>
     </div>
     `
-    main.firstElementChild.lastElementChild.innerHTML = customHTML;
+    let mainInfo = main.querySelector(".mainstuff");
+    mainInfo.firstElementChild.lastElementChild.innerHTML = customHTML;
 
     let crustCompHtml = getCrustHtml();
     let sizeCompHtml = getSizeCustHtml();
@@ -691,7 +780,8 @@ async function startOrder() {
             </div>
         </div>
     `
-    const insideOrder = main.firstElementChild;
+    let mainInfo = main.querySelector(".mainstuff");
+    const insideOrder = mainInfo.firstElementChild;
     insideOrder.lastElementChild.setAttribute("id", "storeselected");
     insideOrder.innerHTML = currentOrderHTML + insideOrder.innerHTML;
 
@@ -703,7 +793,7 @@ async function startOrder() {
 
 function updatePrice() {
     let curPriceInfo = document.querySelector(".totalprice");
-    curPriceInfo.innerText = "$" + parseFloat(currentTotal).toFixed(2);
+    curPriceInfo.innerText = "Total: $" + parseFloat(currentTotal).toFixed(2);
 }
 
 function showPizzaOptions() {
@@ -714,7 +804,8 @@ function showPizzaOptions() {
 
         </ul>
     `
-    const rightMenu = main.firstElementChild.lastElementChild;
+    let mainInfo = main.querySelector(".mainstuff");
+    const rightMenu = mainInfo.firstElementChild.lastElementChild;
     rightMenu.innerHTML = orderNowHTML;
 
     let menuList = document.querySelector(".pizzaOptions");
@@ -757,26 +848,62 @@ function showPizzaOptions() {
     initPizzaButtons();
 }
 
-function showOrderHistory() {
+/*
+<li class="order"><span class='information'>Something</span><button class='orderagain'>Order Again</button></li>
+<li class="order"><span class='information'>Something2</span><button class='orderagain'>Order Again</button></li>
+<li class="order"><span class='information'>Something3</span><button class='orderagain'>Order Again</button></li>
+<li class="order"><span class='information'>Something4</span><button class='orderagain'>Order Again</button></li>
+<li class="order"><span class='information'>Something5</span><button class='orderagain'>Order Again</button></li>
+<li class="order"><span class='information'>Something6</span><button class='orderagain'>Order Again</button></li>
+<li class="order"><span class='information'>Something7</span><button class='orderagain'>Order Again</button></li>
+<li class="order"><span class='information'>Something8</span><button class='orderagain'>Order Again</button></li>
+<li class="order"><span class='information'>Something9</span><button class='orderagain'>Order Again</button></li>
+<li class="order"><span class='information'>Something10</span><button class='orderagain'>Order Again</button></li>
+*/
+async function showOrderHistory() {
+    await FetchOrderHistory();
     const htmlOrderHistory = `
     <div class="orderhistory">
         <h1>Order History</h1>
         <ul class="allorders">
-            <li class="order"><span class='information'>Something</span><button class='orderagain'>Order Again</button></li>
-            <li class="order"><span class='information'>Something2</span><button class='orderagain'>Order Again</button></li>
-            <li class="order"><span class='information'>Something3</span><button class='orderagain'>Order Again</button></li>
-            <li class="order"><span class='information'>Something4</span><button class='orderagain'>Order Again</button></li>
-            <li class="order"><span class='information'>Something5</span><button class='orderagain'>Order Again</button></li>
-            <li class="order"><span class='information'>Something6</span><button class='orderagain'>Order Again</button></li>
-            <li class="order"><span class='information'>Something7</span><button class='orderagain'>Order Again</button></li>
-            <li class="order"><span class='information'>Something8</span><button class='orderagain'>Order Again</button></li>
-            <li class="order"><span class='information'>Something9</span><button class='orderagain'>Order Again</button></li>
-            <li class="order"><span class='information'>Something10</span><button class='orderagain'>Order Again</button></li>
+
         </ul>
     </div>
     `
-    main.innerHTML = htmlOrderHistory;
+
+    let mainInfo = main.querySelector(".mainstuff");
+    mainInfo.innerHTML = htmlOrderHistory;
+    
+    let allordersInside = document.querySelector(".allorders");
+
+    currentorderhistory.storeName.forEach((value,index) => {
+        let date = new Date(currentorderhistory.orderTimes[index]);
+        let listOrderItemHTML = `
+            <li class="order" value="${index}"><span class='information'>${value} - ${date.toDateString()} - $${currentorderhistory.totals[index].toFixed(2)}</span><button class='orderagain'>Order Again</button></li>
+        `
+        allordersInside.innerHTML += listOrderItemHTML;
+    })
+    
     initOrderButtons();
+}
+
+function showDumbOrderCountdown(minutes) {
+    let countdownBox = main.querySelector(".countdown");
+    let timer = new Date();
+    timer.setSeconds(minutes * 60);
+    let setTimer = setInterval(function() {
+        let hrs = Math.floor((timer.getSeconds() % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        let mins = Math.floor((timer.getSeconds() % 60 ));
+        let secs = Math.floor((timer.getSeconds()));
+
+        countdownBox.innerText = `Hours: ${hrs} | Minutes: ${mins} | Seconds: ${secs}`;
+        timer.setSeconds(timer.getSeconds() - 1);
+        console.log(timer.getSeconds());
+        if(timer.getSeconds <= 0) {
+            console.log("done");
+            clearInterval(setTimer);
+        }
+    }, 1000);
 }
 
 function orderNowSwitch() {
@@ -790,7 +917,8 @@ function orderNowSwitch() {
             </div>
         </div>
     `
-    main.innerHTML = orderNowHTML;
+    let mainInfo = main.querySelector(".mainstuff");
+    mainInfo.innerHTML = orderNowHTML;
     let insideList = document.querySelector(".orderNow");
     storeList.forEach(value => {
         let listItem = document.createElement("li");

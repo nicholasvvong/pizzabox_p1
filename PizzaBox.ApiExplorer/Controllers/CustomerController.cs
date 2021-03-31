@@ -25,7 +25,7 @@ namespace PizzaBox.ApiExplorer
         }
 
         [HttpPost("login")]
-        public string Login([FromBody] Customer obj)
+        public string Login([FromBody] RawCustomer obj)
         {
             Console.WriteLine("trying to login");
             Customer curCust = customerLogic.loginCheck(obj);
@@ -42,7 +42,7 @@ namespace PizzaBox.ApiExplorer
         [HttpPost("init")]
         public void Init()
         {
-            //customerLogic.LogicRepoGap();
+            //customerLogic.InitStoreOwners();
         }
 
         // [HttpPost]

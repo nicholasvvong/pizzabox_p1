@@ -14,7 +14,7 @@ namespace PizzaBox.Domain.Abstracts
         [NotMapped]
         public string Name { get; set; }
         public decimal Price { get; protected set; }
-        public int Inventory { get; protected set; }
+        public int Inventory { get; set; }
         public AStore Store { get; set; }
         public APizzaComponent PizzaType { get; set; }
 

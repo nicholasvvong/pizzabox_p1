@@ -9,14 +9,16 @@ namespace PizzaBox.Domain.Models
     public class Order
     {   
         [Key]
-        public Guid OrderID { get; set; }
+        public Guid OrderID { get; set; } = Guid.NewGuid();
         public Guid Cust { get; set; }
         public Guid Store { get; set; }
-        public decimal CurTotal { get; protected set; }
+        public decimal CurTotal { get; set; }
         public DateTime OrderTime { get; set; }
         [NotMapped]
         public BasicPizza CurrentPizza { get; set; }
+        [NotMapped]
         public List<BasicPizza> Pizzas { get; protected set; }
+        public string JSONPizzaOrder { get; set; }
 
         public Order()
         {

@@ -15,11 +15,6 @@ namespace PizzaBox.Logic
             customerRepo = r;
         }
 
-        public void LogicRepoGap()
-        {
-            customerRepo.RunInits();
-        }
-
         public Customer CreateCustomer(RawCustomer obj)
         {
             Customer newCustomer;
@@ -30,13 +25,7 @@ namespace PizzaBox.Logic
             else
             {
                 newCustomer = mapper.CustomerMapper(obj);
-                newCustomer.Fname = obj.Fname;
-                newCustomer.Lname = obj.Lname;
-                newCustomer.Password = obj.Password;
-                newCustomer.Email = obj.Email.ToLower();
-                //obj.Password = PasswordHash(obj.Password);
-                newCustomer.LastStore = Guid.Empty;
-                newCustomer.StoreManger = Guid.Empty;
+                
                 customerRepo.AddNewCustomer(newCustomer);
             }
 
@@ -49,7 +38,7 @@ namespace PizzaBox.Logic
         /// If invalid, return null
         /// </summary>
         /// <param name="obj">Customer info based off login form</param>
-        public Customer loginCheck(Customer obj)
+        public Customer loginCheck(RawCustomer obj)
         {
             if(!customerRepo.IsExistingAccount(obj.Email.ToLower()))
             {
@@ -57,10 +46,11 @@ namespace PizzaBox.Logic
             }
             else
             {
-                string dbpw = customerRepo.GetHashedPassword(obj.Email.ToLower());
-                dbpw = PasswordUnhash(dbpw);
+                byte[] originalSalt = customerRepo.GetPasswordSalt(obj.Email.ToLower());
+                byte[] originalPassword = customerRepo.GetHashedPassword(obj.Email.ToLower());
+                byte[] currentPassword = mapper.PasswordHash(obj.Password, originalSalt);
 
-                if(obj.Password == dbpw)
+                if(CompareHash(originalPassword, currentPassword))
                 {
                     return customerRepo.GetCustomer(obj.Email.ToLower());
                 }
@@ -72,30 +62,66 @@ namespace PizzaBox.Logic
         }
 
         /// <summary>
-        /// This is a placeholder to hash the password
-        /// Currently only reverses the password to be stored in the database
+        /// Compares the hashed version of the user inputted password vs the original hashed version at account creation
+        /// Returns false if they are not the same
         /// </summary>
-        /// <param name="password">Unencrypted user password</param>
+        /// <param name="original">Hashed password at account creation</param>
+        /// <param name="userInput">Hashed password from current user input</param>
         /// <returns></returns>
-        private string PasswordHash(string password)
+        private bool CompareHash(byte[] original, byte[] userInput)
         {
-            char[] hashed = password.ToCharArray();
-            Array.Reverse(hashed);
-            return new string(hashed);
+            if(original.Length != userInput.Length)
+            {
+                return false;
+            }
+            else
+            {
+                for(int i = 0; i < original.Length; i++)
+                {
+                    if(original[i] != userInput[i])
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
         }
 
-        /// <summary>
-        /// This is a placeholder to unencrypt the password
-        /// Will reverse the password stored in the database
-        /// </summary>
-        /// <param name="password">Encrypyed user password</param>
-        /// <returns></returns>
-        private string PasswordUnhash(string password)
+        
+        //---------------------------------------------------------//
+        public void InitStoreOwners()
         {
-            char[] unhashed = password.ToCharArray();
-            Array.Reverse(unhashed);
-            return new string(unhashed);
-        }
+            RawCustomer tempCPK = new RawCustomer();
+            tempCPK.Email = "cpk@gmail.com";
+            tempCPK.Fname = "CPK";
+            tempCPK.Lname = "Nick";
+            tempCPK.Password = "Nick";
+            Customer cpkOwner = mapper.CustomerMapper(tempCPK);
+            customerRepo.InitStoreOwner(cpkOwner, "CPK");
 
+            RawCustomer tempChi = new RawCustomer();
+            tempChi.Email = "chicago@gmail.com";
+            tempChi.Fname = "Chicago";
+            tempChi.Lname = "Nick";
+            tempChi.Password = "Nick";
+            Customer chiOwner = mapper.CustomerMapper(tempChi);
+            customerRepo.InitStoreOwner(chiOwner, "Chicago Pizza Store");
+
+            RawCustomer tempFred = new RawCustomer();
+            tempFred.Email = "chicago@gmail.com";
+            tempFred.Fname = "Chicago";
+            tempFred.Lname = "Nick";
+            tempFred.Password = "Nick";
+            Customer fredOwner = mapper.CustomerMapper(tempFred);
+            customerRepo.InitStoreOwner(fredOwner, "Freddy's Pizza Store");
+
+            RawCustomer tempNY = new RawCustomer();
+            tempNY.Email = "chicago@gmail.com";
+            tempNY.Fname = "Chicago";
+            tempNY.Lname = "Nick";
+            tempNY.Password = "Nick";
+            Customer nyOwner = mapper.CustomerMapper(tempNY);
+            customerRepo.InitStoreOwner(nyOwner, "NewYork Pizza Store");
+        }
     }
 }

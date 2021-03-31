@@ -10,8 +10,8 @@ using PizzaBox.Repository;
 namespace PizzaBox.Repository.Migrations
 {
     [DbContext(typeof(DatabaseCreationContext))]
-    [Migration("20210329224924_FinalCustomerStore")]
-    partial class FinalCustomerStore
+    [Migration("20210330214350_FinalCustomerOrders1")]
+    partial class FinalCustomerOrders1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -212,8 +212,11 @@ namespace PizzaBox.Repository.Migrations
                     b.Property<string>("Lname")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<byte[]>("PasswordHash")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<byte[]>("PasswordSalt")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<Guid>("StoreManger")
                         .HasColumnType("uniqueidentifier");
@@ -250,20 +253,19 @@ namespace PizzaBox.Repository.Migrations
                     b.Property<decimal>("CurTotal")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid?>("CustomerID")
+                    b.Property<Guid>("Cust")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("JSONPizzaOrder")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("OrderTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("StoreID")
+                    b.Property<Guid>("Store")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("OrderID");
-
-                    b.HasIndex("CustomerID");
-
-                    b.HasIndex("StoreID");
 
                     b.ToTable("Orders");
                 });
@@ -358,21 +360,6 @@ namespace PizzaBox.Repository.Migrations
                     b.Navigation("Crust");
 
                     b.Navigation("Size");
-                });
-
-            modelBuilder.Entity("PizzaBox.Domain.Models.Order", b =>
-                {
-                    b.HasOne("PizzaBox.Domain.Models.Customer", "Cust")
-                        .WithMany()
-                        .HasForeignKey("CustomerID");
-
-                    b.HasOne("PizzaBox.Domain.Abstracts.AStore", "Store")
-                        .WithMany()
-                        .HasForeignKey("StoreID");
-
-                    b.Navigation("Cust");
-
-                    b.Navigation("Store");
                 });
 
             modelBuilder.Entity("PizzaBox.Domain.Models.PresetPizza", b =>

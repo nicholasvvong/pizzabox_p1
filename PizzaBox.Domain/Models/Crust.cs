@@ -9,7 +9,7 @@ namespace PizzaBox.Domain.Abstracts
     {
         public Guid CrustID { get; set; } = Guid.NewGuid();
         public decimal Price { get; protected set; }
-        public int Inventory { get; protected set; }
+        public int Inventory { get; set; }
         public bool CheeseStuffed { get; set; }
         public decimal StuffedPrice { get; private set; }
         public APizzaComponent PizzaType { get; set; }
