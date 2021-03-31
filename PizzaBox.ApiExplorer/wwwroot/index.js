@@ -5,11 +5,6 @@ const uri = document.documentURI;
 const form = document.querySelector(".login")
 accountLogInForm();
 
-let correctLogin = {
-    email: "Nick",
-    password: "Nick"
-}
-
 form.addEventListener("click", (event) => {
     event.preventDefault();
     if(event.target.tagName.toLowerCase() === 'button') {
@@ -83,7 +78,21 @@ function createAccount() {
     let reg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if(!reg.test(form.email.value))
     {
-        console.log("failed"); 
+        console.log("failed");
+        let invalid = document.querySelector("#invalidEmail");
+        if(!invalid) {
+            let incorrectText = document.createElement("span");
+            incorrectText.classList.add("formItem");
+            incorrectText.classList.add("incorrect");
+            incorrectText.setAttribute("id", "invalidEmail");
+            
+            incorrectText.innerText = "Invalid email format";
+
+            form.insertBefore(incorrectText, form.lastElementChild);
+        }
+        else {
+            invalid.innerText = "Invalid email format";
+        }
         return;
     }
     
@@ -124,6 +133,9 @@ function createAccount() {
                 incorrectText.innerText = "Email already exists";
 
                 form.insertBefore(incorrectText, form.lastElementChild);
+            }
+            else {
+                findValid.innerText = "Email already exists";
             }
         }
         else {

@@ -10,6 +10,12 @@ namespace PizzaBox.Logic
 {
     public class Mapper
     {
+        /// <summary>
+        /// Maps a RawCustomer to Customer(javascript -> database)
+        /// Hashes the inputted password and stores the hash and salt
+        /// </summary>
+        /// <param name="obj">RawCustomer</param>
+        /// <returns></returns>
         public Customer CustomerMapper(RawCustomer obj)
         {
             using (var hmac = new HMACSHA512())
@@ -28,6 +34,12 @@ namespace PizzaBox.Logic
             }
         }
 
+        /// <summary>
+        /// Rehashes a password given a salt
+        /// </summary>
+        /// <param name="password">User input password</param>
+        /// <param name="salt">account's salt</param>
+        /// <returns></returns>
         public byte[] PasswordHash(string password, byte[] salt)
         {
             using HMACSHA512 hmac = new HMACSHA512(key: salt);
@@ -36,7 +48,12 @@ namespace PizzaBox.Logic
             return hashedPassword;
         }
 
-        public Order BaseOrderMapper(RawOrder obj)
+        /// <summary>
+        /// Map from RawOrder to Order(javascript -> database)
+        /// </summary>
+        /// <param name="obj">RawOrder</param>
+        /// <returns></returns>
+        public Order RawToBaseOrderMapper(RawOrder obj)
         {
             Order newOrder = new Order();
             newOrder.Cust = obj.CustomerID;
@@ -46,6 +63,38 @@ namespace PizzaBox.Logic
             return newOrder;
         }
 
+        /// <summary>
+        /// Map from Order to RawOrder(database -> javascript)
+        /// DOES NOT map the name. Need to do separately, depending on if customer or store history
+        /// </summary>
+        /// <param name="obj">List of Orders</param>
+        /// <returns></returns>
+        public RawOrderHistory BaseToRawOrderMapper(List<Order> obj)
+        {
+            RawOrderHistory newHistory = new RawOrderHistory();
+            newHistory.jsonPizzaOrders = new List<string>();
+            newHistory.StoreName = new List<string>();
+            newHistory.Totals = new List<decimal>();
+            newHistory.OrderTimes = new List<DateTime>();
+            foreach(Order stID in obj)
+            {
+                newHistory.Totals.Add(stID.CurTotal);
+                newHistory.OrderTimes.Add(stID.OrderTime);
+                newHistory.jsonPizzaOrders.Add(stID.JSONPizzaOrder);
+            }
+            return newHistory;
+        }
+
+        /// <summary>
+        /// CURRENTLY NOT USED
+        /// Maps all the RawPizzas from RawOrder to BasicPizzas in Order
+        /// Goes through all size/crust/toppings and creates an appropriate basic pizza
+        /// </summary>
+        /// <param name="newOrder">Order containing List of BasicPizzas</param>
+        /// <param name="obj">Order containing List of RawPizzas</param>
+        /// <param name="storeCrust">List of store's crusts</param>
+        /// <param name="storeSize">List of store's sizes</param>
+        /// <param name="storeToppings">List of store's toppings</param>
         public void PizzaMapper(Order newOrder, RawOrder obj, List<Crust> storeCrust, List<Size> storeSize, List<Topping> storeToppings)
         {
             foreach(RawPizza rp in obj.PizzaList)

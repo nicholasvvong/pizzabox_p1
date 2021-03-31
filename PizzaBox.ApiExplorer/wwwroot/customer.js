@@ -200,7 +200,7 @@ async function FetchSubmitOrder() {
 }
 
 async function FetchOrderHistory() {
-    await fetch(`api/Order/history/${customerObj.CustomerID}`)
+    await fetch(`api/Order/history/customer/${customerObj.CustomerID}`)
     .then(response => {
         if(!response.ok) {
             throw new Error(`Network reponse was not ok (${reponse.status})`);

@@ -15,6 +15,12 @@ namespace PizzaBox.Logic
             customerRepo = r;
         }
 
+        /// <summary>
+        /// Creates a new customer to the database
+        /// Checks if the new email already exists before creating
+        /// </summary>
+        /// <param name="obj">RawCustomer</param>
+        /// <returns></returns>
         public Customer CreateCustomer(RawCustomer obj)
         {
             Customer newCustomer;
@@ -52,7 +58,7 @@ namespace PizzaBox.Logic
 
                 if(CompareHash(originalPassword, currentPassword))
                 {
-                    return customerRepo.GetCustomer(obj.Email.ToLower());
+                    return customerRepo.GetCustomerByEmail(obj.Email.ToLower());
                 }
                 else
                 {

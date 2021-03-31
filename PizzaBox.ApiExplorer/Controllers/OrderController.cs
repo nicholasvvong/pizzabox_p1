@@ -18,8 +18,8 @@ namespace PizzaBox.ApiExplorer
             orderLogic = sL;
         }
 
-        [HttpGet("history/{id}")]
-        public ActionResult<RawOrderHistory> OrderHistory(Guid id)
+        [HttpGet("history/customer/{id}")]
+        public ActionResult<RawOrderHistory> CustomerOrderHistory(Guid id)
         {
             RawOrderHistory orderHistory;
             if(!ModelState.IsValid)
@@ -28,9 +28,27 @@ namespace PizzaBox.ApiExplorer
             }
             else
             {
-                orderHistory = orderLogic.GetOrderHistory(id);
+                orderHistory = orderLogic.GetCustomerOrderHistory(id);
             }
 
+            return orderHistory;
+        }
+
+        [HttpGet("history/store/{id}")]
+        public ActionResult<RawOrderHistory> StoreOrderHistory(Guid id)
+        {
+            RawOrderHistory orderHistory;
+            if(!ModelState.IsValid)
+            {
+                return StatusCode(400, "Invalid Guid format");
+            }
+            else
+            {
+                orderHistory = orderLogic.GetStoreOrderHistory(id);
+            }
+            if(orderHistory is null) {
+                return StatusCode(500, "Could not find store or customers in database");
+            }
             return orderHistory;
         }
         
