@@ -449,6 +449,7 @@ function initDeleteButton() {
     lastDeleBtn.addEventListener("click", (event) =>{  
         let deletePrice = event.target.parentNode.querySelector(".price").innerText.slice(1);
         currentTotal = parseFloat(currentTotal) - parseFloat(deletePrice);
+        updateInvetoryIncrease(currentOrder[event.target.parentNode.value]);
         currentOrder.splice(event.target.parentNode.value, 1);
         event.target.parentNode.remove();
 
@@ -528,7 +529,7 @@ function addToOrder(target) {
         
         let newPresetPizza = createCustomPizza(pizzaName.innerText, sizevalue, pizzaCrust, pizzaToppings.split(" "));
         newPresetPizza.price = (parseFloat(pizzaValue.slice(1)) + possibleSizes[sizeIndex].price).toFixed(2);
-        console.log(storeObj);
+
         if(parseFloat(newPresetPizza.price) + parseFloat(currentTotal) > parseFloat(storeObj.maxPrice)) {
             alert(`Cannot add more. Max order price of $${storeObj.maxPrice.toFixed(2)}`)
             return;
@@ -537,7 +538,7 @@ function addToOrder(target) {
             alert(`Cannot add more. Max pizza limit of ${storeObj.maxPizzas}`);
             return;
         }
-        if(!updateInventory(newPresetPizza)) {
+        if(!updateInventoryDecrease(newPresetPizza)) {
             return;
         }
 
@@ -562,7 +563,6 @@ function addToOrder(target) {
         target.previousElementSibling.selectedIndex = 0;
 
         currentOrder.push(newPresetPizza);
-        //console.log(currentOrder);
         
         updateOrderListValues();
         initDeleteButton();
@@ -605,6 +605,18 @@ function addCustomPizza(customPizza) {
         }
         customPizza.price += parseFloat(possibleToppings[index].price);
     });
+
+    if(parseFloat(customPizza.price) + parseFloat(currentTotal) > parseFloat(storeObj.maxPrice)) {
+        alert(`Cannot add more. Max order price of $${storeObj.maxPrice.toFixed(2)}`)
+        return;
+    }
+    if(currentOrder.length + 1 > storeObj.maxPizzas) {
+        alert(`Cannot add more. Max pizza limit of ${storeObj.maxPizzas}`);
+        return;
+    }
+    if(!updateInventoryDecrease(customPizza)) {
+        return;
+    }
     
     updateCurrentOrderList(customPizza);
 }
@@ -634,7 +646,6 @@ function updateCurrentOrderList(newPizza) {
     curOrder.appendChild(listItem);
 
     currentOrder.push(newPizza);
-    //console.log(currentOrder);
     updateOrderListValues();
     calculateNewTotal(newPizza.price);
     updatePrice();
@@ -645,15 +656,35 @@ function updateOrderListValues() {
     let curOrderList = document.querySelector(".currentList").firstElementChild;
     let index = 0;
     while(curOrderList != null) {
-        //console.log(index);
         curOrderList.setAttribute("value", index);
         curOrderList = curOrderList.nextElementSibling;
         index++;
     }
 }
+function updateInvetoryIncrease(oldPizza) {
+    for(let i = 0; i < possibleCrust.length; i++) {
+        if(possibleCrust[i].name == oldPizza.crust) {
+            possibleCrust[i].inventory++;
+            break;
+        }
+    }
+    for(let i = 0; i < possibleSizes.length; i++) {
+        if(possibleSizes[i].name == oldPizza.size) {
+            possibleSizes[i].inventory++;
+            break;
+        }
+    }
+    oldPizza.toppings.forEach(value => {
+        for(let i = 0; i < possibleToppings.length; i++) {
+            if(possibleToppings[i].name == value) {
+                possibleToppings[i].inventory++;
+                break;
+            }
+        }
+    })
+}
 
-function updateInventory(newPizza) {
-    console.log(newPizza);
+function updateInventoryDecrease(newPizza) {
     for(let i = 0; i < possibleCrust.length; i++) {
         if(possibleCrust[i].name == newPizza.crust) {
             if(possibleCrust[i].inventory <= 0) {
@@ -692,9 +723,6 @@ function updateInventory(newPizza) {
             }
         }
     })
-    console.log(possibleCrust);
-    console.log(possibleSizes);
-    console.log(possibleToppings);
 
     return true;
 }
@@ -848,18 +876,6 @@ function showPizzaOptions() {
     initPizzaButtons();
 }
 
-/*
-<li class="order"><span class='information'>Something</span><button class='orderagain'>Order Again</button></li>
-<li class="order"><span class='information'>Something2</span><button class='orderagain'>Order Again</button></li>
-<li class="order"><span class='information'>Something3</span><button class='orderagain'>Order Again</button></li>
-<li class="order"><span class='information'>Something4</span><button class='orderagain'>Order Again</button></li>
-<li class="order"><span class='information'>Something5</span><button class='orderagain'>Order Again</button></li>
-<li class="order"><span class='information'>Something6</span><button class='orderagain'>Order Again</button></li>
-<li class="order"><span class='information'>Something7</span><button class='orderagain'>Order Again</button></li>
-<li class="order"><span class='information'>Something8</span><button class='orderagain'>Order Again</button></li>
-<li class="order"><span class='information'>Something9</span><button class='orderagain'>Order Again</button></li>
-<li class="order"><span class='information'>Something10</span><button class='orderagain'>Order Again</button></li>
-*/
 async function showOrderHistory() {
     await FetchOrderHistory();
     const htmlOrderHistory = `

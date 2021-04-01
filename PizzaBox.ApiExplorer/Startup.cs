@@ -35,15 +35,25 @@ namespace PizzaBox.ApiExplorer
 			// add the Db context
 			services.AddDbContext<StoreContext>(options =>
 			{
-				options.UseSqlServer(connectionString);
+                if (!options.IsConfigured)
+                {
+                    options.UseSqlServer(connectionString);
+                }
+				
 			});
             services.AddDbContext<CustomerContext>(options =>
 			{
-				options.UseSqlServer(connectionString);
+				if (!options.IsConfigured)
+                {
+                    options.UseSqlServer(connectionString);
+                }
 			});
             services.AddDbContext<OrderContext>(options =>
 			{
-				options.UseSqlServer(connectionString);
+				if (!options.IsConfigured)
+                {
+                    options.UseSqlServer(connectionString);
+                }
 			});
             
 			services.AddScoped<StoreLogic>();

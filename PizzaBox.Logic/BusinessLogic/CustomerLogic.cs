@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using PizzaBox.Domain.Abstracts;
 using PizzaBox.Domain.Models;
+using PizzaBox.Logic.Interfaces;
 using PizzaBox.Repository;
 
 namespace PizzaBox.Logic
 {
-    public class CustomerLogic
+    public class CustomerLogic : ICustomerLogic
     {
         private readonly CustomerRepository customerRepo;
         private readonly Mapper mapper = new Mapper();
@@ -15,12 +16,6 @@ namespace PizzaBox.Logic
             customerRepo = r;
         }
 
-        /// <summary>
-        /// Creates a new customer to the database
-        /// Checks if the new email already exists before creating
-        /// </summary>
-        /// <param name="obj">RawCustomer</param>
-        /// <returns></returns>
         public Customer CreateCustomer(RawCustomer obj)
         {
             Customer newCustomer;
@@ -38,13 +33,7 @@ namespace PizzaBox.Logic
             return newCustomer;
         }
 
-        /// <summary>
-        /// Check if the user has a valid login information. 
-        /// If valid, return the Customer object from database.
-        /// If invalid, return null
-        /// </summary>
-        /// <param name="obj">Customer info based off login form</param>
-        public Customer loginCheck(RawCustomer obj)
+        public Customer LoginCheck(RawCustomer obj)
         {
             if(!customerRepo.IsExistingAccount(obj.Email.ToLower()))
             {
@@ -95,39 +84,39 @@ namespace PizzaBox.Logic
 
         
         //---------------------------------------------------------//
-        public void InitStoreOwners()
-        {
-            RawCustomer tempCPK = new RawCustomer();
-            tempCPK.Email = "cpk@gmail.com";
-            tempCPK.Fname = "CPK";
-            tempCPK.Lname = "Nick";
-            tempCPK.Password = "Nick";
-            Customer cpkOwner = mapper.CustomerMapper(tempCPK);
-            customerRepo.InitStoreOwner(cpkOwner, "CPK");
+        // public void InitStoreOwners()
+        // {
+        //     RawCustomer tempCPK = new RawCustomer();
+        //     tempCPK.Email = "cpk@gmail.com";
+        //     tempCPK.Fname = "CPK";
+        //     tempCPK.Lname = "Nick";
+        //     tempCPK.Password = "Nick";
+        //     Customer cpkOwner = mapper.CustomerMapper(tempCPK);
+        //     customerRepo.InitStoreOwner(cpkOwner, "CPK");
 
-            RawCustomer tempChi = new RawCustomer();
-            tempChi.Email = "chicago@gmail.com";
-            tempChi.Fname = "Chicago";
-            tempChi.Lname = "Nick";
-            tempChi.Password = "Nick";
-            Customer chiOwner = mapper.CustomerMapper(tempChi);
-            customerRepo.InitStoreOwner(chiOwner, "Chicago Pizza Store");
+        //     RawCustomer tempChi = new RawCustomer();
+        //     tempChi.Email = "chicago@gmail.com";
+        //     tempChi.Fname = "Chicago";
+        //     tempChi.Lname = "Nick";
+        //     tempChi.Password = "Nick";
+        //     Customer chiOwner = mapper.CustomerMapper(tempChi);
+        //     customerRepo.InitStoreOwner(chiOwner, "Chicago Pizza Store");
 
-            RawCustomer tempFred = new RawCustomer();
-            tempFred.Email = "chicago@gmail.com";
-            tempFred.Fname = "Chicago";
-            tempFred.Lname = "Nick";
-            tempFred.Password = "Nick";
-            Customer fredOwner = mapper.CustomerMapper(tempFred);
-            customerRepo.InitStoreOwner(fredOwner, "Freddy's Pizza Store");
+        //     RawCustomer tempFred = new RawCustomer();
+        //     tempFred.Email = "chicago@gmail.com";
+        //     tempFred.Fname = "Chicago";
+        //     tempFred.Lname = "Nick";
+        //     tempFred.Password = "Nick";
+        //     Customer fredOwner = mapper.CustomerMapper(tempFred);
+        //     customerRepo.InitStoreOwner(fredOwner, "Freddy's Pizza Store");
 
-            RawCustomer tempNY = new RawCustomer();
-            tempNY.Email = "chicago@gmail.com";
-            tempNY.Fname = "Chicago";
-            tempNY.Lname = "Nick";
-            tempNY.Password = "Nick";
-            Customer nyOwner = mapper.CustomerMapper(tempNY);
-            customerRepo.InitStoreOwner(nyOwner, "NewYork Pizza Store");
-        }
+        //     RawCustomer tempNY = new RawCustomer();
+        //     tempNY.Email = "chicago@gmail.com";
+        //     tempNY.Fname = "Chicago";
+        //     tempNY.Lname = "Nick";
+        //     tempNY.Password = "Nick";
+        //     Customer nyOwner = mapper.CustomerMapper(tempNY);
+        //     customerRepo.InitStoreOwner(nyOwner, "NewYork Pizza Store");
+        // }
     }
 }

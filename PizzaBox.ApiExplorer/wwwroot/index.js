@@ -78,7 +78,7 @@ function createAccount() {
     let reg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if(!reg.test(form.email.value))
     {
-        console.log("failed");
+        //console.log("failed");
         let invalid = document.querySelector("#invalidEmail");
         if(!invalid) {
             let incorrectText = document.createElement("span");
@@ -102,7 +102,7 @@ function createAccount() {
         Fname: form.fname.value.trim(),
         Lname: form.lname.value.trim()
     }
-
+    let success = true;
     fetch('api/Customer/create',
     {
         method: 'POST',
@@ -113,7 +113,11 @@ function createAccount() {
         body: JSON.stringify(Customer),
     })       
     .then(response => {
-        if(!response.ok) {
+        if(response.status == 450) {
+            success = false;
+            return response.json();
+        }
+        else if(!response.ok) {
             throw new Error(`Network reponse was not ok (${reponse.status})`);
         }
         else {
@@ -122,7 +126,7 @@ function createAccount() {
     })
     .then((jsonReponse) => {
         console.log(jsonReponse);
-        if(jsonReponse == 'null') {
+        if(!success) {
             let findValid = document.querySelector("#invalidEmail");
             if(!findValid) {
                 let incorrectText = document.createElement("span");
@@ -151,6 +155,7 @@ function logIn() {
         password: form.password.value
     };
 
+    let success = true;
     fetch('api/Customer/login',
     {
         method: 'POST',
@@ -161,7 +166,11 @@ function logIn() {
         body: JSON.stringify(loginInfo),
     })       
     .then(response => {
-        if(!response.ok) {
+        if(response.status == 450) {
+            success = false;
+            return response.json();
+        }
+        else if(!response.ok) {
             throw new Error(`Network reponse was not ok (${reponse.status})`);
         }
         else {
@@ -170,7 +179,7 @@ function logIn() {
     })
     .then((jsonReponse) => {
         console.log(jsonReponse);
-        if(jsonReponse == 'null') {
+        if(!success) {
             let findValid = document.querySelector("#invalidLogin");
             if(!findValid) {
                 let incorrectText = document.createElement("span");

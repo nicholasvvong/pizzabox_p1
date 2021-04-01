@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using PizzaBox.Domain.Abstracts;
 using PizzaBox.Domain.Models;
+using PizzaBox.Logic.Interfaces;
 using PizzaBox.Repository;
 
 namespace PizzaBox.Logic
 {
-    public class StoreLogic
+    public class StoreLogic : IStoreLogic
     {
         private readonly StoreRepository storeRepo;
         private readonly Mapper mapper = new Mapper();
@@ -15,11 +16,6 @@ namespace PizzaBox.Logic
             storeRepo = r;
         }
 
-        /// <summary>
-        /// Gets all the stores in the database
-        /// Returns it back to api as a name:Guid pair
-        /// </summary>
-        /// <returns>Dictionary<name, Guid></returns>
         public Dictionary<string, Guid> GetStoresStrings()
         {
             List<AStore> temp = storeRepo.GetStores();
@@ -31,10 +27,6 @@ namespace PizzaBox.Logic
             return stringStores;
         }
 
-        /// <summary>
-        /// Gets all the base item types from a store
-        /// </summary>
-        /// <returns>List of all the base item types</returns>
         public List<ItemType> GetItemTypes()
         {
             List<ItemType> liItems = storeRepo.GetItemTypes();
@@ -49,11 +41,6 @@ namespace PizzaBox.Logic
             }
         }
 
-        /// <summary>
-        /// Gets a store from Store ID
-        /// </summary>
-        /// <param name="id">Store ID</param>
-        /// <returns>AStore object with all store information</returns>
         public AStore GetStore(Guid id)
         {
             AStore returnStore = storeRepo.FindStore(id);
@@ -61,11 +48,6 @@ namespace PizzaBox.Logic
             return returnStore;
         }
 
-        /// <summary>
-        /// Gets all the toppings a store offers based off store id
-        /// </summary>
-        /// <param name="id">Store ID</param>
-        /// <returns>List of toppings</returns>
         public List<Topping> GetStoreToppings(Guid id)
         {
             List<Topping> toppings = storeRepo.GetToppings(id);
@@ -73,11 +55,6 @@ namespace PizzaBox.Logic
             return toppings;
         }
 
-        /// <summary>
-        /// Gets all the crusts a store offers based off store id
-        /// </summary>
-        /// <param name="id">Store ID</param>
-        /// <returns>List of Crusts</returns>
         public List<Crust> GetStoreCrusts(Guid id)
         {
             List<Crust> toppings = storeRepo.GetCrusts(id);
@@ -85,11 +62,6 @@ namespace PizzaBox.Logic
             return toppings;
         }
 
-        /// <summary>
-        /// Gets all the sizes a store offers based off store id
-        /// </summary>
-        /// <param name="id">Store ID</param>
-        /// <returns>List of Sizes</returns>
         public List<Size> GetStoreSizes(Guid id)
         {
             List<Size> toppings = storeRepo.GetSizes(id);
@@ -97,13 +69,6 @@ namespace PizzaBox.Logic
             return toppings;
         }
 
-        /// <summary>
-        /// Adds the new component into the database
-        /// Creates an instance of the component based off the type
-        /// Maps the RawNewComp to appropriate component
-        /// </summary>
-        /// <param name="obj">RawNewComp with all the info</param>
-        /// <returns></returns>
         public bool AddNewComp(RawNewComp obj)
         {
             AStore curStore = storeRepo.FindStore(obj.ID);
@@ -137,18 +102,12 @@ namespace PizzaBox.Logic
                 }
                 default:
                 {
-                    Console.WriteLine("default");
                     return false;
                 }
             }
             
         }
 
-        /// <summary>
-        /// Adds a new preset pizza to the databas
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
         public bool AddNewPizza(RawNewPizza obj)
         {
             AStore curStore = storeRepo.FindStore(obj.ID);
@@ -181,14 +140,6 @@ namespace PizzaBox.Logic
             return true;
         }
 
-        /// <summary>
-        /// Gets the APizzaComponent from the database if it exists
-        /// If it does not exist, create it and add it to the database
-        /// Returns null if could not add to database
-        /// </summary>
-        /// <param name="compName">Name of component to try to add</param>
-        /// <param name="baseType">BaseItemType of component</param>
-        /// <returns></returns>
         public APizzaComponent GetPizzaComponent(string compName, ItemType baseType)
         {
             APizzaComponent pComp = storeRepo.GetPizzaComp(compName);
@@ -205,13 +156,6 @@ namespace PizzaBox.Logic
             return pComp;
         }
 
-        /// <summary>
-        /// Creates and adds a new topping to the database
-        /// </summary>
-        /// <param name="obj">RawComp User Input</param>
-        /// <param name="pComp">PizzaComponent created or retrieved from database</param>
-        /// <param name="curStore">Store to add new topping to</param>
-        /// <returns>true/false if succesful</returns>
         public bool AddNewTopping(RawNewComp obj, APizzaComponent pComp, AStore curStore)
         {
             Topping newTopping = mapper.CompToTopping(pComp, obj, curStore);
@@ -219,13 +163,6 @@ namespace PizzaBox.Logic
             return true;
         }
 
-        /// <summary>
-        /// Creates and adds a new crust to the database
-        /// </summary>
-        /// <param name="obj">RawComp User Input</param>
-        /// <param name="pComp">PizzaComponent created or retrieved from database</param>
-        /// <param name="curStore">Store to add new topping to</param>
-        /// <returns>true/false if succesful</returns>
         public bool AddNewCrust(RawNewComp obj, APizzaComponent pComp, AStore curStore)
         {
             Crust newCrust = mapper.CompToCrust(pComp, obj, curStore);
@@ -233,13 +170,6 @@ namespace PizzaBox.Logic
             return true;
         }
 
-        /// <summary>
-        /// Creates and adds a new size to the database
-        /// </summary>
-        /// <param name="obj">RawComp User Input</param>
-        /// <param name="pComp">PizzaComponent created or retrieved from database</param>
-        /// <param name="curStore">Store to add new topping to</param>
-        /// <returns>true/false if succesful</returns>
         public bool AddNewSize(RawNewComp obj, APizzaComponent pComp, AStore curStore)
         {
             Size newSize = mapper.CompToSize(pComp, obj, curStore);
@@ -247,11 +177,6 @@ namespace PizzaBox.Logic
             return true;
         }
 
-        /// <summary>
-        /// Gets all the preset pizzas a store offers based off store id
-        /// </summary>
-        /// <param name="id">Store id</param>
-        /// <returns>List of basicpizzas</returns>
         public List<BasicPizza> GetStorePresets(Guid id)
         {
             List<BasicPizza> presets = storeRepo.GetPresets(id);
@@ -259,12 +184,6 @@ namespace PizzaBox.Logic
             return presets;
         }
 
-        /// <summary>
-        /// Updates the updates with the new inventory and prices
-        /// Uses a rawupdate object mapped from frontend
-        /// </summary>
-        /// <param name="obj">RawUpdate with lists of new info</param>
-        /// <returns>true/false if successful or not</returns>
         public bool UpdateDatabase(RawUpdate obj)
         {
             foreach(RawComp rc in obj.CrustList)

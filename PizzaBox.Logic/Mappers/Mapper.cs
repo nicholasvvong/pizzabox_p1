@@ -133,6 +133,13 @@ namespace PizzaBox.Logic
             }
         }
 
+        /// <summary>
+        /// Maps a RawComp from user to Topping class object
+        /// </summary>
+        /// <param name="pComp">BasePizzaComponent</param>
+        /// <param name="obj">RawComp</param>
+        /// <param name="curStore">Store to add to</param>
+        /// <returns>New Topping Object</returns>
         internal Topping CompToTopping(APizzaComponent pComp, RawNewComp obj, AStore curStore)
         {
             Topping newTopping = new Topping(curStore, obj.Price, 0, pComp);
@@ -140,6 +147,13 @@ namespace PizzaBox.Logic
             return newTopping;
         }
 
+        /// <summary>
+        /// Maps a RawPizza from user to BasicPizza
+        /// </summary>
+        /// <param name="obj">RawPizza from user</param>
+        /// <param name="newCrust">Crust obj for BasicPizza</param>
+        /// <param name="toppings">List of Topping objects</param>
+        /// <returns></returns>
         internal BasicPizza RawToBasicPizzaMapper(RawNewPizza obj, Crust newCrust, List<Topping> toppings)
         {
             BasicPizza newPizza = new BasicPizza();
@@ -149,6 +163,13 @@ namespace PizzaBox.Logic
             return newPizza;
         }
 
+        /// <summary>
+        /// Maps a RawComp to a Crust object
+        /// </summary>
+        /// <param name="pComp">BasePizzaComponent</param>
+        /// <param name="obj">New RawComp</param>
+        /// <param name="curStore">AStore to add to</param>
+        /// <returns></returns>
         internal Crust CompToCrust(APizzaComponent pComp, RawNewComp obj, AStore curStore)
         {
             Crust newCrust = new Crust(curStore, obj.Price, 0, pComp);
@@ -156,6 +177,13 @@ namespace PizzaBox.Logic
             return newCrust;
         }
 
+        /// <summary>
+        /// Maps RawComp to new Size object
+        /// </summary>
+        /// <param name="pComp">Base APizzaComponent</param>
+        /// <param name="obj">New RawComp</param>
+        /// <param name="curStore">AStore to add to</param>
+        /// <returns></returns>
         internal Size CompToSize(APizzaComponent pComp, RawNewComp obj, AStore curStore)
         {
             Size newSize = new Size(curStore, obj.Price, 0, pComp);
@@ -163,6 +191,12 @@ namespace PizzaBox.Logic
             return newSize;
         }
 
+        /// <summary>
+        /// Maps an itemType to a new APizzComponent object
+        /// </summary>
+        /// <param name="compName">Name of new component</param>
+        /// <param name="baseType">Base ItemType</param>
+        /// <returns></returns>
         public APizzaComponent ItemToCompMapper(string compName, ItemType baseType)
         {
             APizzaComponent newComp = new APizzaComponent(compName, baseType);

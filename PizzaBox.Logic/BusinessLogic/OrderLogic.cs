@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using PizzaBox.Domain.Abstracts;
 using PizzaBox.Domain.Models;
+using PizzaBox.Logic.Interfaces;
 using PizzaBox.Repository;
 
 namespace PizzaBox.Logic
 {
-    public class OrderLogic
+    public class OrderLogic : IOrderLogic
     {
         private readonly OrderRepository orderRepo;
         private readonly StoreRepository storeRepo;
@@ -18,12 +19,7 @@ namespace PizzaBox.Logic
             storeRepo = sr;
             custRepo = cr;
         }
-        /// <summary>
-        /// Creates the order and adds it to the database. Mapped from raworder from clientside
-        /// Performs necessary inventory and customer information updates as well
-        /// </summary>
-        /// <param name="obj">RawOrder object from clientside.</param>
-        /// <returns></returns>
+        
         public Order CreateOrder(RawOrder obj)
         {
             Order newOrder = mapper.RawToBaseOrderMapper(obj);
@@ -37,12 +33,6 @@ namespace PizzaBox.Logic
             return newOrder;
         }
 
-        /// <summary>
-        /// Gets the order history of the customer based off his Guid from database.
-        /// Returns a raworderhistory for the client to be read/parsed
-        /// </summary>
-        /// <param name="id">Customer's guid</param>
-        /// <returns></returns>
         public RawOrderHistory GetCustomerOrderHistory(Guid id)
         {
             List<Order> dbOrderHistory = orderRepo.GetCustomerOrders(id);
@@ -55,12 +45,7 @@ namespace PizzaBox.Logic
 
             return OrderHistory;
         }
-
-        /// <summary>
-        /// Gets the order history of a store
-        /// </summary>
-        /// <param name="id">Store ID</param>
-        /// <returns></returns>
+ 
         public RawOrderHistory GetStoreOrderHistory(Guid id)
         {
             List<Order> dbOrderHistory = orderRepo.GetStoreOrders(id);

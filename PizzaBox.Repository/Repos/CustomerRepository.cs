@@ -10,12 +10,12 @@ namespace PizzaBox.Repository
     public class CustomerRepository
     {
         private readonly CustomerContext context;
-        private readonly StoreContext sContext;
+        //private readonly StoreContext sContext;
 
-        public CustomerRepository(CustomerContext c, StoreContext sc)
+        public CustomerRepository(CustomerContext c)//, StoreContext sc)
         {
             context = c;
-            sContext = sc;
+            //sContext = sc;
         }
 
         /// <summary>
@@ -123,13 +123,13 @@ namespace PizzaBox.Repository
 
         
         //------------------------------------------------------------------------//
-        public void InitStoreOwner(Customer customer, string store)
-        {
-            var cpkStore = sContext.Stores.SingleOrDefault(n => n.Name == store);
-            if(cpkStore is null)
-                return;
-            customer.StoreManger = cpkStore.StoreID;
-            AddNewCustomer(customer);
-        }
+        // public void InitStoreOwner(Customer customer, string store)
+        // {
+        //     var cpkStore = sContext.Stores.SingleOrDefault(n => n.Name == store);
+        //     if(cpkStore is null)
+        //         return;
+        //     customer.StoreManger = cpkStore.StoreID;
+        //     AddNewCustomer(customer);
+        // }
     }
 }
