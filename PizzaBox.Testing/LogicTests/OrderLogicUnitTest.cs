@@ -18,13 +18,13 @@ namespace PizzaBox.Testing
         public void Test_CreateOrder()
         {
             var options = new DbContextOptionsBuilder<OrderContext>()
-            .UseInMemoryDatabase(databaseName: "TestDb")
+            .UseInMemoryDatabase(databaseName: "TestDb21")
             .Options;
             var options1 = new DbContextOptionsBuilder<StoreContext>()
-            .UseInMemoryDatabase(databaseName: "TestDb")
+            .UseInMemoryDatabase(databaseName: "TestDb21")
             .Options;
             var options2 = new DbContextOptionsBuilder<CustomerContext>()
-            .UseInMemoryDatabase(databaseName: "TestDb")
+            .UseInMemoryDatabase(databaseName: "TestDb21")
             .Options;
             
             using(var context = new OrderContext(options))
@@ -94,13 +94,13 @@ namespace PizzaBox.Testing
         public void Test_GetCustomerOrderHistory()
         {
             var options = new DbContextOptionsBuilder<OrderContext>()
-            .UseInMemoryDatabase(databaseName: "TestDb")
+            .UseInMemoryDatabase(databaseName: "TestDb15")
             .Options;
             var options1 = new DbContextOptionsBuilder<StoreContext>()
-            .UseInMemoryDatabase(databaseName: "TestDb")
+            .UseInMemoryDatabase(databaseName: "TestDb15")
             .Options;
             var options2 = new DbContextOptionsBuilder<CustomerContext>()
-            .UseInMemoryDatabase(databaseName: "TestDb")
+            .UseInMemoryDatabase(databaseName: "TestDb15")
             .Options;
             
             using(var context = new OrderContext(options))
@@ -144,16 +144,16 @@ namespace PizzaBox.Testing
         }
     
         [Fact]
-        public void Test_GetStoreOrderHistoryy()
+        public void Test_GetStoreOrderHistory()
         {
             var options = new DbContextOptionsBuilder<OrderContext>()
-            .UseInMemoryDatabase(databaseName: "TestDb")
+            .UseInMemoryDatabase(databaseName: "TestDb20")
             .Options;
             var options1 = new DbContextOptionsBuilder<StoreContext>()
-            .UseInMemoryDatabase(databaseName: "TestDb")
+            .UseInMemoryDatabase(databaseName: "TestDb20")
             .Options;
             var options2 = new DbContextOptionsBuilder<CustomerContext>()
-            .UseInMemoryDatabase(databaseName: "TestDb")
+            .UseInMemoryDatabase(databaseName: "TestDb20")
             .Options;
             
             using(var context = new OrderContext(options))

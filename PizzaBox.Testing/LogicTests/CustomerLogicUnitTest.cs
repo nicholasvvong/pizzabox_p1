@@ -18,7 +18,7 @@ namespace PizzaBox.Testing
         public void Test_CreateCustomer()
         {
             var options = new DbContextOptionsBuilder<CustomerContext>()
-            .UseInMemoryDatabase(databaseName: "TestDb")
+            .UseInMemoryDatabase(databaseName: "TestDb25")
             .Options;
             
             using(var context = new CustomerContext(options))
@@ -45,7 +45,7 @@ namespace PizzaBox.Testing
         public void Test_LoginCheck()
         {
             var options = new DbContextOptionsBuilder<CustomerContext>()
-            .UseInMemoryDatabase(databaseName: "TestDb")
+            .UseInMemoryDatabase(databaseName: "TestDb26")
             .Options;
             
             using(var context = new CustomerContext(options))

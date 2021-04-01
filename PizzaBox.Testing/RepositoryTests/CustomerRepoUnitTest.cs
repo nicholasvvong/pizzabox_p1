@@ -15,7 +15,7 @@ namespace PizzaBox.Testing
         public void Test_AddNewCustomer()
         {
             var options = new DbContextOptionsBuilder<CustomerContext>()
-            .UseInMemoryDatabase(databaseName: "TestDb")
+            .UseInMemoryDatabase(databaseName: "TestDb7")
             .Options;
 
             Customer newCust = new Customer();
@@ -45,7 +45,7 @@ namespace PizzaBox.Testing
         public void Test_IsExistingAccountTrue()
         {
             var options = new DbContextOptionsBuilder<CustomerContext>()
-            .UseInMemoryDatabase(databaseName: "TestDb")
+            .UseInMemoryDatabase(databaseName: "TestDb8")
             .Options;
 
             Customer newCust = new Customer();
@@ -75,7 +75,7 @@ namespace PizzaBox.Testing
         public void Test_IsExistingAccountFalse(string email)
         {
             var options = new DbContextOptionsBuilder<CustomerContext>()
-            .UseInMemoryDatabase(databaseName: "TestDb")
+            .UseInMemoryDatabase(databaseName: "TestDb9")
             .Options;
 
             Customer newCust = new Customer();
@@ -104,7 +104,7 @@ namespace PizzaBox.Testing
         public void Test_GetCustomerByEmail()
         {
             var options = new DbContextOptionsBuilder<CustomerContext>()
-            .UseInMemoryDatabase(databaseName: "TestDb")
+            .UseInMemoryDatabase(databaseName: "TestDb10")
             .Options;
 
             string email = "exist@email.com";
@@ -136,7 +136,7 @@ namespace PizzaBox.Testing
         public void Test_GetCustomerByID()
         {
             var options = new DbContextOptionsBuilder<CustomerContext>()
-            .UseInMemoryDatabase(databaseName: "TestDb")
+            .UseInMemoryDatabase(databaseName: "TestDb11")
             .Options;
             
             Customer newCust = new Customer();

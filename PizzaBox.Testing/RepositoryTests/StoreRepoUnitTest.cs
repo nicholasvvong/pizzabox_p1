@@ -15,7 +15,7 @@ namespace PizzaBox.Testing
         public void Test_GetStores()
         {
             var options = new DbContextOptionsBuilder<StoreContext>()
-            .UseInMemoryDatabase(databaseName: "TestDb")
+            .UseInMemoryDatabase(databaseName: "TestDb0")
             .Options;
 
             AStore store1 = new AStore();
@@ -47,7 +47,7 @@ namespace PizzaBox.Testing
         public void Test_UpdateToppingInventory()
         {
             var options = new DbContextOptionsBuilder<StoreContext>()
-            .UseInMemoryDatabase(databaseName: "TestDb")
+            .UseInMemoryDatabase(databaseName: "TestDb1")
             .Options;
 
             AStore store = new AStore();
@@ -69,7 +69,7 @@ namespace PizzaBox.Testing
                 
                 storeRepo.UpdateToppingInventory(store.StoreID, t.PizzaType.Name, expected);
 
-                var test = context.Toppings.SingleOrDefault(n => n.Name == t.PizzaType.Name);
+                var test = context.Toppings.SingleOrDefault(n => n.PizzaType.Name == t.PizzaType.Name);
 
                 Assert.Equal(expected, test.Inventory);
             }
@@ -79,7 +79,7 @@ namespace PizzaBox.Testing
         public void Test_AddPizzaToStore()
         {
             var options = new DbContextOptionsBuilder<StoreContext>()
-            .UseInMemoryDatabase(databaseName: "TestDb")
+            .UseInMemoryDatabase(databaseName: "TestDb2")
             .Options;
 
             AStore store = new AStore();

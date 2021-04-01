@@ -16,7 +16,7 @@ namespace PizzaBox.Testing
         public void Test_GetStoresStrings()
         {
             var options = new DbContextOptionsBuilder<StoreContext>()
-            .UseInMemoryDatabase(databaseName: "TestDb")
+            .UseInMemoryDatabase(databaseName: "TestDb12")
             .Options;
             
             using(var context = new StoreContext(options))
@@ -46,7 +46,7 @@ namespace PizzaBox.Testing
         public void Test_GetStore()
         {
             var options = new DbContextOptionsBuilder<StoreContext>()
-            .UseInMemoryDatabase(databaseName: "TestDb")
+            .UseInMemoryDatabase(databaseName: "TestDb13")
             .Options;
             
             using(var context = new StoreContext(options))
@@ -73,7 +73,7 @@ namespace PizzaBox.Testing
         public void Test_AddNewComp()
         {
             var options = new DbContextOptionsBuilder<StoreContext>()
-            .UseInMemoryDatabase(databaseName: "TestDb")
+            .UseInMemoryDatabase(databaseName: "TestDb14")
             .Options;
             
             using(var context = new StoreContext(options))
@@ -109,7 +109,7 @@ namespace PizzaBox.Testing
         public void Test_AddNewPizza()
         {
             var options = new DbContextOptionsBuilder<StoreContext>()
-            .UseInMemoryDatabase(databaseName: "TestDb")
+            .UseInMemoryDatabase(databaseName: "TestDb16")
             .Options;
             
             using(var context = new StoreContext(options))
@@ -163,7 +163,7 @@ namespace PizzaBox.Testing
         public void Test_GetStoreToppings()
         {
             var options = new DbContextOptionsBuilder<StoreContext>()
-            .UseInMemoryDatabase(databaseName: "TestDb")
+            .UseInMemoryDatabase(databaseName: "TestDb15")
             .Options;
             
             using(var context = new StoreContext(options))

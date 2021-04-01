@@ -15,7 +15,7 @@ namespace PizzaBox.Testing
         public void Test_AddOrder()
         {
             var options = new DbContextOptionsBuilder<OrderContext>()
-            .UseInMemoryDatabase(databaseName: "TestDb")
+            .UseInMemoryDatabase(databaseName: "TestDb4")
             .Options;
             
             Order testOrder = new Order();
@@ -43,7 +43,7 @@ namespace PizzaBox.Testing
         public void Test_GetCustomerOrders()
         {
             var options = new DbContextOptionsBuilder<OrderContext>()
-            .UseInMemoryDatabase(databaseName: "TestDb")
+            .UseInMemoryDatabase(databaseName: "TestDb5")
             .Options;
             
             Customer cust = new Customer();
@@ -73,7 +73,7 @@ namespace PizzaBox.Testing
         public void Test_GetStoreOrders()
         {
             var options = new DbContextOptionsBuilder<OrderContext>()
-            .UseInMemoryDatabase(databaseName: "TestDb")
+            .UseInMemoryDatabase(databaseName: "TestDb6")
             .Options;
             
             AStore store = new AStore();
