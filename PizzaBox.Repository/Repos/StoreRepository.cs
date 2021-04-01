@@ -27,11 +27,6 @@ namespace PizzaBox.Repository
             InitNewYorkStore();
         }
 
-        public void AddTopping(string name, APizzaComponent apc)
-        {
-            
-        }
-
         /// <summary>
         /// Gets all the stores in the database
         /// </summary>
@@ -41,6 +36,16 @@ namespace PizzaBox.Repository
             List<AStore> stores = context.Stores.ToList();
             //StoresInit();
             return stores;
+        }
+
+        /// <summary>
+        /// Gets all the itemtypes in the database(topping, crust, size)
+        /// </summary>
+        /// <returns>List of itemtypes</returns>
+        public List<ItemType> GetItemTypes()
+        {
+            var findItems = context.ItemTypes.ToList();
+            return findItems;
         }
 
         /// <summary>
@@ -91,6 +96,12 @@ namespace PizzaBox.Repository
             return -1;
         }
 
+        public void AddNewTopping(Topping t)
+        {
+            context.Add<Topping>(t);
+            context.SaveChanges();
+        }
+
         /// <summary>
         /// Gets all the crusts a store offers
         /// </summary>
@@ -102,7 +113,103 @@ namespace PizzaBox.Repository
             CrustList = context.Crusts.Include(c => c.PizzaType).Where(n => Guid.Equals(n.Store.StoreID, id)).ToList();
             return CrustList;
         }
-        
+
+        /// <summary>
+        /// Gets the pizza component from the database, if it exists
+        /// If it does not exist, return null
+        /// </summary>
+        /// <param name="compName">Name of the component</param>
+        /// <returns></returns>
+        public APizzaComponent GetPizzaComp(string compName)
+        {
+            var pizzaComp = context.Comps.SingleOrDefault(n => n.Name == compName);
+
+            return pizzaComp;
+        }
+
+        /// <summary>
+        /// Adds a new APizzaComponent to the database.
+        /// Returns the newly added APizzaComponent if successful, else null
+        /// </summary>
+        /// <param name="newComp">New APizzaComponent</param>
+        /// <returns></returns>
+        public APizzaComponent AddPizzaComp(APizzaComponent newComp)
+        {
+            context.Add<APizzaComponent>(newComp);
+            context.SaveChanges();
+
+            var newlyAddedComp = context.Comps.SingleOrDefault(n => Guid.Equals(n.CompID, newComp.CompID));
+            return newlyAddedComp;
+        }
+
+        /// <summary>
+        /// Gets a crust information by its ID
+        /// </summary>
+        /// <param name="iD">Crust ID</param>
+        /// <returns>Crust from database</returns>
+        public Crust GetCrustByID(Guid id)
+        {
+            var getCrust = context.Crusts.SingleOrDefault(n => Guid.Equals(n.CrustID, id));
+            return getCrust;
+        }
+
+        /// <summary>
+        /// Gets a topping information by its ID
+        /// </summary>
+        /// <param name="iD">Topping ID</param>
+        /// <returns>Topping from database</returns>
+        public Topping GetToppingByID(Guid id)
+        {
+            var getTopping = context.Toppings.SingleOrDefault(n => Guid.Equals(n.ToppingID, id));
+            return getTopping;
+        }
+
+        /// <summary>
+        /// Updates database with any changes made to a store outside of repository
+        /// </summary>
+        public void UpdateStore(AStore curStore)
+        {
+            // context.Stores.Attach(curStore);
+            // context.Entry(curStore).Collection(p => p.PresetPizzas).IsModified = true;
+            // context.Stores.Update(curStore);
+            // context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Adds the new pizza into the database
+        /// Then adds the new pizza to the preset of the store afterwards
+        /// </summary>
+        /// <param name="id">Store ID</param>
+        /// <param name="bp">New Pizza</param>
+        /// <returns></returns>
+        public bool AddPizzaToStore(Guid id, BasicPizza bp)
+        {
+            var getStore = context.Stores.Include(s => s.PresetPizzas).SingleOrDefault(n => Guid.Equals(n.StoreID, id));
+            if(getStore is null)
+            {
+                return false;
+            }
+            getStore.PresetPizzas.Add(bp);
+
+            context.Entry(bp).State = EntityState.Added;
+            context.BasicPizza.Add(bp);
+
+            context.SaveChanges();
+            return true;
+        }
+
+        /// <summary>
+        /// Returns the base item type that's in the database(topping, crust, size) based off ID
+        /// </summary>
+        /// <param name="itemID">Item ID</param>
+        /// <returns></returns>
+        public ItemType GetBaseItem(Guid itemID)
+        {
+            var itembase = context.ItemTypes.SingleOrDefault(n => Guid.Equals(n.TypeID, itemID));
+
+            return itembase;
+        }
+
         /// <summary>
         /// Gets all the toppings a store offers
         /// </summary>
@@ -131,6 +238,16 @@ namespace PizzaBox.Repository
         }
 
         /// <summary>
+        /// Adds a new crust to the store database
+        /// </summary>
+        /// <param name="newCrust">New Crust</param>
+        public void AddNewCrust(Crust newCrust)
+        {
+            context.Add<Crust>(newCrust);
+            context.SaveChanges();
+        }
+
+        /// <summary>
         /// Gets all the sizes a store offers
         /// </summary>
         /// <param name="id">Store's ID</param>
@@ -140,6 +257,16 @@ namespace PizzaBox.Repository
             List<Size> SizeList = new List<Size>();
             SizeList = context.Sizes.Include(s => s.PizzaType).Where(n => Guid.Equals(n.Store.StoreID, id)).ToList();
             return SizeList;
+        }
+
+        /// <summary>
+        /// Adds a new size to the store database
+        /// </summary>
+        /// <param name="newSize">New size</param>
+        public void AddNewSize(Size newSize)
+        {
+            context.Add<Size>(newSize);
+            context.SaveChanges();
         }
 
         /// <summary>
@@ -245,7 +372,7 @@ namespace PizzaBox.Repository
         /// <param name="id">Store ID</param>
         /// <param name="size">Size to update</param>
         /// <param name="v">New inventory amount</param>
-        private void UpdateSizeInventory(Guid id, string size, int v)
+        public void UpdateSizeInventory(Guid id, string size, int v)
         {
             var sizeEntry = context.Sizes.Include(c => c.PizzaType) 
                                 .Include(st => st.Store)
@@ -257,20 +384,58 @@ namespace PizzaBox.Repository
         }
 
         /// <summary>
+        /// Updates the price of sizes to a set amount
+        /// </summary>
+        /// <param name="id">Store ID</param>
+        /// <param name="size">Size to update</param>
+        /// <param name="v">New price amount</param>
+        public void UpdateSizePrice(Guid id, string size, decimal price)
+        {
+            var sizeEntry = context.Sizes.Include(c => c.PizzaType) 
+                                .Include(st => st.Store)
+                                .Where(s => s.PizzaType.Name == size)
+                                .Where(s => s.Store.StoreID == id).FirstOrDefault();
+            sizeEntry.Price = price;
+            context.SaveChanges();
+            //context.Entry(sizeEntry).CurrentValues.SetValues(v);
+        }
+
+        /// <summary>
         /// Updates the inventory of crust to a set amount
         /// </summary>
         /// <param name="id">Store ID</param>
         /// <param name="crust">Crust Name</param>
         /// <param name="v">New inventory amount</param>
-        private void UpdateCrustInventory(Guid id, string crust, int v)
+        public void UpdateCrustInventory(Guid id, string crust, int v)
         {
             var crustEntry = context.Crusts.Include(c => c.PizzaType) 
                                 .Include(st => st.Store)
                                 .Where(s => s.PizzaType.Name == crust)
                                 .Where(s => s.Store.StoreID == id).FirstOrDefault();
+            if(crustEntry is null) 
+            {
+                Console.WriteLine("Could not find this crust " + crust);
+                return;
+            }
             crustEntry.Inventory = v;
             context.SaveChanges();
             //context.Entry(sizeEntry).CurrentValues.SetValues(v);
+        }
+
+        /// <summary>
+        /// Updates the price of a crust to a set amount
+        /// </summary>
+        /// <param name="storeID">Store ID</param>
+        /// <param name="name">Name of crust</param>
+        /// <param name="price">New price of crust</param>
+        public void UpdateCrustPrice(Guid id, string crust, decimal price)
+        {
+            var crustEntry = context.Crusts.Include(c => c.PizzaType) 
+                                .Include(st => st.Store)
+                                .Where(s => s.PizzaType.Name == crust)
+                                .Where(s => s.Store.StoreID == id).FirstOrDefault();
+            crustEntry.Price = price;
+            context.SaveChanges();
         }
 
         /// <summary>
@@ -279,7 +444,7 @@ namespace PizzaBox.Repository
         /// <param name="id">Store ID</param>
         /// <param name="topping">Topping Name</param>
         /// <param name="v">New inventory amount</param>
-        private void UpdateToppingInventory(Guid id, string topping, int v)
+        public void UpdateToppingInventory(Guid id, string topping, int v)
         {
             var toppingEntry = context.Toppings.Include(c => c.PizzaType) 
                                 .Include(st => st.Store)
@@ -288,6 +453,22 @@ namespace PizzaBox.Repository
             toppingEntry.Inventory = v;
             context.SaveChanges();
             //context.Entry(sizeEntry).CurrentValues.SetValues(v);
+        }
+
+        /// <summary>
+        /// Updates the price of a topping to a set amount
+        /// </summary>
+        /// <param name="storeID">Store ID</param>
+        /// <param name="name">Name of topping</param>
+        /// <param name="price">New price of topping</param>
+        public void UpdateToppingPrice(Guid id, string topping, decimal price)
+        {
+            var toppingEntry = context.Toppings.Include(c => c.PizzaType) 
+                                .Include(st => st.Store)
+                                .Where(s => s.PizzaType.Name == topping)
+                                .Where(s => s.Store.StoreID == id).FirstOrDefault();
+            toppingEntry.Price = price;
+            context.SaveChanges();
         }
 
         //------------------------------------------------------------------------------------------------------------------------------//

@@ -8,7 +8,7 @@ namespace PizzaBox.Domain.Abstracts
     public class Size
     {
         public Guid SizeID { get; set; } = Guid.NewGuid();
-        public decimal Price { get; protected set; }
+        public decimal Price { get; set; }
         public int Inventory { get; set; }
         public AStore Store { get; set; }
         public APizzaComponent PizzaType { get; set; }

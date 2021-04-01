@@ -1,4 +1,5 @@
 let storeID = localStorage.getItem("storeID");
+console.log(storeID);
 
 const topbar = document.querySelector('.topbar');
 const main = document.querySelector('.maincontent');
@@ -6,6 +7,11 @@ let currentorderhistory;
 let crusts = [];
 let sizes = [];
 let toppings = [];
+let itemTypes = [];
+let sortType = {
+    ascending: true,
+    type: "time"
+}
 
 async function FetchOrderHistory() {
     await fetch(`api/Order/history/store/${storeID}`)
@@ -25,8 +31,7 @@ async function FetchOrderHistory() {
         console.log("Failed to fetch page: ", err);
     });
 }
-
-async function FetchAllComps() {
+async function FetchAllToppings(){
     await fetch('api/Store/Toppings', {
         method: 'POST',
         headers: {
@@ -49,11 +54,13 @@ async function FetchAllComps() {
         jsonReponse.forEach((value, index) => {
             toppings[index].id = value.toppingID;
         })
+        console.log(toppings);
     })
     .catch(function(err) {
         console.log("Failed to fetch page: ", err);
     });
- 
+}
+async function FetchAllCrusts() {
     await fetch('api/Store/Crusts', {
         method: 'POST',
         headers: {
@@ -75,12 +82,14 @@ async function FetchAllComps() {
         jsonReponse.forEach((value, index) => {
             crusts[index].id = value.crustID;
         })
+        console.log(crusts);
     })
     .catch(function(err) {
         console.log("Failed to fetch page: ", err);
     });
+}
 
- 
+async function FetchAllSizes() {
     await fetch('api/Store/Sizes', {
         method: 'POST',
         headers: {
@@ -102,11 +111,128 @@ async function FetchAllComps() {
         jsonReponse.forEach((value, index) => {
             sizes[index].id = value.sizeID;
         })
-        
+        console.log(sizes);
     })
     .catch(function(err) {
         console.log("Failed to fetch page: ", err);
     });
+}
+
+async function FetchAllComps() {
+    await FetchAllToppings();
+    await FetchAllCrusts();
+    await FetchAllSizes();
+}
+
+function FetchUpdateInventory() {
+    let allList = {
+        id: storeID,
+        crustList: crusts,
+        sizeList: sizes,
+        toppingList: toppings
+    };
+
+    fetch(`api/Store/Update/${storeID}`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type':'application/json'
+        },
+        body: JSON.stringify(allList),
+    })
+    .then(response => {
+        if(!response.ok) {
+            throw new Error(`Network reponse was not ok (${reponse.status})`);
+        }
+        else
+            return response.json();
+    })
+    .then((jsonReponse) => {
+        if(jsonReponse == false) {
+            alert("Something went wrong updating the information");
+        }
+        else {
+            alert("Update successfully completed");
+        }
+    })
+    .catch(function(err) {
+        console.log("Failed to fetch page: ", err);
+    })
+}
+
+async function FetchItemTypes() {
+    await fetch(`api/Store/ItemTypes/`)
+    .then(response => {
+        if(!response.ok) {
+            throw new Error(`Network reponse was not ok (${reponse.status})`);
+        }
+        else
+            return response.json();
+    })
+    .then((jsonReponse) => {
+        itemTypes = jsonReponse;
+    })
+    .catch(function(err) {
+        console.log("Failed to fetch page: ", err);
+    })
+}
+
+function FetchAddNewComp(newCompObj) {
+    fetch(`api/Store/Add/Comp`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type':'application/json'
+        },
+        body: JSON.stringify(newCompObj),
+    })
+    .then(response => {
+        if(!response.ok) {
+            throw new Error(`Network reponse was not ok (${reponse.status})`);
+        }
+        else
+            return response.json();
+    })
+    .then((jsonReponse) => {
+        if(jsonReponse == false) {
+            alert("Could not add. Something went wrong on server.");
+        }
+        else {
+            alert("Successfully Added");
+        }
+    })
+    .catch(function(err) {
+        console.log("Failed to fetch page: ", err);
+    })
+}
+
+function FetchAddNewPizza(newPizza) {
+    fetch(`api/Store/Add/Pizza`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type':'application/json'
+        },
+        body: JSON.stringify(newPizza),
+    })
+    .then(response => {
+        if(!response.ok) {
+            throw new Error(`Network reponse was not ok (${reponse.status})`);
+        }
+        else
+            return response.json();
+    })
+    .then((jsonReponse) => {
+        if(jsonReponse == false) {
+            alert("Could not add. Something went wrong on server.");
+        }
+        else {
+            alert("Successfully Added");
+        }
+    })
+    .catch(function(err) {
+        console.log("Failed to fetch page: ", err);
+    })
 }
 
 //------------------------------------------------------------------//
@@ -134,6 +260,136 @@ topbar.addEventListener("click", (event) => {
 
 showOrderHistory();
 
+//------------------------------------------------------------------//
+function initAddNewPizza() {
+    let addNewPizza = document.querySelector("#submitcompbtn")
+
+    addNewPizza.addEventListener("click", (event) => {
+        let pizzaForm = document.querySelector(".addcomp");
+        if(!pizzaForm.querySelector("#name").checkValidity()) {
+            alert("Must enter a name");
+            return;
+        }
+
+        let curElement = pizzaForm.firstElementChild;
+        let pizzaName = curElement.lastElementChild.value;
+        console.log(pizzaName);
+
+        curElement = curElement.nextElementSibling;
+        let crustIndex = curElement.lastElementChild.value;
+
+        curElement = curElement.nextElementSibling.firstElementChild;
+        let newToppings = [];
+
+        while(curElement != null) {
+            newToppings.push(toppings[curElement.lastElementChild.value]);
+            curElement = curElement.nextElementSibling;
+        }
+        newToppings.pop();
+
+        let newPizza = {
+            ID: storeID,
+            Name: pizzaName,
+            Crust: crusts[crustIndex],
+            AllToppings: newToppings
+        }
+        console.log(newPizza);
+        FetchAddNewPizza(newPizza);
+    })
+}
+function initNewCompButton() {
+    let submitComp = document.querySelector("#submitcompbtn");
+
+    submitComp.addEventListener("click", async (event) => {
+
+        let compForm = document.querySelector(".addcomp");
+        if(!compForm.querySelector("#name").checkValidity()) {
+            alert("Must enter a name");
+            return;
+        }
+
+        let compCurrent = compForm.firstElementChild;
+        let currentInput = compCurrent.lastElementChild.value;
+        
+        let compType = itemTypes[currentInput];
+
+        compCurrent = compCurrent.nextElementSibling;
+        compName = compCurrent.lastElementChild.value;
+
+        if(compType.name == 'toppings') {
+            await FetchAllToppings();
+            for(let i = 0; i < toppings.length; i++) {
+                if(compName.toLowerCase() == toppings[i].name.toLowerCase()) {
+                    alert("This item already exists.");
+                    return;
+                }
+            }
+        }
+        if(compType.name == 'crust') {
+            await FetchAllCrusts();
+            for(let i = 0; i < crusts.length; i++) {
+                if(compName.toLowerCase() == crusts[i].name.toLowerCase()) {
+                    alert("This item already exists.");
+                    return;
+                }
+            }
+        }
+        if(compType.name == 'size') {
+            await FetchAllSizes();
+            for(let i = 0; i < sizes.length; i++) {
+                if(compName.toLowerCase() == sizes[i].name.toLowerCase()) {
+                    alert("This item already exists.");
+                    return;
+                }
+            }
+        }
+
+        compCurrent = compCurrent.nextElementSibling;
+        compPrice = parseFloat(compCurrent.lastElementChild.value);
+        
+        let newCompObj = {
+            ID: storeID,
+            ItemID: compType.typeID,
+            Itemname: compType.name,
+            Compname: compName,
+            Price: compPrice
+        }
+
+        FetchAddNewComp(newCompObj);
+    })
+}
+function initUpdateButton() {
+    let update = document.querySelector("#updatebtn");
+
+    update.addEventListener("click", () => {
+        updateComponentsList();
+        FetchUpdateInventory();
+        showUpdateInventory();
+    })
+}
+
+function initInventoryCheck() {
+    let inventoryCheck = document.querySelectorAll("input[name='inventory']");
+    inventoryCheck.forEach(value => {
+        value.addEventListener('change', (event) => {
+            if(!event.target.checkValidity()) {               
+                event.target.value = event.target.defaultValue;
+            }
+        })
+    });
+}
+function initPriceCheck() {
+    let inventoryCheck = document.querySelectorAll("input[name='price']");
+    inventoryCheck.forEach(value => {
+        value.addEventListener('change', (event) => {
+            if(!event.target.checkValidity()) {               
+                event.target.value = event.target.defaultValue;
+            }
+        })
+    });
+}
+
+
 function initAddToppingsBtn() {
     let btn = document.querySelector("#addtopping");
 
@@ -159,11 +415,6 @@ function initOrderButtons() {
                     additionaListItem.innerText = `${value.Size} ${value.Name} - ${value.Crust} - ${value.Toppings.join(' ')} - ${value.Price.toFixed(2)}`;
                     additionalInformation.appendChild(additionaListItem);
                 })
-                // for(let i = 0; i < 10; i++) {
-                //     const additionaListItem = document.createElement("li");
-                //     additionaListItem.innerText = `Some random information`;
-                //     additionalInformation.appendChild(additionaListItem);
-                // }
 
                 event.target.parentNode.parentNode.insertBefore(additionalInformation, event.target.parentNode.nextSibling);
             }
@@ -176,6 +427,46 @@ function initOrderButtons() {
     })
 }
 
+function initTabSwitches() {
+    let tabs = document.querySelector(".ordertabs")
+
+    tabs.addEventListener("click", (event )=> {
+        if(event.target.classList.contains("nametab")) {
+            return;
+        }
+        if(event.target.classList.contains("timetab")) {
+            if(sortType.type == 'time') {
+                if(sortType.ascending) {
+                    sortType.ascending = false;
+                }
+                else {
+                    sortType.ascending = true;
+                }
+            }
+            else {
+                sortType.type = 'time';
+                sortType.ascending = true;
+            }
+        }
+        if(event.target.classList.contains("pricetab")) {
+            if(sortType.type == 'price') {
+                if(sortType.ascending) {
+                    sortType.ascending = false;
+                }
+                else {
+                    sortType.ascending = true;
+                }
+            }
+            else {
+                sortType.type = 'price';
+                sortType.ascending = true;
+            }
+        }
+        sortOrderHistory();
+    })
+}
+
+//------------------------------------------------------------------//
 function switchSelected(target) {
     document.getElementById('selected').removeAttribute('id');
     target.id = "selected";
@@ -199,6 +490,48 @@ function convertComps(dbComps, jsComps) {
     })
 }
 
+function updateComponentsList() {
+    let compList = document.querySelector(".allitems");
+    let curElement = compList.firstElementChild;
+
+    // Because of how we created the elements, looping through the list of each one SHOULD line up.
+    // If it doesn't, we can always change this to loop through every single component until we find the one with the matching id
+    // And then change it accordingly
+    for(let i = 0; i < crusts.length; i++) {
+        let info = curElement.lastElementChild;
+        let inv = info.firstElementChild.value;
+        let price = info.lastElementChild.value;
+
+        crusts[i].inventory = parseFloat(inv);
+        crusts[i].price = parseFloat(price);
+
+        curElement = curElement.nextElementSibling;
+    }
+
+    for(let i = 0; i < sizes.length; i++) {
+        let info = curElement.lastElementChild;
+        let inv = info.firstElementChild.value;
+        let price = info.lastElementChild.value;
+
+        sizes[i].inventory = parseFloat(inv);
+        sizes[i].price = parseFloat(price);
+
+        curElement = curElement.nextElementSibling;
+    }
+
+    for(let i = 0; i < toppings.length; i++) {
+        let info = curElement.lastElementChild;
+        let inv = info.firstElementChild.value;
+        let price = info.lastElementChild.value;
+
+        toppings[i].inventory = parseFloat(inv);
+        toppings[i].price = parseFloat(price);
+
+        curElement = curElement.nextElementSibling;
+    }
+}
+
+//------------------------------------------------------------------//
 async function showOrderHistory() {
     await FetchOrderHistory();
     const htmlOrderHistory = `
@@ -225,7 +558,7 @@ async function showOrderHistory() {
              <li class="order" value=${i}>
                 <div class="information">
                     <span class='name'>${currentorderhistory.storeName[i]}</span>
-                    <span class='time'>${date.toDateString()}</span>
+                    <span class='time'>${date.toDateString()} ${date.toTimeString().substring(0, 9)}</span>
                     <span class='total'>$${currentorderhistory.totals[i]}</span>
                 </div>
              </li>
@@ -234,10 +567,11 @@ async function showOrderHistory() {
     }
     
     initOrderButtons();
+    initTabSwitches();
 }
 
-function showUpdateInventory() {
-    FetchAllComps();
+async function showUpdateInventory() {
+    await FetchAllComps();
     const htmlOrderHistory = `
     <div class="inventory">
         <h1>Update Inventory</h1>
@@ -253,49 +587,12 @@ function showUpdateInventory() {
     `
 
     main.innerHTML = htmlOrderHistory;
-    
     let allordersInside = document.querySelector(".allitems");
 
-    for(let i = 0; i < 10; i++) {
-        let listOrderItemHTML = `
-             <li class="item">
-                <span class="itemname">Some Dumb Information</span>
-                <span class="iteminv"><input type="number" placeholder="100" min="0"></span>
-            </li>
-         `
-         let listItem = document.createElement("li");
-         listItem.classList.add("item");
-         listItem.setAttribute("value", i);
-
-         let listSpanName = document.createElement("span");
-         listSpanName.classList.add("itemname");
-         listSpanName.innerText = "Some dumb information";
-
-         let listSpanInv = document.createElement("span");
-         listSpanInv.classList.add("iteminv");
-
-         let invInput = document.createElement("input");
-         invInput.type = "number";
-         invInput.name= "inventory"
-         invInput.min = 0;
-         invInput.defaultValue = 100;
-         invInput.classList.add("invinput");
-
-         let invPriceInput = document.createElement("input");
-         invPriceInput.type = "number";
-         invPriceInput.name = "price";
-         invPriceInput.step = "0.01";
-         invPriceInput.min = 0;
-         invPriceInput.defaultValue = 100.00.toFixed(2);
-         invPriceInput.classList.add("invinput");
-
-         listSpanInv.appendChild(invInput);
-         listSpanInv.appendChild(invPriceInput);
-         listItem.appendChild(listSpanName);
-         listItem.appendChild(listSpanInv);
-         allordersInside.appendChild(listItem);
-         //allordersInside.innerHTML += listOrderItemHTML;
-    }
+    crusts.forEach(addAnotherComp);
+    sizes.forEach(addAnotherComp);
+    toppings.forEach(addAnotherComp);
+    
     let updateDiv = document.createElement("div");
     updateDiv.classList.add("update")
     let updateButton = document.createElement("button");
@@ -304,9 +601,14 @@ function showUpdateInventory() {
 
     updateDiv.appendChild(updateButton)
     allordersInside.parentNode.appendChild(updateDiv);
+
+    initInventoryCheck();
+    initPriceCheck();
+    initUpdateButton();
 }
 
-function showAddComp() {
+async function showAddComp() {
+    await FetchItemTypes();
     const htmlOrderHistory = `
     <div class="newcomp">
         <h1>Adding New Comp</h1>
@@ -330,13 +632,14 @@ function showAddComp() {
     selectBox.setAttribute("class", "userinput");
     selectBox.required = true;
 
-    for(let i = 0; i < 5; i++) {
+    itemTypes.forEach((value, index) => {
         let selectOption = document.createElement("option");
-        selectOption.setAttribute("value", i);
-        selectOption.innerText = i;
+        selectOption.setAttribute("value", index);
+        selectOption.innerText = `${value.name}`;
 
         selectBox.appendChild(selectOption);
-    }
+    })
+
     compDiv.appendChild(compLabel);
     compDiv.appendChild(selectBox);
     addCompDiv.appendChild(compDiv);
@@ -388,12 +691,17 @@ function showAddComp() {
 
     addDiv.appendChild(submitCompButton)
     addCompDiv.parentNode.appendChild(addDiv);
+
+    initPriceCheck();
+    initNewCompButton();
 }
 
-function showAddPizza() {
+async function showAddPizza() {
+    await FetchAllCrusts();
+    await FetchAllToppings();
     const htmlOrderHistory = `
     <div class="newcomp">
-        <h1>Adding New Preest Pizza</h1>
+        <h1>Adding New Preset Pizza</h1>
         <div class="addcomp">
 
         </div>
@@ -431,13 +739,14 @@ function showAddPizza() {
     selectBox.setAttribute("class", "userinput");
     selectBox.required = true;
 
-    for(let i = 0; i < 5; i++) {
+    crusts.forEach((value,index) => {
         let selectOption = document.createElement("option");
-        selectOption.setAttribute("value", i);
-        selectOption.innerText = i;
+        selectOption.setAttribute("value", index);
+        selectOption.innerText = value.name;
 
         selectBox.appendChild(selectOption);
-    }
+    })
+
     crustDiv.appendChild(compLabel);
     crustDiv.appendChild(selectBox);
     addCompDiv.append(crustDiv);
@@ -457,7 +766,6 @@ function showAddPizza() {
     addCompDiv.appendChild(toppingsDiv);
 
     addNewPizzaTopping();
-    addNewPizzaTopping();
 
     let addPizzaDiv = document.createElement("div");
     addPizzaDiv.classList.add("updatecomp")
@@ -469,8 +777,10 @@ function showAddPizza() {
     addCompDiv.parentNode.appendChild(addPizzaDiv);
     
     initAddToppingsBtn();
+    initAddNewPizza();
 }
 
+//------------------------------------------------------------------//
 function addNewPizzaTopping() {
     let addCompDiv = document.querySelector(".addtoppings");
 
@@ -486,16 +796,60 @@ function addNewPizzaTopping() {
     toppingSelect.setAttribute("class", "userinput");
     toppingSelect.required = true;
 
-    for(let i = 0; i < 5; i++) {
+    toppings.forEach((value, index) => {
         let selectOption = document.createElement("option");
-        selectOption.setAttribute("value", i);
-        selectOption.innerText = i;
+        selectOption.setAttribute("value", index);
+        selectOption.innerText = value.name;
 
         toppingSelect.appendChild(selectOption);
-    }
+    })
+
     toppingDiv.appendChild(toppingLabel);
     toppingDiv.appendChild(toppingSelect);
     addCompDiv.insertBefore(toppingDiv, addCompDiv.lastElementChild);
+}
+
+function addAnotherComp(value) {
+    let allordersInside = document.querySelector(".allitems");
+
+    let listOrderItemHTML = `
+        <li class="item">
+            <span class="itemname">Some Dumb Information</span>
+            <span class="iteminv"><input type="number" placeholder="100" min="0"></span>
+        </li>
+    `
+    let listItem = document.createElement("li");
+    listItem.classList.add("item");
+    listItem.setAttribute("name", `${value.id}`);
+
+    let listSpanName = document.createElement("span");
+    listSpanName.classList.add("itemname");
+    listSpanName.innerText = `${value.name}`;
+
+    let listSpanInv = document.createElement("span");
+    listSpanInv.classList.add("iteminv");
+
+    let invInput = document.createElement("input");
+    invInput.type = "number";
+    invInput.name= "inventory"
+    invInput.min = 0;
+    invInput.step = 1;
+    invInput.defaultValue = `${value.inventory}`;
+    invInput.classList.add("invinput");
+
+    let invPriceInput = document.createElement("input");
+    invPriceInput.type = "number";
+    invPriceInput.name = "price";
+    invPriceInput.step = "0.01";
+    invPriceInput.min = 0;
+    invPriceInput.defaultValue = `${value.price.toFixed(2)}`;
+    invPriceInput.classList.add("invinput");
+
+    listSpanInv.appendChild(invInput);
+    listSpanInv.appendChild(invPriceInput);
+    listItem.appendChild(listSpanName);
+    listItem.appendChild(listSpanInv);
+    allordersInside.appendChild(listItem);
 }
 
 function logOut() {

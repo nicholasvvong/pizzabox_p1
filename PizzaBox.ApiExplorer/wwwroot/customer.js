@@ -692,9 +692,9 @@ function updateInventory(newPizza) {
             }
         }
     })
-    // console.log(possibleCrust);
-    // console.log(possibleSizes);
-    // console.log(possibleToppings);
+    console.log(possibleCrust);
+    console.log(possibleSizes);
+    console.log(possibleToppings);
 
     return true;
 }

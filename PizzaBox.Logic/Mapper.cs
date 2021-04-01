@@ -132,5 +132,42 @@ namespace PizzaBox.Logic
                 newOrder.Pizzas.Add(bp);
             }
         }
+
+        internal Topping CompToTopping(APizzaComponent pComp, RawNewComp obj, AStore curStore)
+        {
+            Topping newTopping = new Topping(curStore, obj.Price, 0, pComp);
+
+            return newTopping;
+        }
+
+        internal BasicPizza RawToBasicPizzaMapper(RawNewPizza obj, Crust newCrust, List<Topping> toppings)
+        {
+            BasicPizza newPizza = new BasicPizza();
+            newPizza.Type = obj.Name;
+            newPizza.Crust = newCrust;
+            newPizza.Toppings = toppings;
+            return newPizza;
+        }
+
+        internal Crust CompToCrust(APizzaComponent pComp, RawNewComp obj, AStore curStore)
+        {
+            Crust newCrust = new Crust(curStore, obj.Price, 0, pComp);
+
+            return newCrust;
+        }
+
+        internal Size CompToSize(APizzaComponent pComp, RawNewComp obj, AStore curStore)
+        {
+            Size newSize = new Size(curStore, obj.Price, 0, pComp);
+
+            return newSize;
+        }
+
+        public APizzaComponent ItemToCompMapper(string compName, ItemType baseType)
+        {
+            APizzaComponent newComp = new APizzaComponent(compName, baseType);
+
+            return newComp;
+        }
     }
 }
