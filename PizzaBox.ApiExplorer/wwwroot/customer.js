@@ -13,6 +13,7 @@ let possibleToppings = [];
 let currentTotal = 0;
 
 let orderstarted = false;
+let countdown = false;
 
 let currentOrder = [];
 let currentorderhistory;
@@ -193,6 +194,10 @@ async function FetchSubmitOrder() {
     })
     .then((jsonReponse) => {
         //console.log(jsonReponse);
+        if(jsonReponse == null) {
+            return false;
+        }
+        return true;
     })
     .catch(function(err) {
         console.log("Failed to fetch page: ", err);
@@ -256,7 +261,7 @@ function createComp(cName, cPrice, cInv) {
 })();
 
 (function initOption() {
-    //showDumbOrderCountdown(3);
+    //showDumbOrderCountdown(1);
     showOrderHistory();
 })();
 
@@ -295,10 +300,15 @@ function initSubmitOrder() {
             alert("No items added to order");
         }
         else {
-            await FetchSubmitOrder();
+            let submitted = await FetchSubmitOrder();
             switchSelected(topbar.firstElementChild.nextElementSibling.firstElementChild);
             orderstarted = false;
-            //showDumbOrderCountdown(1);
+            if(submitted) {
+                showDumbOrderCountdown(40);
+            }
+            else {
+                alert("Something went wrong with your order");
+            }
             showOrderHistory();
         }
     })
@@ -481,15 +491,17 @@ function enoughToppings() {
 }
 
 function switchSelected(target) {
-    document.getElementById('selected').removeAttribute('id');
-    target.id = "selected";
     if(target.innerText == "Order History"){
-
+        document.getElementById('selected').removeAttribute('id');
+        target.id = "selected";
         showOrderHistory();
     }
     if(target.innerText == "Order Now"){
-
-        orderNowSwitch();
+        if(!countdown) {
+            document.getElementById('selected').removeAttribute('id');
+            target.id = "selected";
+            orderNowSwitch();
+        }
     }
     if(target.innerText == "Manage Store") {
         //console.log(customerObj);
@@ -685,10 +697,12 @@ function updateInvetoryIncrease(oldPizza) {
 }
 
 function updateInventoryDecrease(newPizza) {
+    let returnValue = true;
     for(let i = 0; i < possibleCrust.length; i++) {
         if(possibleCrust[i].name == newPizza.crust) {
             if(possibleCrust[i].inventory <= 0) {
                 alert("Sorry. We're out of that crust.");
+                returnValue = false;
                 return false;
             }
             else {
@@ -701,6 +715,7 @@ function updateInventoryDecrease(newPizza) {
         if(possibleSizes[i].name == newPizza.size) {
             if(possibleSizes[i].inventory <= 0) {
                 alert("Sorry. We're out of dough to make that size");
+                returnValue = false;
                 return false;
             }
             else {
@@ -714,6 +729,7 @@ function updateInventoryDecrease(newPizza) {
             if(possibleToppings[i].name == value) {
                 if(possibleToppings[i].inventory <= 0) {
                     alert("Sorry. We're out of " + value);
+                    returnValue = false;
                     return false;
                 }
                 else {
@@ -723,8 +739,7 @@ function updateInventoryDecrease(newPizza) {
             }
         }
     })
-
-    return true;
+    return returnValue;
 }
 
 function checkCrust(customPizza) {
@@ -904,20 +919,37 @@ async function showOrderHistory() {
 }
 
 function showDumbOrderCountdown(minutes) {
-    let countdownBox = main.querySelector(".countdown");
-    let timer = new Date();
-    timer.setSeconds(minutes * 60);
-    let setTimer = setInterval(function() {
-        let hrs = Math.floor((timer.getSeconds() % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        let mins = Math.floor((timer.getSeconds() % 60 ));
-        let secs = Math.floor((timer.getSeconds()));
+    let countdownDiv = document.createElement("div");
+    countdownDiv.classList.add("countdown");
+    main.insertBefore(countdownDiv, main.lastElementChild);
 
-        countdownBox.innerText = `Hours: ${hrs} | Minutes: ${mins} | Seconds: ${secs}`;
-        timer.setSeconds(timer.getSeconds() - 1);
-        console.log(timer.getSeconds());
-        if(timer.getSeconds <= 0) {
+    let countdownBox = main.querySelector(".countdown");
+    
+    countdown = true;
+    let title = document.createElement("div");
+    title.classList.add("countdowntitle")
+    title.innerText = "Order arrives in "
+    countdownBox.appendChild(title);
+
+    let countdowntimer = document.createElement("div");
+    countdowntimer.classList.add("cdtimer");
+    countdownBox.appendChild(countdowntimer);
+
+    let actualTimer = countdownBox.querySelector(".cdtimer");
+    let endTime = new Date(Date.now() + minutes * 60000);
+    let setTimer = setInterval(function() {
+        let distance = endTime - Date.now();
+        let hrs = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        let mins = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        let secs = Math.floor((distance % (1000 * 60)) / 1000);
+
+        actualTimer.innerText = `${hrs.toLocaleString(undefined, {minimumIntegerDigits: 2})}:${mins.toLocaleString(undefined, {minimumIntegerDigits: 2})}:${secs.toLocaleString(undefined, {minimumIntegerDigits: 2})}`;
+
+        if(distance < 1) {
             console.log("done");
             clearInterval(setTimer);
+            countdown = false;
+            countdownBox.remove();
         }
     }, 1000);
 }

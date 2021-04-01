@@ -76,6 +76,7 @@ namespace PizzaBox.Repository
                 DecrementCrust(StoreID, rp.Crust);
                 foreach(string t in rp.Toppings)
                 {
+                    Console.WriteLine("-----------" + t);
                     DecrementTopping(StoreID, t);
                 }
             }
@@ -446,6 +447,9 @@ namespace PizzaBox.Repository
         /// <param name="v">New inventory amount</param>
         public void UpdateToppingInventory(Guid id, string topping, int v)
         {
+            Console.WriteLine(id);
+            Console.WriteLine(topping);
+            Console.WriteLine(v);
             var toppingEntry = context.Toppings.Include(c => c.PizzaType) 
                                 .Include(st => st.Store)
                                 .Where(s => s.PizzaType.Name == topping)

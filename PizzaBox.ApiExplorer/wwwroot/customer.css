@@ -48,9 +48,25 @@ body {
 }
 
 .maincontent .countdown{
+    background: #15262B;
     color:white;
     text-align: center;
+    margin-top:1rem;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    width:60%;
+    font-size: 3vw;
+}
 
+.maincontent .countdown .countdowntitle {
+    font-size:3vw;
+}
+
+.maincontent .countdown .cdtimer {
+    font-size:2vw;
 }
 
 .maincontent .orderhistory {
